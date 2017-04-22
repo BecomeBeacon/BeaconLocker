@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_machine"
+            android:icon="@drawable/ic_menu_machine"
+            android:title="내 기기" />
+        <item
+            android:id="@+id/nav_laf"
+            android:icon="@drawable/ic_menu_laf"
+            android:title="Lost and Found" />
+        <item
+            android:id="@+id/nav_clock"
+            android:icon="@drawable/ic_menu_clock"
+            android:title="알람" />
+        <item
+            android:id="@+id/nav_setting"
+            android:icon="@drawable/ic_menu_setting"
+            android:title="설정" />
+    </group>
+
+
+</menu>
