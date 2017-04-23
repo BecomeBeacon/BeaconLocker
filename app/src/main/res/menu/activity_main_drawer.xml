@@ -11,10 +11,6 @@
             android:icon="@drawable/ic_menu_laf"
             android:title="Lost and Found" />
         <item
-            android:id="@+id/nav_clock"
-            android:icon="@drawable/ic_menu_clock"
-            android:title="알람" />
-        <item
             android:id="@+id/nav_setting"
             android:icon="@drawable/ic_menu_setting"
             android:title="설정" />
