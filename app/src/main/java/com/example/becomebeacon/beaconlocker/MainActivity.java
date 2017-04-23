@@ -1,5 +1,6 @@
 package com.example.becomebeacon.beaconlocker;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -87,6 +88,9 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_laf) {
 
+        } else if (id == R.id.nav_map) {
+            Intent intent = new Intent(getApplicationContext(), MapActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_setting) {
 
         } else if (id == R.id.nav_logout) {
