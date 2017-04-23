@@ -32,7 +32,7 @@ public class MapActivity extends FragmentActivity
     public void onMapReady(final GoogleMap map) {
         //좌표값 세팅
         LatLng LOST = new LatLng(37.56, 126.97);
-        //마커 옵션
+        //마커 옵션(분실물 정보, 분실 시각)
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(LOST);
         markerOptions.title("분실물");
