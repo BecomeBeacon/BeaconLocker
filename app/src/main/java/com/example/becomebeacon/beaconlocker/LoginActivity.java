@@ -1,6 +1,7 @@
 package com.example.becomebeacon.beaconlocker;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -35,6 +36,9 @@ public class LoginActivity extends AppCompatActivity implements
     private static final String TAG = "SignInActivity";
     private static final int RC_SIGN_IN = 9001;
     private FirebaseAuth mAuth;
+    private static FirebaseUser mAccount;
+    private int command;
+    private final int RCode=1;
 
 
     private GoogleApiClient mGoogleApiClient;
@@ -45,16 +49,11 @@ public class LoginActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        command=1;
         mAuth = FirebaseAuth.getInstance();
 
         Button goToMainButton = (Button)findViewById(R.id.goToMain_temp);
-        goToMainButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
-            }
-        });
+        goToMainButton.setOnClickListener(this);
 
         // Button listeners
         findViewById(R.id.login_google).setOnClickListener(this);
@@ -86,8 +85,17 @@ public class LoginActivity extends AppCompatActivity implements
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
+
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        updateUI(currentUser);
+        if(command==1) {
+
+            mAccount = currentUser;
+
+            updateUI(currentUser);
+        }else if(command==88)
+        {
+            //signOut();
+        }
     }
     // [END on_start_check_user]
 
@@ -111,11 +119,18 @@ public class LoginActivity extends AppCompatActivity implements
                 // [END_EXCLUDE]
             }
         }
+        if(resultCode==88)
+        {
+            Log.d("sss","code 88");
+            command=88;
+
+        }
     }
     // [END onactivityresult]
 
     // [START auth_with_google]
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
+
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
 
 
@@ -128,6 +143,7 @@ public class LoginActivity extends AppCompatActivity implements
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            mAccount=user;
                             updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -147,12 +163,15 @@ public class LoginActivity extends AppCompatActivity implements
 
     // [START signin]
     private void signIn() {
+        Log.d("sss","In signIn");
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
     // [END signin]
 
     private void signOut() {
+        mGoogleApiClient.connect();
+
         // Firebase sign out
         mAuth.signOut();
 
@@ -183,8 +202,9 @@ public class LoginActivity extends AppCompatActivity implements
     private void updateUI(FirebaseUser user) {
 
         if (user != null) {
+            Log.d("sss","updateUI not null");
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent,RCode);
 
         } else {
 
@@ -204,6 +224,18 @@ public class LoginActivity extends AppCompatActivity implements
         int i = v.getId();
         if (i == R.id.login_google) {
             signIn();
+        }else if (i == R.id.goToMain_temp)
+        {
+            signOut();
         }
     }
+
+
+    static FirebaseUser getUser()
+    {
+        return mAccount;
+    }
+
+
+
 }

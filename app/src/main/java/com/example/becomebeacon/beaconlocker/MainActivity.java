@@ -2,8 +2,10 @@ package com.example.becomebeacon.beaconlocker;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,17 +15,43 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+
+    private FirebaseUser mUser;
+    private TextView mEmail;
+    private TextView mName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mUser=LoginActivity.getUser();
+
+
+
+        Log.d("dd","ID : "+mUser.getEmail());
         //Slide
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        mEmail=(TextView)findViewById(R.id.slide_user_email);
+        mName=(TextView)findViewById(R.id.slide_user_name);
+
+        Log.d("sss","mUser " + mUser.getEmail());
+        Log.d("sss","mUser " + mUser.getDisplayName());
+//        mEmail.setText(mUser.getEmail());
+//        mName.setText(mUser.getDisplayName());
+
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -94,6 +122,8 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_setting) {
 
         } else if (id == R.id.nav_logout) {
+            setResult(88);
+            finish();
 
         }
         //Slide Close
@@ -101,4 +131,19 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
+    private void updateUI(FirebaseUser user) {
+
+        if (user != null) {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+
+        } else {
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivity(intent);
+
+        }
+    }
+
 }
