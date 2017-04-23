@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_setting) {
 
         } else if (id == R.id.nav_logout) {
-            
+
         }
         //Slide Close
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
