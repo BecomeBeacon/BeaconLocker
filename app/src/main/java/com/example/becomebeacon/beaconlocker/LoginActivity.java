@@ -43,7 +43,6 @@ public class LoginActivity extends AppCompatActivity implements
                 startActivity(intent);
             }
         });
-
         // Button listeners
         findViewById(R.id.login_google).setOnClickListener(this);
 
@@ -200,5 +199,13 @@ public class LoginActivity extends AppCompatActivity implements
                 break;
 
         }
+        Button goToMapButton = (Button)findViewById(R.id.goToMap_temp);
+        goToMapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), MapActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }
