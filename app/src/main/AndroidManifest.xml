@@ -43,10 +43,11 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
+        </activity>
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBiSqQMWvOqr3d6BUAx5MkM3Xp0i83ODl0" />
-        </activity>
 
         <activity
             android:name=".MapActivity"
