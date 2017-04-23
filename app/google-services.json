@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "558753922013",
+    "firebase_url": "https://beaconlocker-51c69.firebaseio.com",
+    "project_id": "beaconlocker-51c69",
+    "storage_bucket": "beaconlocker-51c69.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:558753922013:android:768ec47835a2a1cb",
+        "android_client_info": {
+          "package_name": "com.example.becomebeacon.beaconlocker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "558753922013-u3f3h5nv9657ql0bue5m5qdjn09m352i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.becomebeacon.beaconlocker",
+            "certificate_hash": "6c5eb8bbe813e9a73b3478d75db5089bd3124266"
+          }
+        },
+        {
+          "client_id": "558753922013-756j7erve9jqu8jtuvarn55f82912922.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJa3YsUrLOCBcys2cc3lddAA4A7aAa-AA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "558753922013-756j7erve9jqu8jtuvarn55f82912922.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

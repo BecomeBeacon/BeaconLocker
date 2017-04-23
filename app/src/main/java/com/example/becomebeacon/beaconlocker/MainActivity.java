@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    /*
+/*
     //Slide Back
     @Override
     public void onBackPressed() {
@@ -68,5 +68,5 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-    */
+*/
 }
