@@ -52,9 +52,6 @@ public class LoginActivity extends AppCompatActivity implements
         command=1;
         mAuth = FirebaseAuth.getInstance();
 
-        Button goToMainButton = (Button)findViewById(R.id.goToMain_temp);
-        goToMainButton.setOnClickListener(this);
-
         // Button listeners
         findViewById(R.id.login_google).setOnClickListener(this);
 
@@ -216,9 +213,6 @@ public class LoginActivity extends AppCompatActivity implements
         int i = v.getId();
         if (i == R.id.login_google) {
             signIn();
-        }else if (i == R.id.goToMain_temp)
-        {
-            signOut();
         }
     }
 
