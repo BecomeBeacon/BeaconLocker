@@ -40,6 +40,8 @@ public class MainActivity extends AppCompatActivity
     private TextView mEmail;
     private TextView mName;
     private GoogleApiClient mGoogleApiClient;
+    private BluetoothService mBleService;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +58,8 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         mEmail=(TextView)findViewById(R.id.slide_user_email);
         mName=(TextView)findViewById(R.id.slide_user_name);
+        mBleService=new BluetoothService(this);
+
 
         Log.d("sss","mUser " + mUser.getEmail());
         Log.d("sss","mUser " + mUser.getDisplayName());
@@ -68,8 +72,7 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                mBleService.scanDevice();
             }
         });
 
@@ -82,11 +85,12 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        //bluetoothAdapter 얻기
         final BluetoothManager bluetoothManager =
                 (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-        mBluetoothAdapter = bluetoothManager.getAdapter();
 
 
+        //bluetooth 체크 후 비활성화시 팝업
         if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
 
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
