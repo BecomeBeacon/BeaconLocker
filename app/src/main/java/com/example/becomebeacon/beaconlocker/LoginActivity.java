@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,8 +36,6 @@ public class LoginActivity extends AppCompatActivity implements
     private static final int RC_SIGN_IN = 9001;
     private static FirebaseAuth mAuth;
     private static FirebaseUser mAccount;
-    private int command;
-    private final int RCode=1;
 
 
     private GoogleApiClient mGoogleApiClient;
@@ -49,7 +46,6 @@ public class LoginActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        command=1;
         mAuth = FirebaseAuth.getInstance();
 
         // Button listeners
