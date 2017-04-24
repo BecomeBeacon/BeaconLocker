@@ -37,8 +37,8 @@ public class LoginActivity extends AppCompatActivity implements
     private static final int RC_SIGN_IN = 9001;
     private static FirebaseAuth mAuth;
     private static FirebaseUser mAccount;
-    private int command;
-    private final int RCode=1;
+
+
 
 
     private GoogleApiClient mGoogleApiClient;
@@ -49,11 +49,9 @@ public class LoginActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        command=1;
+
         mAuth = FirebaseAuth.getInstance();
 
-        Button goToMainButton = (Button)findViewById(R.id.goToMain_temp);
-        goToMainButton.setOnClickListener(this);
 
         // Button listeners
         findViewById(R.id.login_google).setOnClickListener(this);
@@ -88,8 +86,6 @@ public class LoginActivity extends AppCompatActivity implements
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
-
-        Log.d("sss","command 1");
         mAccount = currentUser;
 
         updateUI(currentUser);
@@ -216,9 +212,6 @@ public class LoginActivity extends AppCompatActivity implements
         int i = v.getId();
         if (i == R.id.login_google) {
             signIn();
-        }else if (i == R.id.goToMain_temp)
-        {
-            signOut();
         }
     }
 
