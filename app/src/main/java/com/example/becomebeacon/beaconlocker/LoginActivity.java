@@ -35,7 +35,7 @@ public class LoginActivity extends AppCompatActivity implements
 
     private static final String TAG = "SignInActivity";
     private static final int RC_SIGN_IN = 9001;
-    private FirebaseAuth mAuth;
+    private static FirebaseAuth mAuth;
     private static FirebaseUser mAccount;
     private int command;
     private final int RCode=1;
@@ -87,15 +87,13 @@ public class LoginActivity extends AppCompatActivity implements
         // Check if user is signed in (non-null) and update UI accordingly.
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(command==1) {
 
-            mAccount = currentUser;
 
-            updateUI(currentUser);
-        }else if(command==88)
-        {
-            //signOut();
-        }
+        Log.d("sss","command 1");
+        mAccount = currentUser;
+
+        updateUI(currentUser);
+
     }
     // [END on_start_check_user]
 
@@ -119,12 +117,7 @@ public class LoginActivity extends AppCompatActivity implements
                 // [END_EXCLUDE]
             }
         }
-        if(resultCode==88)
-        {
-            Log.d("sss","code 88");
-            command=88;
 
-        }
     }
     // [END onactivityresult]
 
@@ -170,7 +163,6 @@ public class LoginActivity extends AppCompatActivity implements
     // [END signin]
 
     private void signOut() {
-        mGoogleApiClient.connect();
 
         // Firebase sign out
         mAuth.signOut();
@@ -204,7 +196,7 @@ public class LoginActivity extends AppCompatActivity implements
         if (user != null) {
             Log.d("sss","updateUI not null");
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivityForResult(intent,RCode);
+            startActivity(intent);
 
         } else {
 
@@ -230,6 +222,11 @@ public class LoginActivity extends AppCompatActivity implements
         }
     }
 
+
+    static FirebaseAuth getAuth()
+    {
+        return mAuth;
+    }
 
     static FirebaseUser getUser()
     {
