@@ -1,33 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
 
-    <EditText
-        android:id="@+id/et_UUID"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    <Space
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="testUUID_ffff" />
+        android:layout_weight="0.12" />
 
-    <EditText
-        android:id="@+id/et_NICKNAME"
+    <GridLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="testNICKNAME" />
+        android:layout_height="208dp"
+        android:columnCount="2"
+        android:orientation="horizontal"
+        android:rowCount="4">
 
-    <EditText
-        android:id="@+id/et_PICTURE"
+
+        <TextView
+            android:layout_width="109dp"
+            android:layout_height="49dp"
+            android:layout_column="0"
+            android:layout_row="0"
+            android:ems="10"
+            android:text="블루투스 UUID"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/et_UUID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_row="0"
+            android:layout_column="1"
+            android:text="B9407F30-F5F8-466E-AFF9-25556B57FE6D" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_row="1"
+            android:text="별칭"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/et_NICKNAME"
+            android:layout_width="258dp"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_row="1"
+            android:inputType="textPersonName"
+            android:text="testNICKNAME"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="96dp"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_row="2"
+            android:text="사진"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/et_PICTURE"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_row="2"
+            android:layout_column="1"
+            android:inputType="textPersonName"
+            android:text="개발중" />
+
+    </GridLayout>
+
+    <Button
+        android:id="@+id/button_saveForm"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="testPICTURE.jpg" />
+        android:layout_height="0dp"
+        android:layout_weight="0.18"
+        android:text="저장하기" />
 
-<!--
+
+
+
+
+
+    <!--
+    <Button
+        android:id="@+id/button_clearForm"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.42"
+        android:text="초기화" />
+
     <EditText
         android:id="@+id/et_LATITUDE"
         android:layout_width="match_parent"
@@ -44,15 +116,5 @@
         android:inputType="textPersonName"
         android:text="LONGITUDE" />
 -->
-    <Button
-        android:id="@+id/button_saveForm"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Button" />
 
-    <Button
-        android:id="@+id/button_clearForm"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Button" />
 </LinearLayout>
