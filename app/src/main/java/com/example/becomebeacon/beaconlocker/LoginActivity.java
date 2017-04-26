@@ -85,8 +85,6 @@ public class LoginActivity extends AppCompatActivity implements
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
-
-        Log.d("sss","command 1");
         mAccount = currentUser;
 
         updateUI(currentUser);
