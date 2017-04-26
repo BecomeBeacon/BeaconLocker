@@ -5,6 +5,8 @@ import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -33,6 +35,17 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
 
+    private BluetoothService btService = null;
+    private final Handler mHandler = new Handler()    {
+        @Override
+        public void handleMessage(Message msg)
+        {
+            super.handleMessage(msg);
+        }
+    };
+
+
+
     private final int REQUEST_ENABLE_BT=9999;
     private BluetoothAdapter mBluetoothAdapter;
     private FirebaseUser mUser;
@@ -40,7 +53,7 @@ public class MainActivity extends AppCompatActivity
     private TextView mEmail;
     private TextView mName;
     private GoogleApiClient mGoogleApiClient;
-    private BluetoothService mBleService;
+
 
 
     @Override
@@ -52,13 +65,19 @@ public class MainActivity extends AppCompatActivity
         mUser=LoginActivity.getUser();
 
 
+        if(btService == null) {
+            btService = new BluetoothService(this, mHandler);
+        }
+
+
+
 
         Log.d("dd","ID : "+mUser.getEmail());
         //Slide
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         mEmail=(TextView)findViewById(R.id.slide_user_email);
         mName=(TextView)findViewById(R.id.slide_user_name);
-        mBleService=new BluetoothService(this);
+
 
 
         Log.d("sss","mUser " + mUser.getEmail());
@@ -72,7 +91,7 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mBleService.scanDevice();
+                //ble 검색 및 추가
             }
         });
 
@@ -91,11 +110,15 @@ public class MainActivity extends AppCompatActivity
 
 
         //bluetooth 체크 후 비활성화시 팝업
-        if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
+//        if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
+//
+//            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+//        }
+        btService.checkBluetooth();
 
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-        }
+
+
 
     }
 
