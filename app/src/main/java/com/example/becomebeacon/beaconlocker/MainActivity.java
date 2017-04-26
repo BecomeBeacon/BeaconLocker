@@ -24,9 +24,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +46,9 @@ import com.google.firebase.auth.FirebaseUser;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -48,6 +56,7 @@ public class MainActivity extends AppCompatActivity
     private Handler mHandler;
     private LayoutInflater layoutInflater;
 
+    private ListView lvArticleList;
 
 
     private final int REQUEST_ENABLE_BT=9999;
@@ -131,6 +140,13 @@ public class MainActivity extends AppCompatActivity
             mName.setText(mUser.getDisplayName());
         }
 
+        //리스트
+        lvArticleList = (ListView) findViewById(R.id.ble_list);
+        List articleList = new ArrayList();
+
+        articleList.add(new ItemData("노트북", "소지", 15));
+
+        lvArticleList.setAdapter(new ItemListViewAdapter(articleList, this));
 
 
 
@@ -270,5 +286,8 @@ public class MainActivity extends AppCompatActivity
 
         }
     }
+
+
+
 
 }
