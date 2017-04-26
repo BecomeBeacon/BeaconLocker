@@ -4,6 +4,8 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -12,6 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -21,6 +24,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,30 +37,14 @@ import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import org.w3c.dom.Text;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-
-    private final int SYNC_ACCOUNT=1;
     private BluetoothService btService = null;
-    private final Handler mHandler = new Handler()    {
-        @Override
-        public void handleMessage(Message msg)
-        {
-            super.handleMessage(msg);
-
-            mEmail=(TextView)findViewById(R.id.slide_user_email);
-            mName=(TextView)findViewById(R.id.slide_user_name);
-            mAuth=LoginActivity.getAuth();
-            mUser=LoginActivity.getUser();
-
-            if(msg.what==SYNC_ACCOUNT)
-            {
-                mEmail.setText(mUser.getEmail());
-                mName.setText(mUser.getDisplayName());
-            }
-        }
-    };
+    private Handler mHandler;
+    private LayoutInflater layoutInflater;
 
 
 
@@ -77,32 +66,19 @@ public class MainActivity extends AppCompatActivity
 
 
 
+        mAuth=LoginActivity.getAuth();
+        mUser=LoginActivity.getUser();
+
+
         if(btService == null) {
             btService = new BluetoothService(this, mHandler);
         }
 
-
-
-
-
         //Slide
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-
-
-
-//        Log.d("sss","mUser " + mUser.getEmail());
-//        Log.d("sss","mUser " + mUser.getDisplayName());
-
-        Runnable task=new Runnable() {
-            @Override
-            public void run() {
-                mHandler.sendEmptyMessage(SYNC_ACCOUNT);
-            }
-        };
-        Thread thread=new Thread(task);
-        thread.start();
-
+        Log.d("sss","mUser " + mUser.getEmail());
+        Log.d("sss","mUser " + mUser.getDisplayName());
 
 
         setSupportActionBar(toolbar);
@@ -124,6 +100,9 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+
+
+
         //bluetoothAdapter 얻기
         final BluetoothManager bluetoothManager =
                 (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
@@ -136,6 +115,56 @@ public class MainActivity extends AppCompatActivity
 //            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
 //        }
         btService.checkBluetooth();
+
+        View headerLayout = navigationView.getHeaderView(0);
+        mEmail=(TextView)headerLayout.findViewById(R.id.slide_user_email);
+        mName=(TextView)headerLayout.findViewById(R.id.slide_user_name);
+
+
+
+        if (mEmail != null) {
+
+            mEmail.setText(mUser.getEmail());
+        }
+
+        if (mName != null) {
+
+            mName.setText(mUser.getDisplayName());
+        }
+
+
+
+
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                // 현재 UI 스레드가 아니기 때문에 메시지 큐에 Runnable을 등록 함
+//                runOnUiThread(new Runnable() {
+//                    public void run() {
+//                        // 메시지 큐에 저장될 메시지의 내용
+//
+//                        if (mEmail != null)
+//                            Log.d("sss","mEmail is not null and Email is "+mUser.getEmail());
+//                        else
+//                            Log.d("sss","mEmail is null");
+//                        if (mName != null)
+//                            Log.d("sss","mName is not null and Name is "+mUser.getDisplayName());
+//                         else
+//                            Log.d("sss","mName is null");
+//
+//                        if (mEmail != null)
+//                            mEmail.setText(mUser.getEmail());
+//                        if (mName != null)
+//                            mName.setText(mUser.getDisplayName());
+//
+//                    }
+//                });
+//            }
+//        }).start();
+//
+
+
+
 
 
 
@@ -179,6 +208,7 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
@@ -191,6 +221,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
+
         int id = item.getItemId();
 
         if (id == R.id.nav_machine) {

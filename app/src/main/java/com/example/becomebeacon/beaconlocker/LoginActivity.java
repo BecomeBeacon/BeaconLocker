@@ -215,12 +215,12 @@ public class LoginActivity extends AppCompatActivity implements
     }
 
 
-    static FirebaseAuth getAuth()
+    public static FirebaseAuth getAuth()
     {
         return mAuth;
     }
 
-    static FirebaseUser getUser()
+    public static FirebaseUser getUser()
     {
         return mAccount;
     }
