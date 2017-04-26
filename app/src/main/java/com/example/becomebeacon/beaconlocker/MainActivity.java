@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.renderscript.RenderScript;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -35,12 +36,24 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
 
+    private final int SYNC_ACCOUNT=1;
     private BluetoothService btService = null;
     private final Handler mHandler = new Handler()    {
         @Override
         public void handleMessage(Message msg)
         {
             super.handleMessage(msg);
+
+            mEmail=(TextView)findViewById(R.id.slide_user_email);
+            mName=(TextView)findViewById(R.id.slide_user_name);
+            mAuth=LoginActivity.getAuth();
+            mUser=LoginActivity.getUser();
+
+            if(msg.what==SYNC_ACCOUNT)
+            {
+                mEmail.setText(mUser.getEmail());
+                mName.setText(mUser.getDisplayName());
+            }
         }
     };
 
@@ -61,8 +74,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mAuth=LoginActivity.getAuth();
-        mUser=LoginActivity.getUser();
+
 
 
         if(btService == null) {
@@ -72,18 +84,26 @@ public class MainActivity extends AppCompatActivity
 
 
 
-        Log.d("dd","ID : "+mUser.getEmail());
+
         //Slide
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        mEmail=(TextView)findViewById(R.id.slide_user_email);
-        mName=(TextView)findViewById(R.id.slide_user_name);
 
 
 
-        Log.d("sss","mUser " + mUser.getEmail());
-        Log.d("sss","mUser " + mUser.getDisplayName());
-//        mEmail.setText(mUser.getEmail());
-//        mName.setText(mUser.getDisplayName());
+
+//        Log.d("sss","mUser " + mUser.getEmail());
+//        Log.d("sss","mUser " + mUser.getDisplayName());
+
+        Runnable task=new Runnable() {
+            @Override
+            public void run() {
+                mHandler.sendEmptyMessage(SYNC_ACCOUNT);
+            }
+        };
+        Thread thread=new Thread(task);
+        thread.start();
+
+
 
         setSupportActionBar(toolbar);
 
