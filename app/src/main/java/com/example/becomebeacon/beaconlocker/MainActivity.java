@@ -79,10 +79,6 @@ public class MainActivity extends AppCompatActivity
         //Slide
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        Log.d("sss","mUser " + mUser.getEmail());
-        Log.d("sss","mUser " + mUser.getDisplayName());
-
-
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
