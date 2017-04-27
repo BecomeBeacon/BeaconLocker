@@ -49,7 +49,7 @@ public class ItemAcitivity extends AppCompatActivity {
     }
 
     private void initUI() {
-        mImage= (ImageView) findViewById(R.id.iv_image);
+        mImage= (ImageView) findViewById(R.id.et_PICTURE);
         mAddImage= (Button) findViewById(R.id.btn_add_image);
     }
     private void initListeners() {

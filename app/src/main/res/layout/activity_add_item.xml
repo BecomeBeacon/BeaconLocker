@@ -88,7 +88,7 @@
 
 
         <ImageView
-            android:id="@+id/iv_image"
+            android:id="@+id/et_PICTURE"
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_alignParentStart="true"
