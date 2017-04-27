@@ -62,11 +62,11 @@
         <activity
             android:name=".MapActivity"
             android:label="Beacon Locker">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+        </activity>
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+        <activity android:name=".database.DataStore"
+            android:label="Beacon Locker">
+
         </activity>
     </application>
 
