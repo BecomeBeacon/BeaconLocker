@@ -52,11 +52,6 @@ public class LoginActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-        toolbar.setTitle("BLE 등록");
-        toolbar.setTitleTextColor(Color.WHITE);
-        setSupportActionBar(toolbar);
 
 
         mAuth = FirebaseAuth.getInstance();
