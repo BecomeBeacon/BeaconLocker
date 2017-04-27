@@ -13,6 +13,12 @@ public class BeaconOnDB {
         picture = "";
     }
 
+    public BeaconOnDB(String nickname) {
+        islost = "0";
+        this.nickname = nickname;
+        picture = "";
+    }
+
     public String getNickname() {
         return nickname;
     }

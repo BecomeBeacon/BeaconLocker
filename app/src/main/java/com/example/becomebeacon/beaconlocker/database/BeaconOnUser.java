@@ -1,21 +1,38 @@
 package com.example.becomebeacon.beaconlocker.database;
 
+
 /**
- * Created by GW on 2017-04-26.
+ * Created by gwmail on 2017-04-26.
  */
 
-public class BeaconOnUser {
-    private String UUID;
+public class BeaconOnUser extends BeaconOnDB {
+    private String UUID, Uid;
 
-    BeaconOnUser() {
-
+    public BeaconOnUser() {
+        super();
+        UUID = "";
+        Uid = "";
     }
 
     public String getUUID() {
         return UUID;
     }
 
-    public void setUUID(String UUID) {
+    void setUUID(String UUID) {
         this.UUID = UUID;
+    }
+
+    public String getUid() {
+        return Uid;
+    }
+
+    public void setUid(String uid) {
+        Uid = uid;
+    }
+
+    public BeaconOnDB toDB() {
+        BeaconOnDB beaconOnDB = new BeaconOnDB(getNickname());
+
+        return beaconOnDB;
     }
 }

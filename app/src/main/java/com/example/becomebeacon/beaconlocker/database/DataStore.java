@@ -1,5 +1,6 @@
 package com.example.becomebeacon.beaconlocker.database;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -22,6 +23,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.example.becomebeacon.beaconlocker.LoginActivity;
 import com.google.firebase.database.FirebaseDatabase;
 
+import static android.support.v7.appcompat.R.styleable.MenuItem;
+
 /**
  * Created by gwmail on 2017-04-26.
  */
@@ -33,7 +36,7 @@ public class DataStore extends AppCompatActivity {
 
     private TextView et_UUID;
     private EditText et_Nickname;
-    private TextView et_Picture;
+    //private TextView et_Picture;
     //private EditText et_Islost;
     //private EditText et_LATITUDE;
     //private EditText et_LONGITUDE;
@@ -43,6 +46,9 @@ public class DataStore extends AppCompatActivity {
         setContentView(R.layout.activity_add_item);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        toolbar.setTitle("BLE 등록");
+        toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
 
         mAuth= LoginActivity.getAuth();
@@ -51,7 +57,7 @@ public class DataStore extends AppCompatActivity {
 
         et_UUID = (TextView) findViewById(R.id.et_UUID);
         et_Nickname = (EditText) findViewById(R.id.et_NICKNAME);
-        et_Picture = (TextView) findViewById(R.id.et_PICTURE);
+        //et_Picture = (TextView) findViewById(R.id.et_PICTURE);
         //et_LATITUDE = (EditText) findViewById(R.id.et_LATITUDE);
         //et_LONGITUDE = (EditText) findViewById(R.id.et_LONGITUDE);
 
@@ -61,11 +67,14 @@ public class DataStore extends AppCompatActivity {
             //finish();
             //return;
         //}
+        Log.v("sss","섹스밖");
+
 
         Button button_saveForm = (Button) findViewById(R.id.button_saveForm);
         button_saveForm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.v("sss","chck0");
                 saveData();
             }
         });
@@ -74,40 +83,43 @@ public class DataStore extends AppCompatActivity {
     private void initData() {
         et_UUID.setText("");
         et_Nickname.setText("");
-        et_Picture.setText("");
     }
 
     private void saveData() {
+        Log.v("sss","chck1");
         if (et_UUID.getText().toString().isEmpty()) {
             Toast.makeText(getApplicationContext(), "UUID 값이 없습니다. 다시 시도해 주세요.", Toast.LENGTH_SHORT).show();
             return;
         } else if (et_Nickname.getText().toString().isEmpty()) {
             Toast.makeText(getApplicationContext(), "Nickname 값이 없습니다. 다시 시도해 주세요.", Toast.LENGTH_SHORT).show();
             return;
-        } else if (et_Picture.getText().toString().isEmpty()) {
-            Toast.makeText(getApplicationContext(), "Picture 값이 없습니다. 다시 시도해 주세요.", Toast.LENGTH_SHORT).show();
-            return;
         }
+        //else if (et_Picture.getText().toString().isEmpty()) {
+        //    Toast.makeText(getApplicationContext(), "Picture 값이 없습니다. 다시 시도해 주세요.", Toast.LENGTH_SHORT).show();
+        //    return;
+        //}
 
+        Log.v("sss","check1");
         BeaconOnUser beaconOnUser = new BeaconOnUser();
         beaconOnUser.setUUID(et_UUID.getText().toString());
         //users 에 비콘uuid 저장
         mDatabase.getReference("users/" + mUser.getUid() + "/beacons")
-                .setValue(beaconOnUser);
+                .setValue(beaconOnUser.getUUID());
+        Log.v("sss","check2");
+        beaconOnUser.setNickname(et_Nickname.getText().toString());
+        beaconOnUser.setPicture("개발중");
 
-        BeaconOnDB beaconOnDB = new BeaconOnDB();
-        beaconOnDB.setNickname(et_Nickname.getText().toString());
-        beaconOnDB.setPicture(et_Picture.getText().toString());
-
+        Log.v("sss","check3");
         mDatabase
                 .getReference("beacon/")
-                .child(et_UUID.getText().toString())
-                .setValue(beaconOnDB)
+                .child(beaconOnUser.getUUID())
+                .setValue(beaconOnUser.toDB())
                 .addOnSuccessListener(DataStore.this, new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Toast.makeText(getApplicationContext(), "서버에 저장되었습니다.", Toast.LENGTH_LONG).show();
                         initData();
+                        finish();
                     }
                 })
                 .addOnFailureListener(DataStore.this, new OnFailureListener() {
@@ -116,5 +128,6 @@ public class DataStore extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "저장에 실패하였습니다.", Toast.LENGTH_LONG).show();
                     }
                 });
+        Log.v("sss","check4");
     }
 }
