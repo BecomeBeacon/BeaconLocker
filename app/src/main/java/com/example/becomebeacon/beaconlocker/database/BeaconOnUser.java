@@ -7,7 +7,6 @@ package com.example.becomebeacon.beaconlocker.database;
 
 public class BeaconOnUser extends BeaconOnDB {
     private String UUID, Uid;
-    private BeaconOnDB beaconOnDB;
 
     public BeaconOnUser() {
         super();
@@ -32,9 +31,7 @@ public class BeaconOnUser extends BeaconOnDB {
     }
 
     public BeaconOnDB toDB() {
-        beaconOnDB.setIslost(this.getIslost());
-        beaconOnDB.setNickname(this.getNickname());
-        beaconOnDB.setPicture(this.getPicture());
+        BeaconOnDB beaconOnDB = new BeaconOnDB(getNickname());
 
         return beaconOnDB;
     }

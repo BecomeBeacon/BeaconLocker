@@ -103,6 +103,16 @@ public class MainActivity extends AppCompatActivity
            }
         });
 
+        //TODO : fab - test용 버튼 (db저장메뉴)
+        FloatingActionButton fab_test = (FloatingActionButton) findViewById(R.id.fab_test);
+        fab_test.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mActivity, DataStore.class);
+                startActivity(intent);
+            }
+        });
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
