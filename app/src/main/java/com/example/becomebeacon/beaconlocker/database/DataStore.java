@@ -93,16 +93,15 @@ public class DataStore extends AppCompatActivity {
         beaconOnUser.setUUID(et_UUID.getText().toString());
         //users 에 비콘uuid 저장
         mDatabase.getReference("users/" + mUser.getUid() + "/beacons")
-                .setValue(beaconOnUser);
+                .setValue(beaconOnUser.getUUID());
 
-        BeaconOnDB beaconOnDB = new BeaconOnDB();
-        beaconOnDB.setNickname(et_Nickname.getText().toString());
-        beaconOnDB.setPicture(et_Picture.getText().toString());
+        beaconOnUser.setNickname(et_Nickname.getText().toString());
+        beaconOnUser.setPicture(et_Picture.getText().toString());
 
         mDatabase
                 .getReference("beacon/")
-                .child(et_UUID.getText().toString())
-                .setValue(beaconOnDB)
+                .child(beaconOnUser.getUUID())
+                .setValue(beaconOnUser.toDB())
                 .addOnSuccessListener(DataStore.this, new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
