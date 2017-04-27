@@ -42,6 +42,7 @@ import org.w3c.dom.Text;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private MainActivity mActivity;
     private BluetoothService btService = null;
     private Handler mHandler;
     private LayoutInflater layoutInflater;
@@ -63,6 +64,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mActivity=this;
 
 
 
@@ -83,12 +85,16 @@ public class MainActivity extends AppCompatActivity
 
         setSupportActionBar(toolbar);
 
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //ble 검색 및 추가
-            }
+                //btService.getBleDeviceInfoFromLeScan();
+                Intent intent = new Intent(mActivity, BleScanActivity.class);
+                startActivity(intent);
+           }
         });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
