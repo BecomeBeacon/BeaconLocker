@@ -34,7 +34,7 @@
             android:layout_column="0"
             android:layout_row="0"
             android:ems="10"
-            android:text="블루투스 UUID"
+            android:text="블루투스UUID"
             android:textSize="20sp"
             android:id="@+id/textView2"
             android:layout_alignBaseline="@+id/et_UUID"
