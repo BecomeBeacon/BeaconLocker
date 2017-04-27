@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.media.Image;
 import android.os.Bundle;
@@ -47,19 +48,22 @@ import com.google.firebase.auth.FirebaseUser;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private MainActivity mActivity;
-    private BluetoothService btService = null;
-    private Handler mHandler;
+
     private LayoutInflater layoutInflater;
 
-    private ListView lvArticleList;
 
 
+
+
+    private ListView myBeacons;
+    private ListView scannedBeacons;
     private final int REQUEST_ENABLE_BT=9999;
     private BluetoothAdapter mBluetoothAdapter;
     private FirebaseUser mUser;
@@ -67,25 +71,106 @@ public class MainActivity extends AppCompatActivity
     private TextView mEmail;
     private TextView mName;
     private GoogleApiClient mGoogleApiClient;
+    private BleDeviceListAdapter mBleDeviceListAdapter;
+    private MyBeaconsListAdapter mBeaconsListAdapter;
+    private HashMap<String, BleDeviceInfo> mItemMap;
+    private BluetoothService mBleService;
+    private boolean mScanning=false;
+    private boolean isScannig=false;
+
+    private static final long TIMEOUT_LIMIT = 20;
+    private static final long TIMEOUT_PERIOD = 1000;
+    private static final long SCAN_PERIOD = 1000;
+    public ArrayList<BleDeviceInfo> mArrayListBleDevice;
+    public ArrayList<BleDeviceInfo> mAssignedItem;
 
 
+    private Handler mHandler= new Handler()
+    {
+        public void handleMessage(Message msg)
+        {
+            if(mScanning)
+            {
+                mScanning = false;
+                mBleService.getBtAdapter().stopLeScan(mBleService.mLeScanCallback);
+            }
+
+            mScanning = true;
+            mBleService.getBtAdapter().startLeScan(mBleService.mLeScanCallback);
+            mHandler.sendEmptyMessageDelayed(0, SCAN_PERIOD);
+        }
+    };
+
+    private Handler mTimeOut = new Handler(){
+        public void handleMessage(Message msg){
+            Log.i("TAG","TIMEOUT UPDATE");
+
+            int maxRssi = 0;
+            int maxIndex = -1;
+
+            //timeout counter update
+            for (int i= 0 ; i < mArrayListBleDevice.size() ; i++){
+                mArrayListBleDevice.get(i).timeout--;
+                if(mArrayListBleDevice.get(i).timeout == 0){
+                    mItemMap.remove(mArrayListBleDevice.get(i).devAddress);
+                    mArrayListBleDevice.remove(i);
+                }
+                else{
+                    if(mArrayListBleDevice.get(i).rssi > maxRssi || maxRssi == 0)
+                    {
+                        maxRssi = mArrayListBleDevice.get(i).rssi;
+                        maxIndex = i;
+                    }
+                }
+            }
+            //TextView text_max_dev = (TextView)findViewById(R.id.text_max_dev);
+
+            if(maxIndex == -1) {
+                //text_max_dev.setText("No Dev");
+            }
+            else{
+                //text_max_dev.setText(maxIndex+1 +"th    "
+                //        + "major: " + mArrayListBleDevice.get(maxIndex).major + "  "
+                //        + "minor: " + mArrayListBleDevice.get(maxIndex).minor + "  "
+                //        + mArrayListBleDevice.get(maxIndex).getRssi() +"dbm");
+            }
+            mTimeOut.sendEmptyMessageDelayed(0,TIMEOUT_PERIOD);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        myBeacons=(ListView)findViewById(R.id.ble_list);
+        scannedBeacons=(ListView)findViewById(R.id.scan_list);
+        if(myBeacons==null||scannedBeacons==null)
+        {
+            Log.d("sss","cannot find listview");
+        }
         mActivity=this;
+        mArrayListBleDevice = new ArrayList<BleDeviceInfo>();
+        mAssignedItem=new ArrayList<BleDeviceInfo>();
+        mItemMap = new HashMap<String, BleDeviceInfo>();
+        mBleDeviceListAdapter = new BleDeviceListAdapter(this, R.layout.activity_main_content,
+                mArrayListBleDevice, mItemMap);
+        mBeaconsListAdapter = new MyBeaconsListAdapter(this, R.layout.activity_main_content,
+                mArrayListBleDevice, mItemMap);
 
 
+        mBleService=new BluetoothService(this,mBleDeviceListAdapter,mBeaconsListAdapter);
+        scannedBeacons = (ListView)findViewById(R.id.scan_list);
+        scannedBeacons.setAdapter(mBleDeviceListAdapter);
+
+        myBeacons=(ListView)findViewById(R.id.ble_list);
+        myBeacons.setAdapter(mBeaconsListAdapter);
 
         mAuth=LoginActivity.getAuth();
         mUser=LoginActivity.getUser();
+        mBleDeviceListAdapter=new BleDeviceListAdapter(this, R.layout.activity_main_content,
+                mArrayListBleDevice, mItemMap);
 
-
-        if(btService == null) {
-            btService = new BluetoothService(this, mHandler);
-        }
 
         //Slide
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -97,9 +182,13 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 //ble 검색 및 추가
-                //btService.getBleDeviceInfoFromLeScan();
-                Intent intent = new Intent(mActivity, BleScanActivity.class);
-                startActivity(intent);
+                myBeacons.setVisibility(View.GONE);
+                scannedBeacons.setVisibility(View.VISIBLE);
+                mBleService.changeMod(Use.USE_SCAN);
+                mHandler.sendEmptyMessageDelayed(0, SCAN_PERIOD);
+                mTimeOut.sendEmptyMessageDelayed(0, TIMEOUT_PERIOD);
+
+
            }
         });
 
@@ -126,7 +215,7 @@ public class MainActivity extends AppCompatActivity
 //            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 //            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
 //        }
-        btService.checkBluetooth();
+        mBleService.checkBluetooth();
 
         View headerLayout = navigationView.getHeaderView(0);
         mEmail=(TextView)headerLayout.findViewById(R.id.slide_user_email);
@@ -144,43 +233,8 @@ public class MainActivity extends AppCompatActivity
             mName.setText(mUser.getDisplayName());
         }
 
-        //리스트
-        lvArticleList = (ListView) findViewById(R.id.ble_list);
-        List articleList = new ArrayList();
-
-        articleList.add(new ItemData("노트북", "소지", 15));
-
-        lvArticleList.setAdapter(new ItemListViewAdapter(articleList, this));
 
 
-
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                // 현재 UI 스레드가 아니기 때문에 메시지 큐에 Runnable을 등록 함
-//                runOnUiThread(new Runnable() {
-//                    public void run() {
-//                        // 메시지 큐에 저장될 메시지의 내용
-//
-//                        if (mEmail != null)
-//                            Log.d("sss","mEmail is not null and Email is "+mUser.getEmail());
-//                        else
-//                            Log.d("sss","mEmail is null");
-//                        if (mName != null)
-//                            Log.d("sss","mName is not null and Name is "+mUser.getDisplayName());
-//                         else
-//                            Log.d("sss","mName is null");
-//
-//                        if (mEmail != null)
-//                            mEmail.setText(mUser.getEmail());
-//                        if (mName != null)
-//                            mName.setText(mUser.getDisplayName());
-//
-//                    }
-//                });
-//            }
-//        }).start();
-//
 
 
 
@@ -189,6 +243,8 @@ public class MainActivity extends AppCompatActivity
 
 
     }
+
+
 
     @Override
     protected void onStart() {
@@ -200,6 +256,29 @@ public class MainActivity extends AppCompatActivity
                 .build();
         mGoogleApiClient.connect();
         super.onStart();
+    }
+
+    protected void onResume() {
+        super.onResume();
+
+
+        //BEACON_UUID = getBeaconUuid(setting);
+
+        //saveRSSI = setting.getBoolean("saveRSSI", true);
+
+        mBleService.checkBluetooth();
+
+        if(isScannig) {
+            //scanBleDevice(true);            // BLE 장치 검색\
+            mHandler.sendEmptyMessageDelayed(0, SCAN_PERIOD);
+            mTimeOut.sendEmptyMessageDelayed(0, TIMEOUT_PERIOD);
+        }
+        else
+        {
+
+        }
+
+
     }
 
     //Slide Back
@@ -289,6 +368,27 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
 
         }
+    }
+
+    public String getBeaconUuid(SharedPreferences pref)
+    {
+        String uuid = "";
+
+        uuid = pref.getString("keyUUID", BluetoothUuid.WINI_UUID.toString());
+
+        /*
+        if(USING_WINI) {
+            uuid = pref.getString("keyUUID", BluetoothUuid.WINI_UUID.toString());
+            //uuid = BluetoothUuid.WINI_UUID.toString();
+        }
+        else {
+
+            uuid = pref.getString("keyUUID", BluetoothUuid.WIZTURN_PROXIMITY_UUID.toString());
+            //uuid = BluetoothUuid.WIZTURN_PROXIMITY_UUID.toString();
+        }
+        */
+
+        return uuid;
     }
 
 }

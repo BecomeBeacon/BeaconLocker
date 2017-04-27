@@ -76,7 +76,6 @@ public class BleDeviceInfo {
     public BleDeviceInfo(String proximityUuid, String devName,
                          String devAddress, int major, int minor, int txPower, int rssi, double distance)
     {
-
         this.proximityUuid = proximityUuid;
         this.devName = devName;
         this.devAddress = devAddress;

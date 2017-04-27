@@ -1,45 +1,20 @@
 package com.example.becomebeacon.beaconlocker;
 
+import android.bluetooth.BluetoothDevice;
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
 /**
  * Created by 함상혁입니다 on 2017-04-27.
  */
 
-import android.bluetooth.BluetoothDevice;
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-
-/**
- * Created by changsu on 2015-03-23.
- */
-
-import android.bluetooth.BluetoothDevice;
-import android.content.Context;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.content.Intent;
-
-import org.w3c.dom.Text;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
-
-public class BleDeviceListAdapter extends BaseAdapter {
+public class MyBeaconsListAdapter extends BaseAdapter {
     private Context mContext;
     LayoutInflater mInflater;
     int mLayout;
@@ -51,7 +26,7 @@ public class BleDeviceListAdapter extends BaseAdapter {
     // String: Device Address(key값)
     private HashMap<String, BleDeviceInfo> mHashBleMap = new HashMap<String, BleDeviceInfo>();
 
-    public BleDeviceListAdapter(Context context, int layout, ArrayList<BleDeviceInfo> arBleList,
+    public MyBeaconsListAdapter(Context context, int layout, ArrayList<BleDeviceInfo> arBleList,
                                 HashMap<String, BleDeviceInfo> hashBleMap)
     {
         mContext = context;
@@ -145,7 +120,7 @@ public class BleDeviceListAdapter extends BaseAdapter {
 //        });
 //
 //
-        return convertView;
+       return convertView;
     }
 
 

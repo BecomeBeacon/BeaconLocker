@@ -15,12 +15,23 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+
 /**
  * Created by 함상혁입니다 on 2017-04-24.
  */
 
 public class BluetoothService {
 
+    //private static final boolean USING_WINI = true; // TI CC2541 사용: true
+    private BluetoothService mBleService;
+
+
+
+
+    //private Handler mHandler;
+
+
+    private boolean onScreen;
 
     public static String BEACON_UUID;       // changsu
     public static  Boolean saveRSSI;
@@ -31,15 +42,8 @@ public class BluetoothService {
     //private static final boolean USING_WINI = true; // TI CC2541 사용: true
 
     private BleDeviceListAdapter mBleDeviceListAdapter;
-    // Socket 관련 상수
-    private static final int SERVER_PORT = 6789;
-    //private static final String SERVER_IP = "192.168.123.13";
-    //private static final String SERVER_IP = "155.230.90.196";
-    private static final String DEVICE_ADDR = "D0:39:72:A3:E1:2E";
-    private static final int MAJOR = 100;
-    private static final int MINOR = 2500;
+    private MyBeaconsListAdapter mBeaconsListAdapter;
 
-    final static int MSG_RECEIVED_MSG = 0x100;
 
     /*
         Class Instance Variables
@@ -65,22 +69,29 @@ public class BluetoothService {
     //private LogFile logFile;
 
 
+
     private BluetoothAdapter btAdapter;
     private boolean IS_DEBUG=true;
+    private boolean isScanning=false;
 
     private String TAG="BluetoothService";
-    private Activity mActivity;
+    private MainActivity mActivity;
     private static final int REQUEST_CONNECT_DEVICE = 1;
     private static final int REQUEST_ENABLE_BT = 2;
     private BleUtils mBleUtils;
 
-    private Handler mHandler;
 
-    BluetoothService(Activity ma,  Handler h)
+
+
+    BluetoothService(MainActivity ma,  BleDeviceListAdapter bdla, MyBeaconsListAdapter mbla)
     {
+        onScreen=true;
         mActivity=ma;
-        mHandler=h;
+
         mBleUtils=new BleUtils();
+        mBleDeviceListAdapter=bdla;
+        mBeaconsListAdapter=mbla;
+
 
         btAdapter = BluetoothAdapter.getDefaultAdapter();
 
@@ -206,7 +217,7 @@ public class BluetoothService {
                         txPower, rssiValue, distance, distance2);
 
 
-                //updateBleDeviceList(item);
+                updateBleDeviceList(item);
 
 
             }catch(Exception ex)
@@ -215,6 +226,82 @@ public class BluetoothService {
             }
 
         }
+    }
+
+    public void updateBleDeviceList(BleDeviceInfo item)
+    {
+        int index = 0;
+        boolean foundItem = false;
+        int KalmanRSSI =0;
+        /**
+         * HashMap의 key값에 동일한 device address가 있는 경우: update 수행
+         */
+        if(mItemMap.containsKey(item.devAddress))
+        {
+
+//            mItemMap.get(item.devAddress).rssi = item.rssi;
+            mItemMap.get(item.devAddress).rssi = (int)mItemMap.get(item.devAddress).rssiKalmanFileter.update(item.rssi);
+            KalmanRSSI = mItemMap.get(item.devAddress).rssi;
+//            mItemMap.get(item.devAddress).distance = item.distance;
+//            mItemMap.get(item.devAddress).distance2 = item.distance2;
+            mItemMap.get(item.devAddress).distance =  mBleUtils.getDistance(KalmanRSSI, item.txPower);
+            mItemMap.get(item.devAddress).distance2 =  mBleUtils.getDistance_20150515(KalmanRSSI, item.txPower);
+
+            mItemMap.get(item.devAddress).timeout = item.timeout;
+
+            Log.d("Debug", "Major: " + item.major +
+                    ", Minor: " + item.minor +
+                    ", rssi: " + KalmanRSSI +
+                    ", distance: " + item.distance);
+        }
+        else
+        {
+            /**
+             *  HashMap에 해당 item의 device address가 없는 경우, 추가함
+             *  key값: devAddress
+             */
+            mArrayListBleDevice.add(item);
+            mItemMap.put(item.devAddress, item);
+        }
+
+        if(saveRSSI) {
+                    /*
+                    logFile.recodeLogFile(
+                            "dev name: " + devName +
+                                    ", addr: " + devAddress +
+                                    ", major: " + major +
+                                    ", minor: " + minor +
+                                    ", rssi: " + rssi +
+                                    ", txPower: " + txPower +
+                                    ", distance: " + distance + "\n\n");
+
+                    */
+            if(KalmanRSSI == 0)
+                KalmanRSSI = item.rssi;
+
+        }
+
+        mMaxRssiBeacon = getMaxRssiBeacon();
+
+        // 가장 근거리의 Beacon 정보를 서버로 전송함
+        //sendSocketMsg(mMaxRssiBeacon.devAddress, mMaxRssiBeacon.major, mMaxRssiBeacon.minor);
+    }
+
+    public BleDeviceInfo getMaxRssiBeacon()
+    {
+        int pos = 0;
+        int maxRssi = mArrayListBleDevice.get(0).rssi;
+
+        for(int i = 1; i < mArrayListBleDevice.size(); i++)
+        {
+            if(maxRssi > mArrayListBleDevice.get(i).rssi)
+            {
+                pos = i;
+                maxRssi = mArrayListBleDevice.get(i).rssi;
+            }
+        }
+
+        return mArrayListBleDevice.get(pos);
     }
 
     public BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
@@ -228,7 +315,10 @@ public class BluetoothService {
                      */
             mActivity.runOnUiThread(new Runnable() {
                 public void run() {
-                    //mBleDeviceListAdapter.notifyDataSetChanged();
+                    if(onScreen) {
+                        mBleDeviceListAdapter.notifyDataSetChanged();
+                        Log.d("sss","in callback");
+                    }
 
                 }
             });
@@ -241,6 +331,17 @@ public class BluetoothService {
     public BluetoothAdapter getBtAdapter()
     {
         return btAdapter;
+    }
+
+    public void changeMod(int mod)
+    {
+        if(mod==Use.USE_SCAN)
+        {
+            isScanning=true;
+        } else if (mod == Use.USE_TRACK){
+            isScanning=false;
+        }
+
     }
 
 
