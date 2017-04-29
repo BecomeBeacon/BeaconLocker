@@ -34,7 +34,7 @@
             android:layout_column="0"
             android:layout_row="0"
             android:ems="10"
-            android:text="블루투스UUID"
+            android:text="UUID"
             android:textSize="20sp"
             android:id="@+id/textView2"
             android:layout_alignBaseline="@+id/et_UUID"
@@ -46,10 +46,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_column="1"
+            android:layout_marginTop="14dp"
             android:layout_row="0"
-            android:text="B9407F30-F5F8-466E-AFF9-25556B57FE6D"
             android:layout_toEndOf="@+id/textView2"
-            android:layout_marginTop="14dp" />
+            android:text="B9407F30-F5F8-466E-AFF9-25556B57FE6D"
+            android:textSize="12sp" />
 
         <TextView
             android:layout_width="94dp"
@@ -71,8 +72,8 @@
             android:inputType="textPersonName"
             android:text="testNICKNAME"
             android:textSize="15sp"
-            android:layout_alignBottom="@+id/textView3"
-            android:layout_alignEnd="@+id/et_UUID" />
+            android:layout_above="@+id/textView4"
+            android:layout_toEndOf="@+id/textView2" />
 
         <TextView
             android:layout_width="94dp"
@@ -111,7 +112,8 @@
         android:layout_height="0dp"
         android:layout_weight="0.18"
         android:background="@color/colorPrimary"
-        android:text="저장하기" />
+        android:text="저장하기"
+        android:textColor="@android:color/white" />
 
 
     <!--
