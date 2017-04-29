@@ -1,6 +1,7 @@
 package com.example.becomebeacon.beaconlocker;
 
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
@@ -71,18 +72,28 @@ public class MainActivity extends AppCompatActivity
     private TextView mEmail;
     private TextView mName;
     private GoogleApiClient mGoogleApiClient;
-    private BleDeviceListAdapter mBleDeviceListAdapter;
-    private MyBeaconsListAdapter mBeaconsListAdapter;
+
+    private HashMap<String, BleDeviceInfo> scannedMap;
     private HashMap<String, BleDeviceInfo> mItemMap;
     private BluetoothService mBleService;
     private boolean mScanning=false;
     private boolean isScannig=false;
 
-    private static final long TIMEOUT_LIMIT = 20;
-    private static final long TIMEOUT_PERIOD = 1000;
-    private static final long SCAN_PERIOD = 1000;
+
     public ArrayList<BleDeviceInfo> mArrayListBleDevice;
     public ArrayList<BleDeviceInfo> mAssignedItem;
+    private BleUtils mBleUtils;
+
+    public static String BEACON_UUID;       // changsu
+    public static  Boolean saveRSSI;
+    private static final long SCAN_PERIOD = 1000;       // 10초동안 SCAN 과정을 수행함
+
+    private static final long TIMEOUT_LIMIT = 20;
+    private static final long TIMEOUT_PERIOD = 1000;
+    //private static final boolean USING_WINI = true; // TI CC2541 사용: true
+
+    private BleDeviceListAdapter mBleDeviceListAdapter;
+    private MyBeaconsListAdapter mBeaconsListAdapter;
 
 
     private Handler mHandler= new Handler()
@@ -142,6 +153,8 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mBleUtils=new BleUtils();
+        mBluetoothAdapter= BluetoothAdapter.getDefaultAdapter();
 
         myBeacons=(ListView)findViewById(R.id.ble_list);
         scannedBeacons=(ListView)findViewById(R.id.scan_list);
@@ -152,24 +165,28 @@ public class MainActivity extends AppCompatActivity
         mActivity=this;
         mArrayListBleDevice = new ArrayList<BleDeviceInfo>();
         mAssignedItem=new ArrayList<BleDeviceInfo>();
+        scannedMap = new HashMap<String, BleDeviceInfo>();
         mItemMap = new HashMap<String, BleDeviceInfo>();
-        mBleDeviceListAdapter = new BleDeviceListAdapter(this, R.layout.activity_main_content,
-                mArrayListBleDevice, mItemMap);
-        mBeaconsListAdapter = new MyBeaconsListAdapter(this, R.layout.activity_main_content,
-                mArrayListBleDevice, mItemMap);
+        mBleDeviceListAdapter = new BleDeviceListAdapter(this, R.layout.ble_device_row,
+                mArrayListBleDevice, scannedMap);
+        mBeaconsListAdapter = new MyBeaconsListAdapter(this, R.layout.ble_device_row,
+                mAssignedItem, mItemMap);
 
 
-        mBleService=new BluetoothService(this,mBleDeviceListAdapter,mBeaconsListAdapter);
+
+
         scannedBeacons = (ListView)findViewById(R.id.scan_list);
         scannedBeacons.setAdapter(mBleDeviceListAdapter);
 
         myBeacons=(ListView)findViewById(R.id.ble_list);
         myBeacons.setAdapter(mBeaconsListAdapter);
 
+        mBleService=new BluetoothService(this,mBleDeviceListAdapter,mBeaconsListAdapter);
+
         mAuth=LoginActivity.getAuth();
         mUser=LoginActivity.getUser();
-        mBleDeviceListAdapter=new BleDeviceListAdapter(this, R.layout.activity_main_content,
-                mArrayListBleDevice, mItemMap);
+
+
 
 
         //Slide
@@ -186,7 +203,7 @@ public class MainActivity extends AppCompatActivity
                 scannedBeacons.setVisibility(View.VISIBLE);
                 mBleService.changeMod(Use.USE_SCAN);
                 mHandler.sendEmptyMessageDelayed(0, SCAN_PERIOD);
-                mTimeOut.sendEmptyMessageDelayed(0, TIMEOUT_PERIOD);
+                //mTimeOut.sendEmptyMessageDelayed(0, TIMEOUT_PERIOD);
 
 
            }
@@ -401,4 +418,26 @@ public class MainActivity extends AppCompatActivity
         return uuid;
     }
 
+
+
+
+    public HashMap<String, BleDeviceInfo> getScannedMap()
+    {
+        return scannedMap;
+    }
+
+    public HashMap<String, BleDeviceInfo> getmItemMap()
+    {
+        return mItemMap;
+    }
+
+    public ArrayList<BleDeviceInfo> getmArrayListBleDevice()
+    {
+        return mArrayListBleDevice;
+    }
+
+    public ArrayList<BleDeviceInfo> getmAssignedItem()
+    {
+        return mAssignedItem;
+    }
 }
