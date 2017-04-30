@@ -5,7 +5,7 @@ package com.example.becomebeacon.beaconlocker;
  */
 
 public class BeaconOnDB {
-    private String nickname, picture, islost;
+    public String nickname, picture, islost;
 
     public BeaconOnDB() {
         islost = "0";
@@ -23,24 +23,15 @@ public class BeaconOnDB {
         return nickname;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public String getPicture() {
-        return picture;
-    }
-
-    public void setPicture(String picture) {
-        this.picture = picture;
-    }
-
-    public String getIslost() {
-        return islost;
-    }
-
-    public void setIslost(String islost) {
-        this.islost = islost;
+    public String getTitle() {
+        if( nickname != null ) {
+            if(nickname.length() > 5) {
+                return nickname.substring(0, 5) + "...";
+            } else {
+                return nickname;
+            }
+        }
+        return null;
     }
 
 }

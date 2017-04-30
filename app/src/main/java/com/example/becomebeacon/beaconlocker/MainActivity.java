@@ -31,6 +31,12 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,8 +69,11 @@ public class MainActivity extends AppCompatActivity
     private boolean isScannig=false;
 
 
-    public ArrayList<BleDeviceInfo> mArrayListBleDevice;
+    public ArrayList<BleDeviceInfo> mArrayListBleDevice;    ;
     public ArrayList<BleDeviceInfo> mAssignedItem;
+
+    public ArrayList<BeaconOnDB> mMyBleDeviceList;
+
     private BleUtils mBleUtils;
 
     public static String BEACON_UUID;       // changsu
@@ -77,6 +86,8 @@ public class MainActivity extends AppCompatActivity
 
     private BleDeviceListAdapter mBleDeviceListAdapter;
     private MyBeaconsListAdapter mBeaconsListAdapter;
+
+    private FirebaseDatabase mDatabase;
 
 
     private Handler mHandler= new Handler()
@@ -258,6 +269,9 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onStart() {
+        //displayBeacons();
+        Log.v("Testing Print", "onStart");
+
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -266,6 +280,8 @@ public class MainActivity extends AppCompatActivity
                 .build();
         mGoogleApiClient.connect();
         super.onStart();
+
+        mDatabase = DataStoreActivity.getDatabase();
     }
 
     protected void onResume() {
@@ -400,6 +416,52 @@ public class MainActivity extends AppCompatActivity
 
         return uuid;
     }
+
+//    private void displayBeacons(){
+//        Log.v("Testing Print Uid", mUser.getUid());
+//        DatabaseReference userUuidRef = mDatabase.getReference("users");
+//
+//        userUuidRef
+//                .addChildEventListener(new ChildEventListener() {
+//                    @Override
+//                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//                        Log.v("Testing Print", "ChildAdded");
+//                        //get UUID
+//                        for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
+//                            String Uuid = (String) messageSnapshot.getValue();
+//                            Log.v("Testing Print Uuid", Uuid);
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(DatabaseError databaseError) {
+//
+//                    }
+//                });
+//    }
+
+
+
+    private void displayBeaconList(BeaconOnDB beaconOnDB) {
+        mMyBleDeviceList.add(beaconOnDB);
+        Log.v("Testing Print Nick", beaconOnDB.getNickname());
+    }
+
 
 
 
