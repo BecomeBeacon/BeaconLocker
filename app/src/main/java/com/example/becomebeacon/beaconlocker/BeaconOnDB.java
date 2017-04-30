@@ -1,4 +1,4 @@
-package com.example.becomebeacon.beaconlocker.database;
+package com.example.becomebeacon.beaconlocker;
 
 /**
  * Created by GW on 2017-04-26.

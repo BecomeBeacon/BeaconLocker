@@ -197,7 +197,7 @@ public class MainActivity extends AppCompatActivity
         fab_test.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(mActivity, DataStoreActivity.class);
+                Intent intent = new Intent(getApplicationContext(), DataStoreActivity.class);
                 startActivity(intent);
             }
         });

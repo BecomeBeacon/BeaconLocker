@@ -39,12 +39,6 @@
         </activity>
 
         <activity
-            android:name=".BleScanActivity"
-            android:label="@string/app_name">
-
-        </activity>
-
-        <activity
             android:name=".ItemAcitivity"
             android:label="@string/app_name">
         <meta-data
@@ -64,7 +58,8 @@
             android:label="Beacon Locker">
         </activity>
 
-        <activity android:name=".database.DataStore"
+        <activity
+            android:name=".DataStoreActivity"
             android:label="Beacon Locker">
 
         </activity>
