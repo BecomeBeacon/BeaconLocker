@@ -280,8 +280,6 @@ public class MainActivity extends AppCompatActivity
                 .build();
         mGoogleApiClient.connect();
         super.onStart();
-
-        mDatabase = DataStoreActivity.getDatabase();
     }
 
     protected void onResume() {
