@@ -8,13 +8,13 @@ import com.example.becomebeacon.beaconlocker.BeaconOnDB;
  */
 
 public class BeaconOnUser  {
-    public String Uuid;
+    public String address;
 
-    public BeaconOnUser(String Uuid) {
-        this.Uuid = Uuid;
+    public BeaconOnUser(String address) {
+        this.address = address;
     }
 
     public BeaconOnUser() {
-        Uuid = "";
+        address = "";
     }
 }

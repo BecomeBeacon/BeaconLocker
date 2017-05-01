@@ -36,22 +36,22 @@
             android:layout_column="0"
             android:layout_row="0"
             android:ems="10"
-            android:text="UUID"
+            android:text="Addr"
             android:textSize="20sp"
             android:id="@+id/textView2"
-            android:layout_alignBaseline="@+id/et_UUID"
-            android:layout_alignBottom="@+id/et_UUID"
+            android:layout_alignBaseline="@+id/et_address"
+            android:layout_alignBottom="@+id/et_address"
             android:layout_alignParentStart="true" />
 
         <TextView
-            android:id="@+id/et_UUID"
+            android:id="@+id/et_address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_column="1"
             android:layout_marginTop="14dp"
             android:layout_row="0"
             android:layout_toEndOf="@+id/textView2"
-            android:text="B9407F30-F5F8-466E-AFF9-25556B57FE6D"
+            android:text="EC:08:81:F9:2A:D3"
             android:textSize="12sp" />
 
         <TextView
@@ -72,7 +72,7 @@
             android:layout_column="1"
             android:layout_row="1"
             android:inputType="textPersonName"
-            android:text="testNICKNAME"
+            android:text="노트북"
             android:textSize="15sp"
             android:layout_above="@+id/textView4"
             android:layout_toEndOf="@+id/textView2" />

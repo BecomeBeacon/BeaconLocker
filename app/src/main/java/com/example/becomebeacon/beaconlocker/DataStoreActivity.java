@@ -36,14 +36,14 @@ public class DataStoreActivity extends AppCompatActivity {
     private FirebaseUser mUser;
     private static FirebaseDatabase mDatabase;
 
-    private TextView et_UUID;
+    private TextView et_Address;
     private EditText et_Nickname;
     //private TextView et_Picture;
     //private EditText et_Islost;
     //private EditText et_LATITUDE;
     //private EditText et_LONGITUDE;
 
-    private DatabaseReference mUserUuidRef;
+    private DatabaseReference mUserAddressRef;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,9 +68,9 @@ public class DataStoreActivity extends AppCompatActivity {
         mAuth= LoginActivity.getAuth();
         mUser= LoginActivity.getUser();
         mDatabase = FirebaseDatabase.getInstance();
-        mUserUuidRef = mDatabase.getReference("users/"+mUser.getUid()+"/beacons");
+        mUserAddressRef = mDatabase.getReference("users/"+mUser.getUid()+"/beacons");
 
-        et_UUID = (TextView) findViewById(R.id.et_UUID);
+        et_Address = (TextView) findViewById(R.id.et_address);
         et_Nickname = (EditText) findViewById(R.id.et_NICKNAME);
         //et_Picture = (TextView) findViewById(R.id.et_PICTURE);
         //et_LATITUDE = (EditText) findViewById(R.id.et_LATITUDE);
@@ -106,13 +106,13 @@ public class DataStoreActivity extends AppCompatActivity {
     }
 
     private void initData() {
-        et_UUID.setText("");
+        et_Address.setText("");
         et_Nickname.setText("");
     }
 
     private void saveData() {
-        if (et_UUID.getText().toString().isEmpty()) {
-            Toast.makeText(getApplicationContext(), "UUID 값이 없습니다. 다시 시도해 주세요.", Toast.LENGTH_SHORT).show();
+        if (et_Address.getText().toString().isEmpty()) {
+            Toast.makeText(getApplicationContext(), "Address 값이 없습니다. 다시 시도해 주세요.", Toast.LENGTH_SHORT).show();
             return;
         } else if (et_Nickname.getText().toString().isEmpty()) {
             Toast.makeText(getApplicationContext(), "Nickname 값이 없습니다. 다시 시도해 주세요.", Toast.LENGTH_SHORT).show();
@@ -123,20 +123,20 @@ public class DataStoreActivity extends AppCompatActivity {
         //    return;
         //}
 
-        //'users' 에 소지한 비콘 UUID 넣기
+        //'users' 에 소지한 비콘 Address 넣기
         BleDeviceInfo bleDeviceInfo = new BleDeviceInfo();
-        bleDeviceInfo.setProximityUuid(et_UUID.getText().toString());
-        BeaconOnUser beaconOnUser = new BeaconOnUser(bleDeviceInfo.getProximityUuid());
+        bleDeviceInfo.setDevAddress(et_Address.getText().toString());
+        BeaconOnUser beaconOnUser = new BeaconOnUser(bleDeviceInfo.getDevAddress());
 
-        mUserUuidRef.push().setValue(beaconOnUser);
+        mUserAddressRef.push().setValue(beaconOnUser);
 
         //store beacon info to 'Beacon' DB in Uid order
         bleDeviceInfo.setNickname(et_Nickname.getText().toString());
         bleDeviceInfo.setPicture("in develop");
 
         mDatabase
-                .getReference("/beacon/")
-                .child(bleDeviceInfo.getProximityUuid())
+                .getReference("beacon/")
+                .child(bleDeviceInfo.getDevAddress())
                 .setValue(bleDeviceInfo.toDB())
                 .addOnSuccessListener(DataStoreActivity.this, new OnSuccessListener<Void>() {
                     @Override
@@ -155,19 +155,19 @@ public class DataStoreActivity extends AppCompatActivity {
     }
 
     private void displayBeacons() {
-        // users/$Uid/beacons/"UUID"
+        // users/$Uid/beacons/"Address"
 
         Log.v("Testing Print Uid", mUser.getUid());
 
-        mUserUuidRef
+        mUserAddressRef
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        for(DataSnapshot uuidSnapshot : dataSnapshot.getChildren()) {
-                            BeaconOnUser myBeaconOnUser = uuidSnapshot.getValue(BeaconOnUser.class);
-                            Log.v("Test Print UUID", myBeaconOnUser.Uuid);
+                        for(DataSnapshot addressSnapshot : dataSnapshot.getChildren()) {
+                            BeaconOnUser myBeaconOnUser = addressSnapshot.getValue(BeaconOnUser.class);
+                            Log.v("Test Print ADDR", myBeaconOnUser.address);
 
-                            findBeaconByUuid(myBeaconOnUser.Uuid);
+                            findBeaconByAddress(myBeaconOnUser.address);
                         }
                     }
 
@@ -179,11 +179,11 @@ public class DataStoreActivity extends AppCompatActivity {
 
     }
 
-    private void findBeaconByUuid(String Uuid) {
-        // beacon/UUID/"beaconOnDB"
+    private void findBeaconByAddress(String address) {
+        // beacon/address/"beaconOnDB"
         DatabaseReference beaconInfoRef = mDatabase.getReference("beacon/");
 
-        beaconInfoRef.child(Uuid)
+        beaconInfoRef.child(address)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
