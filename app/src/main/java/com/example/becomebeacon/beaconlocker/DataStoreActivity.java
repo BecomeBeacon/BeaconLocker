@@ -68,7 +68,7 @@ public class DataStoreActivity extends AppCompatActivity {
         mAuth= LoginActivity.getAuth();
         mUser= LoginActivity.getUser();
         mDatabase = FirebaseDatabase.getInstance();
-        mUserUuidRef = mDatabase.getReference("users/"+mUser.getUid()+"beacons");
+        mUserUuidRef = mDatabase.getReference("users/"+mUser.getUid()+"/beacons");
 
         et_UUID = (TextView) findViewById(R.id.et_UUID);
         et_Nickname = (EditText) findViewById(R.id.et_NICKNAME);
@@ -135,7 +135,7 @@ public class DataStoreActivity extends AppCompatActivity {
         bleDeviceInfo.setPicture("in develop");
 
         mDatabase
-                .getReference("beacon/")
+                .getReference("/beacon/")
                 .child(bleDeviceInfo.getProximityUuid())
                 .setValue(bleDeviceInfo.toDB())
                 .addOnSuccessListener(DataStoreActivity.this, new OnSuccessListener<Void>() {
