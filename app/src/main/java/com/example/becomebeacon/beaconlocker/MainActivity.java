@@ -1,20 +1,14 @@
 package com.example.becomebeacon.beaconlocker;
 
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.renderscript.RenderScript;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,18 +20,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.becomebeacon.beaconlocker.database.DataStore;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -45,12 +31,15 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import org.w3c.dom.Text;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -80,8 +69,11 @@ public class MainActivity extends AppCompatActivity
     private boolean isScannig=false;
 
 
-    public ArrayList<BleDeviceInfo> mArrayListBleDevice;
+    public ArrayList<BleDeviceInfo> mArrayListBleDevice;    ;
     public ArrayList<BleDeviceInfo> mAssignedItem;
+
+    public ArrayList<BeaconOnDB> mMyBleDeviceList;
+
     private BleUtils mBleUtils;
 
     public static String BEACON_UUID;       // changsu
@@ -94,6 +86,8 @@ public class MainActivity extends AppCompatActivity
 
     private BleDeviceListAdapter mBleDeviceListAdapter;
     private MyBeaconsListAdapter mBeaconsListAdapter;
+
+    private FirebaseDatabase mDatabase;
 
 
     private Handler mHandler= new Handler()
@@ -235,7 +229,7 @@ public class MainActivity extends AppCompatActivity
         fab_test.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(mActivity, DataStore.class);
+                Intent intent = new Intent(getApplicationContext(), DataStoreActivity.class);
                 startActivity(intent);
             }
         });
@@ -296,6 +290,9 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onStart() {
+        //displayBeacons();
+        Log.v("Testing Print", "onStart");
+
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -304,6 +301,8 @@ public class MainActivity extends AppCompatActivity
                 .build();
         mGoogleApiClient.connect();
         super.onStart();
+
+        mDatabase = DataStoreActivity.getDatabase();
     }
 
     protected void onResume() {
@@ -438,6 +437,52 @@ public class MainActivity extends AppCompatActivity
 
         return uuid;
     }
+
+//    private void displayBeacons(){
+//        Log.v("Testing Print Uid", mUser.getUid());
+//        DatabaseReference userUuidRef = mDatabase.getReference("users");
+//
+//        userUuidRef
+//                .addChildEventListener(new ChildEventListener() {
+//                    @Override
+//                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//                        Log.v("Testing Print", "ChildAdded");
+//                        //get UUID
+//                        for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
+//                            String Uuid = (String) messageSnapshot.getValue();
+//                            Log.v("Testing Print Uuid", Uuid);
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(DatabaseError databaseError) {
+//
+//                    }
+//                });
+//    }
+
+
+
+    private void displayBeaconList(BeaconOnDB beaconOnDB) {
+        mMyBleDeviceList.add(beaconOnDB);
+        Log.v("Testing Print Nick", beaconOnDB.getNickname());
+    }
+
 
 
 

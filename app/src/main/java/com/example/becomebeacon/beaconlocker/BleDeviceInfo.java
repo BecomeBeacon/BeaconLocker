@@ -29,6 +29,10 @@ public class BleDeviceInfo {
     public String fwVersion;           // Firmware Version
     public KalmanFilter rssiKalmanFileter;
 
+    //User info
+    public String nickname;
+    public String picture;
+
     //Constructor
     public BleDeviceInfo() {
         this.proximityUuid = "";
@@ -228,6 +232,23 @@ public class BleDeviceInfo {
     public int getTimeout(){ return this.timeout; }
 
     public void setTimeout(int timeout){ this.timeout = timeout; }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
     /*----------------------------------------------------------*/
     /*
         거리 계산
@@ -257,6 +278,12 @@ public class BleDeviceInfo {
             return true;
         else
             return false;
+    }
+
+    public BeaconOnDB toDB() {
+        BeaconOnDB beaconOnDB = new BeaconOnDB(getNickname());
+
+        return beaconOnDB;
     }
 
 }
