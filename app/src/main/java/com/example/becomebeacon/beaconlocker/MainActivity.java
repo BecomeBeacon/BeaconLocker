@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity
     {
         public void handleMessage(Message msg)
         {
+            Log.d("main","in handler");
             if(mScanning)
             {
                 mScanning = false;
@@ -119,48 +120,39 @@ public class MainActivity extends AppCompatActivity
             int maxRssi = 0;
             int maxIndex = -1;
 
-            if(mod==Use.USE_TRACK) {
-                tMap = mItemMap;
-                tArray=mAssignedItem;
-            }
-            else if(mod==Use.USE_SCAN)
-            {
-                tMap=scannedMap;
-                tArray=mArrayListBleDevice;
-            }
-            else
-            {
-                tMap=null;
-                tArray=null;
-            }
 
-            //timeout counter update
-            for (int i= 0 ; i < tArray.size() ; i++){
-                tArray.get(i).timeout--;
-                if(tArray.get(i).timeout == 0){
-                    tMap.remove(tArray.get(i).devAddress);
-                    tArray.remove(i);
-                }
-                else{
-                    if(tArray.get(i).rssi > maxRssi || maxRssi == 0)
-                    {
-                        maxRssi = tArray.get(i).rssi;
-                        maxIndex = i;
+            if(mod==Use.USE_SCAN) {
+                tMap = scannedMap;
+                tArray = mArrayListBleDevice;
+
+
+                //timeout counter update
+                for (int i = 0; i < tArray.size(); i++) {
+                    tArray.get(i).timeout--;
+                    if (tArray.get(i).timeout == 0) {
+                        tMap.remove(tArray.get(i).devAddress);
+                        tArray.remove(i);
+                    } else {
+                        if (tArray.get(i).rssi > maxRssi || maxRssi == 0) {
+                            maxRssi = tArray.get(i).rssi;
+                            maxIndex = i;
+                        }
                     }
                 }
-            }
-            //TextView text_max_dev = (TextView)findViewById(R.id.text_max_dev);
+                //TextView text_max_dev = (TextView)findViewById(R.id.text_max_dev);
 
-            if(maxIndex == -1) {
-                //text_max_dev.setText("No Dev");
+                if (maxIndex == -1) {
+                    //text_max_dev.setText("No Dev");
+                } else {
+                    //text_max_dev.setText(maxIndex+1 +"th    "
+                    //        + "major: " + mArrayListBleDevice.get(maxIndex).major + "  "
+                    //        + "minor: " + mArrayListBleDevice.get(maxIndex).minor + "  "
+                    //        + mArrayListBleDevice.get(maxIndex).getRssi() +"dbm");
+                }
             }
-            else{
-                //text_max_dev.setText(maxIndex+1 +"th    "
-                //        + "major: " + mArrayListBleDevice.get(maxIndex).major + "  "
-                //        + "minor: " + mArrayListBleDevice.get(maxIndex).minor + "  "
-                //        + mArrayListBleDevice.get(maxIndex).getRssi() +"dbm");
-            }
-            mTimeOut.sendEmptyMessageDelayed(0,TIMEOUT_PERIOD);
+
+            mTimeOut.sendEmptyMessageDelayed(0, TIMEOUT_PERIOD);
+
         }
     };
 
@@ -183,7 +175,7 @@ public class MainActivity extends AppCompatActivity
         scannedMap = new HashMap<String, BleDeviceInfo>();
         mItemMap = new HashMap<String, BleDeviceInfo>();
         mBleDeviceListAdapter = new BleDeviceListAdapter(this, R.layout.ble_device_row,
-                mArrayListBleDevice, scannedMap);
+                mArrayListBleDevice, scannedMap,mAssignedItem, mItemMap);
         mBeaconsListAdapter = new MyBeaconsListAdapter(this, R.layout.ble_device_row,
                 mAssignedItem, mItemMap);
 
@@ -214,11 +206,19 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 //ble 검색 및 추가
-                myBeacons.setVisibility(View.GONE);
-                scannedBeacons.setVisibility(View.VISIBLE);
-                mBleService.changeMod(Use.USE_SCAN);
-                mHandler.sendEmptyMessageDelayed(0, SCAN_PERIOD);
-                mTimeOut.sendEmptyMessageDelayed(0, TIMEOUT_PERIOD);
+                if(mBleService.getMod()==Use.USE_TRACK) {
+                    myBeacons.setVisibility(View.GONE);
+                    scannedBeacons.setVisibility(View.VISIBLE);
+                    mBleService.changeMod(Use.USE_SCAN);
+
+                }else if(mBleService.getMod()==Use.USE_SCAN)
+                {
+                    myBeacons.setVisibility(View.VISIBLE);
+                    scannedBeacons.setVisibility(View.GONE);
+                    mBleService.changeMod(Use.USE_TRACK);
+
+                }
+
 
 
            }
@@ -242,6 +242,7 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
 
 
 
@@ -288,6 +289,7 @@ public class MainActivity extends AppCompatActivity
 
 
 
+
     @Override
     protected void onStart() {
         //displayBeacons();
@@ -314,16 +316,18 @@ public class MainActivity extends AppCompatActivity
         //saveRSSI = setting.getBoolean("saveRSSI", true);
 
         mBleService.checkBluetooth();
+        mHandler.sendEmptyMessageDelayed(0, SCAN_PERIOD);
+        mTimeOut.sendEmptyMessageDelayed(0, TIMEOUT_PERIOD);
 
-        if(isScannig) {
-            //scanBleDevice(true);            // BLE 장치 검색\
-            mHandler.sendEmptyMessageDelayed(0, SCAN_PERIOD);
-            mTimeOut.sendEmptyMessageDelayed(0, TIMEOUT_PERIOD);
-        }
-        else
-        {
-
-        }
+//        if(isScannig) {
+//            //scanBleDevice(true);            // BLE 장치 검색\
+//            mHandler.sendEmptyMessageDelayed(0, SCAN_PERIOD);
+//            mTimeOut.sendEmptyMessageDelayed(0, TIMEOUT_PERIOD);
+//        }
+//        else
+//        {
+//
+//        }
 
 
     }

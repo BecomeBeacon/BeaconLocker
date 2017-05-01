@@ -211,23 +211,23 @@ public class BluetoothService {
 
         //Log.d(TAG, "proximityUUID: " + proximityUUID);
 
-        Log.d("sss","in scan");
+
        // if(proximityUUID.equals(BEACON_UUID) || proximityUUID.equals(BluetoothUuid.WIZTURN_PROXIMITY_UUID.toString()) || proximityUUID.equals(BluetoothUuid.WINI_UUID.toString()) )
-        {
+
             try {
-                Log.d(TAG, "Found Pebble UUID: " + proximityUUID);
+ //               Log.d(TAG, "Found Pebble UUID: " + proximityUUID);
 
                 double distance = mBleUtils.getDistance(rssiValue, txPower);
                 double distance2 = mBleUtils.getDistance_20150515(rssiValue, txPower);
 
-                Log.d(TAG, "dev name: " + devName +
-                        ", addr: " + devAddress +
-                        ", major: " + major +
-                        ", minor: " + minor +
-                        ", rssi: " + rssi +
-                        ", txPower: " + txPower +
-                        ", distance: " + distance +
-                        ", distance2: " + distance2);
+//                Log.d(TAG, "dev name: " + devName +
+//                        ", addr: " + devAddress +
+//                        ", major: " + major +
+//                        ", minor: " + minor +
+//                        ", rssi: " + rssi +
+//                        ", txPower: " + txPower +
+//                        ", distance: " + distance +
+//                        ", distance2: " + distance2);
 
                 BleDeviceInfo item = new BleDeviceInfo(proximityUUID, devName, devAddress, major, minor,
                         txPower, rssiValue, distance, distance2);
@@ -241,8 +241,7 @@ public class BluetoothService {
                 Log.e("Error", "Exception: " + ex.getMessage());
             }
 
-        }
-        Log.d("sss","getdevicescan end");
+
     }
 
     public void updateBleDeviceList(BleDeviceInfo item)
@@ -253,39 +252,40 @@ public class BluetoothService {
         /**
          * HashMap의 key값에 동일한 device address가 있는 경우: update 수행
          */
-        Log.d("sss","in update");
-        if(isScanning) { //스캔중일 경우
-            if (mScannedMap.containsKey(item.devAddress)) {
 
-                Log.d("sss","it's contain key");
+        if(isScanning) { //스캔중일 경우
+            if(!mItemMap.containsKey(item.devAddress)) {
+                Log.d(TAG,item.devAddress+" is not contained in MyList : "+mItemMap.toString());
+                if (mScannedMap.containsKey(item.devAddress)) {
+
 //            mScannedMap.get(item.devAddress).rssi = item.rssi;
-                mScannedMap.get(item.devAddress).rssi = (int) mScannedMap.get(item.devAddress).rssiKalmanFileter.update(item.rssi);
-                KalmanRSSI = mScannedMap.get(item.devAddress).rssi;
+                    mScannedMap.get(item.devAddress).rssi = (int) mScannedMap.get(item.devAddress).rssiKalmanFileter.update(item.rssi);
+                    KalmanRSSI = mScannedMap.get(item.devAddress).rssi;
 //            mScannedMap.get(item.devAddress).distance = item.distance;
 //            mScannedMap.get(item.devAddress).distance2 = item.distance2;
-                mScannedMap.get(item.devAddress).distance = mBleUtils.getDistance(KalmanRSSI, item.txPower);
-                mScannedMap.get(item.devAddress).distance2 = mBleUtils.getDistance_20150515(KalmanRSSI, item.txPower);
+                    mScannedMap.get(item.devAddress).distance = mBleUtils.getDistance(KalmanRSSI, item.txPower);
+                    mScannedMap.get(item.devAddress).distance2 = mBleUtils.getDistance_20150515(KalmanRSSI, item.txPower);
 
-                mScannedMap.get(item.devAddress).timeout = item.timeout;
+                    mScannedMap.get(item.devAddress).timeout = item.timeout;
 
-                Log.d("Debug", "Major: " + item.major +
-                        ", Minor: " + item.minor +
-                        ", rssi: " + KalmanRSSI +
-                        ", distance: " + item.distance);
-            } else {
-                /**
-                 *  HashMap에 해당 item의 device address가 없는 경우, 추가함
-                 *  key값: devAddress
-                 */
-                Log.d("sss","it's not contain key");
+                    Log.d("Debug", "Major: " + item.major +
+                            ", Minor: " + item.minor +
+                            ", rssi: " + KalmanRSSI +
+                            ", distance: " + item.distance);
+                } else {
+                    /**
+                     *  HashMap에 해당 item의 device address가 없는 경우, 추가함
+                     *  key값: devAddress
+                     */
+                    Log.d(TAG, "it's not contain key");
 
-                mArrayListBleDevice.add(item);
-                Log.d("sss","list of array"+mArrayListBleDevice.toString());
-                mScannedMap.put(item.devAddress, item);
-                Log.d("sss","list of map"+mScannedMap.toString());
-            }
+                    mArrayListBleDevice.add(item);
+                    Log.d("sss", "list of array" + mArrayListBleDevice.toString());
+                    mScannedMap.put(item.devAddress, item);
+                    Log.d("sss", "list of map" + mScannedMap.toString());
+                }
 
-            if (saveRSSI) {
+                if (saveRSSI) {
                     /*
                     logFile.recodeLogFile(
                             "dev name: " + devName +
@@ -297,6 +297,56 @@ public class BluetoothService {
                                     ", distance: " + distance + "\n\n");
 
                     */
+                    if (KalmanRSSI == 0)
+                        KalmanRSSI = item.rssi;
+
+                }
+
+                mMaxRssiBeacon = getMaxRssiBeacon();
+            }
+            else
+            {
+                Log.d(TAG,item.devAddress+" is contained in MyList : "+mItemMap.toString());
+            }
+        }
+        else//자기비컨만 보는 메인화면
+        {
+
+            if (mItemMap.containsKey(item.devAddress)) {
+
+                Log.d(TAG, "it's contain key");
+//            mScannedMap.get(item.devAddress).rssi = item.rssi;
+                mItemMap.get(item.devAddress).rssi = (int) mItemMap.get(item.devAddress).rssiKalmanFileter.update(item.rssi);
+                KalmanRSSI = mItemMap.get(item.devAddress).rssi;
+//            mScannedMap.get(item.devAddress).distance = item.distance;
+//            mScannedMap.get(item.devAddress).distance2 = item.distance2;
+                mItemMap.get(item.devAddress).distance = mBleUtils.getDistance(KalmanRSSI, item.txPower);
+                mItemMap.get(item.devAddress).distance2 = mBleUtils.getDistance_20150515(KalmanRSSI, item.txPower);
+
+                mItemMap.get(item.devAddress).timeout = item.timeout;
+
+                Log.d("Debug", "Major: " + item.major +
+                        ", Minor: " + item.minor +
+                        ", rssi: " + KalmanRSSI +
+                        ", distance: " + item.distance);
+            }
+            else
+            {
+                Log.d(TAG, "it's not contain key");
+            }
+
+            if (saveRSSI) {
+                /*
+                logFile.recodeLogFile(
+                        "dev name: " + devName +
+                                ", addr: " + devAddress +
+                                ", major: " + major +
+                                ", minor: " + minor +
+                                ", rssi: " + rssi +
+                                ", txPower: " + txPower +
+                                ", distance: " + distance + "\n\n");
+
+                */
                 if (KalmanRSSI == 0)
                     KalmanRSSI = item.rssi;
 
@@ -304,14 +354,14 @@ public class BluetoothService {
 
             mMaxRssiBeacon = getMaxRssiBeacon();
         }
-        else
-        {
 
-        }
+
+
+    }
 
         // 가장 근거리의 Beacon 정보를 서버로 전송함
         //sendSocketMsg(mMaxRssiBeacon.devAddress, mMaxRssiBeacon.major, mMaxRssiBeacon.minor);
-    }
+
 
     public BleDeviceInfo getMaxRssiBeacon()
     {
@@ -342,11 +392,12 @@ public class BluetoothService {
             mActivity.runOnUiThread(new Runnable() {
                 public void run() {
                     if(isScanning) {//스캔중일시
-                        Log.d("sss","in callback scanning");
+
                         mBleDeviceListAdapter.notifyDataSetChanged();
 
                     }else{//자기 비컨만 표시
-                        Log.d("sss","in callback not scanning");
+
+                        mBeaconsListAdapter.notifyDataSetChanged();
                     }
 
                 }

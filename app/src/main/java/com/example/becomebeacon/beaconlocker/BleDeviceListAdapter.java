@@ -44,22 +44,27 @@ public class BleDeviceListAdapter extends BaseAdapter {
     LayoutInflater mInflater;
     int mLayout;
     private boolean isScanning = false;
-    private ArrayList<BluetoothDevice> mBleDeviceArrayList;
+    //private ArrayList<BluetoothDevice> mBleDeviceArrayList;
     private ArrayList<BleDeviceInfo> mBleDeviceInfoArrayList;
+    private ArrayList<BleDeviceInfo> mAssignedArrayList;
 
     // 검색된 BLE 장치가 중복 추가되는 부분을 방지하기 위해 HashMap을 사용
     // String: Device Address(key값)
     private HashMap<String, BleDeviceInfo> mHashBleMap = new HashMap<String, BleDeviceInfo>();
+    private HashMap<String, BleDeviceInfo> mAssignedBleMap = new HashMap<String, BleDeviceInfo>();
 
     public BleDeviceListAdapter(Context context, int layout, ArrayList<BleDeviceInfo> arBleList,
-                                HashMap<String, BleDeviceInfo> hashBleMap)
+                                HashMap<String, BleDeviceInfo> hashBleMap,ArrayList<BleDeviceInfo> mBleList,HashMap<String, BleDeviceInfo> mBleMap)
     {
         mContext = context;
         mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         mBleDeviceInfoArrayList = arBleList;
+        mAssignedArrayList=mBleList;
+
         mLayout = layout;
         mHashBleMap = hashBleMap;
+        mAssignedBleMap=mBleMap;
     }
 
     public synchronized void addOrUpdateItem(BleDeviceInfo info)
@@ -102,7 +107,7 @@ public class BleDeviceListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         final int pos = position;
 
-        Log.d("sss","in getview");
+
         if(convertView == null)
         {
             convertView = mInflater.inflate(mLayout, parent, false);
@@ -132,7 +137,8 @@ public class BleDeviceListAdapter extends BaseAdapter {
         txtTxPower.setText("Tx Power: " + String.valueOf(mBleDeviceInfoArrayList.get(position).txPower) + " dbm");      // changsu
 
         TextView txtDistance = (TextView)convertView.findViewById(R.id.text_distance);
-        txtDistance.setText("Distance: " + String.valueOf(mBleDeviceInfoArrayList.get(position).distance) + " m (" + String.format("%.2f", mBleDeviceInfoArrayList.get(position).distance2) + "m)");
+        txtDistance.setText("Distance: " //+ String.format("%.2f",String.valueOf(mBleDeviceInfoArrayList.get(position).distance))+ " m ("
+                 + String.format("%.2f", mBleDeviceInfoArrayList.get(position).distance2) +"m");
 
         TextView txtTimeout = (TextView)convertView.findViewById(R.id.text_timeout);
         txtTimeout.setText("Timeout: " + String.valueOf(mBleDeviceInfoArrayList.get(position).timeout));
@@ -141,7 +147,18 @@ public class BleDeviceListAdapter extends BaseAdapter {
         btnConnect.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v)
             {
-                // connect 함수 연결
+
+                if(!mAssignedBleMap.containsKey(mBleDeviceInfoArrayList.get(pos).devAddress)) {
+                    mAssignedArrayList.add(mBleDeviceInfoArrayList.get(pos));
+                    mAssignedBleMap.put(mBleDeviceInfoArrayList.get(pos).getDevAddress(), mBleDeviceInfoArrayList.get(pos));
+                    mHashBleMap.get(mBleDeviceInfoArrayList.get(pos).devAddress).setTimeout(1);
+//                mBleDeviceInfoArrayList.remove(pos);
+//                mHashBleMap.remove(mBleDeviceInfoArrayList.get(pos).devAddress);
+                    notifyDataSetChanged();
+                    Log.d("sss", "Assigned");
+                    Log.d("sss", "mAssigned list : " + mAssignedArrayList.toString());
+                }
+
             }
         });
 //
@@ -150,28 +167,28 @@ public class BleDeviceListAdapter extends BaseAdapter {
     }
 
 
-    public void addDevice(BluetoothDevice device)
-    {
-        if(!mBleDeviceArrayList.contains(device))
-        {
-            mBleDeviceArrayList.add(device);
-        }
-    }
+//    public void addDevice(BluetoothDevice device)
+//    {
+//        if(!mBleDeviceArrayList.contains(device))
+//        {
+//            mBleDeviceArrayList.add(device);
+//        }
+//    }
 
-    public BluetoothDevice getDevice(int position)
-    {
-        return mBleDeviceArrayList.get(position);
-    }
-
-    public int getBleDeviceCount()
-    {
-        return mBleDeviceArrayList.size();
-    }
-
-    public Object getBleDeviceItem(int i)
-    {
-        return mBleDeviceArrayList.get(i);
-    }
+//    public BluetoothDevice getDevice(int position)
+//    {
+//        return mBleDeviceArrayList.get(position);
+//    }
+//
+//    public int getBleDeviceCount()
+//    {
+//        return mBleDeviceArrayList.size();
+//    }
+//
+//    public Object getBleDeviceItem(int i)
+//    {
+//        return mBleDeviceArrayList.get(i);
+//    }
 
     /*  BleDeviceScanActivity에서 최대 RSSI Beacon을 계산함
     public BleDeviceInfo getMaxRssiBeacon()
@@ -190,15 +207,5 @@ public class BleDeviceListAdapter extends BaseAdapter {
         return mBleDeviceInfoArrayList.get(pos);
     }
     */
-    public void changeMod(int mod)
-    {
-        if(mod==Use.USE_SCAN)
-        {
-            isScanning=true;
 
-        }else if(mod==Use.USE_TRACK)
-        {
-            isScanning=false;
-        }
-    }
 }
