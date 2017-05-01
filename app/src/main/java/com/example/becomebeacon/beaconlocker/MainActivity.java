@@ -63,6 +63,8 @@ public class MainActivity extends AppCompatActivity
     private GoogleApiClient mGoogleApiClient;
 
     private HashMap<String, BleDeviceInfo> scannedMap;
+
+    //myItem
     private HashMap<String, BleDeviceInfo> mItemMap;
     private BluetoothService mBleService;
     private boolean mScanning=false;
@@ -70,6 +72,8 @@ public class MainActivity extends AppCompatActivity
 
 
     public ArrayList<BleDeviceInfo> mArrayListBleDevice;    ;
+
+    //myItem
     public ArrayList<BleDeviceInfo> mAssignedItem;
 
     public ArrayList<BeaconOnDB> mMyBleDeviceList;
@@ -280,6 +284,9 @@ public class MainActivity extends AppCompatActivity
                 .build();
         mGoogleApiClient.connect();
         super.onStart();
+
+        DataFetch dataFetch = new DataFetch();
+        dataFetch.displayBeacons();
     }
 
     protected void onResume() {
