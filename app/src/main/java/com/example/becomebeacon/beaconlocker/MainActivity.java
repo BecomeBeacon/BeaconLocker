@@ -308,13 +308,27 @@ public class MainActivity extends AppCompatActivity
         mGoogleApiClient.connect();
         super.onStart();
 
-        DataFetch dataFetch = new DataFetch();
+        //My Data List 갱신
+        DataFetch dataFetch = new DataFetch(mAssignedItem, mItemMap);
         dataFetch.displayBeacons();
+
+        //Log.v("mAssignedItem1 Addr", mAssignedItem.get(0).devAddress);
+        Log.v("Test_Print", "Test1");
+
+        //mItemMap = new HashMap<String, BleDeviceInfo>();
+//        for(int i = 0; i < mAssignedItem.size(); i++) {
+//            mItemMap.put(mAssignedItem.get(i).devAddress, mAssignedItem.get(i));
+//        }
+
+        //Log.v("mAssignedItem2 Addr", mAssignedItem.get(0).devAddress);
+        Log.v("Test_Print", "Test2");
+
+        //Log.v("mItemMap Addr", mItemMap.get("EC:08:81:F9:2A:D3").devAddress);
+        //Log.v("mItemMap nick", mItemMap.get("EC:08:81:F9:2A:D3").getNickname());
     }
 
     protected void onResume() {
         super.onResume();
-
 
         //BEACON_UUID = getBeaconUuid(setting);
 
