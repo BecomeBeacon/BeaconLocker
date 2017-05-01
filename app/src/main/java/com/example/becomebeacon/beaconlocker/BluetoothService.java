@@ -375,6 +375,14 @@ public class BluetoothService {
 
     }
 
+    public int getMod()
+    {
+        if(isScanning)
+            return Use.USE_SCAN;
+        else
+            return Use.USE_TRACK;
+    }
+
     public String getBeaconUuid(SharedPreferences pref)
     {
         String uuid = "";

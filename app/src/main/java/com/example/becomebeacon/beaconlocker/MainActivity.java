@@ -116,20 +116,41 @@ public class MainActivity extends AppCompatActivity
         public void handleMessage(Message msg){
             Log.i("TAG","TIMEOUT UPDATE");
 
+            HashMap<String, BleDeviceInfo> tMap;
+            ArrayList<BleDeviceInfo> tArray;
+            int mod=mBleService.getMod();
+
+
+
             int maxRssi = 0;
             int maxIndex = -1;
 
+            if(mod==Use.USE_TRACK) {
+                tMap = mItemMap;
+                tArray=mAssignedItem;
+            }
+            else if(mod==Use.USE_SCAN)
+            {
+                tMap=scannedMap;
+                tArray=mArrayListBleDevice;
+            }
+            else
+            {
+                tMap=null;
+                tArray=null;
+            }
+
             //timeout counter update
-            for (int i= 0 ; i < mArrayListBleDevice.size() ; i++){
-                mArrayListBleDevice.get(i).timeout--;
-                if(mArrayListBleDevice.get(i).timeout == 0){
-                    mItemMap.remove(mArrayListBleDevice.get(i).devAddress);
-                    mArrayListBleDevice.remove(i);
+            for (int i= 0 ; i < tArray.size() ; i++){
+                tArray.get(i).timeout--;
+                if(tArray.get(i).timeout == 0){
+                    tMap.remove(tArray.get(i).devAddress);
+                    tArray.remove(i);
                 }
                 else{
-                    if(mArrayListBleDevice.get(i).rssi > maxRssi || maxRssi == 0)
+                    if(tArray.get(i).rssi > maxRssi || maxRssi == 0)
                     {
-                        maxRssi = mArrayListBleDevice.get(i).rssi;
+                        maxRssi = tArray.get(i).rssi;
                         maxIndex = i;
                     }
                 }
@@ -203,7 +224,7 @@ public class MainActivity extends AppCompatActivity
                 scannedBeacons.setVisibility(View.VISIBLE);
                 mBleService.changeMod(Use.USE_SCAN);
                 mHandler.sendEmptyMessageDelayed(0, SCAN_PERIOD);
-                //mTimeOut.sendEmptyMessageDelayed(0, TIMEOUT_PERIOD);
+                mTimeOut.sendEmptyMessageDelayed(0, TIMEOUT_PERIOD);
 
 
            }
