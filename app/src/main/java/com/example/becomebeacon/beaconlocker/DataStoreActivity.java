@@ -49,13 +49,21 @@ public class DataStoreActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-        toolbar.setTitle("BLE 등록");
-        toolbar.setTitleTextColor(Color.WHITE);
+        //툴바 세팅
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_additem);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+
+        toolbar.setTitle(R.string.app_name);
+        toolbar.setSubtitle("BLE 등록");
+
+        toolbar.setTitleTextColor(Color.WHITE);
+        toolbar.setSubtitleTextColor(Color.GRAY);
+
+        if(getSupportActionBar() != null) {
+//            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            Log.v("Test Print","i'm in supportActionBar22");
+        }
 
         mAuth= LoginActivity.getAuth();
         mUser= LoginActivity.getUser();
@@ -75,39 +83,27 @@ public class DataStoreActivity extends AppCompatActivity {
             //return;
         //}
 
-
-        Button button_saveForm = (Button) findViewById(R.id.button_saveForm);
-        button_saveForm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saveData();
-            }
-        });
-
         displayBeacons();
     }
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.list_menu, menu);
-//
-//        LayoutInflater inflator=(LayoutInflater)this.getSystemService(LAYOUT_INFLATER_SERVICE);
-//
-//        Inflater ss = inflator.inflate(R.menu.list_menu,false);
-//
-//        return true;
-//    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_additem, menu);
+        return true;
+    }
 
-//    @Override
-//    public boolean onOptionsItemSelected(android.view.MenuItem item) {
-//
-//        int id = item.getItemId();
-//
-//        if( id == R.id.newBle ){
-//            saveData();
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
+    @Override
+    public boolean onOptionsItemSelected(android.view.MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.action_bt1:
+                saveData();
+                break;
+            case android.R.id.home:
+                finish();
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     private void initData() {
         et_UUID.setText("");

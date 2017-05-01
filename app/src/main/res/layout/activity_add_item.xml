@@ -8,11 +8,13 @@
     android:weightSum="1">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/toolbar_additem"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        app:popupTheme="@style/AppTheme.PopupOverlay" />
+        android:theme="@style/AppTheme.AppBarOverlay">
+    </android.support.v7.widget.Toolbar>
 
     <Space
         android:layout_width="match_parent"
@@ -49,7 +51,7 @@
             android:layout_marginTop="14dp"
             android:layout_row="0"
             android:layout_toEndOf="@+id/textView2"
-            android:text="B7707F30-F5F8-466E-AFF9-25556B57FE6D"
+            android:text="B9407F30-F5F8-466E-AFF9-25556B57FE6D"
             android:textSize="12sp" />
 
         <TextView
@@ -106,14 +108,14 @@
 
     </RelativeLayout>
 
-    <Button
-        android:id="@+id/button_saveForm"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.18"
-        android:background="@color/colorPrimary"
-        android:text="저장하기"
-        android:textColor="@android:color/white" />
+    <!--<Button-->
+        <!--android:id="@+id/button_saveForm"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:layout_weight="0.18"-->
+        <!--android:background="@color/colorPrimary"-->
+        <!--android:text="저장하기"-->
+        <!--android:textColor="@android:color/white" />-->
 
 
     <!--
