@@ -33,6 +33,10 @@ public class BleDeviceInfo {
     public String nickname;
     public String picture;
 
+    //Coordination
+    public String latitude;
+    public String longitude;
+
     //Constructor
     public BleDeviceInfo() {
         this.proximityUuid = "";
@@ -54,6 +58,9 @@ public class BleDeviceInfo {
 
         this.nickname = "";
         this.picture = "";
+
+        this.latitude = "";
+        this.longitude = "";
     }
 
     //Constructor
@@ -77,6 +84,9 @@ public class BleDeviceInfo {
 
         this.nickname = nickname;
         this.picture = "";
+
+        this.latitude = "";
+        this.longitude = "";
     }
 
 
@@ -100,6 +110,12 @@ public class BleDeviceInfo {
         this.timeout = TIME_OUT;
 
         this.rssiKalmanFileter = new KalmanFilter(this.rssi);
+
+        this.nickname = "";
+        this.picture = "";
+
+        this.latitude = "";
+        this.longitude = "";
     }
 
     // Measured Power 제외, 거리 1개
@@ -119,6 +135,12 @@ public class BleDeviceInfo {
         this.timeout = TIME_OUT;
 
         this.rssiKalmanFileter = new KalmanFilter(this.rssi);
+
+        this.nickname = "";
+        this.picture = "";
+
+        this.latitude = "";
+        this.longitude = "";
     }
 
     // Measured Power를 제외한 생성자
