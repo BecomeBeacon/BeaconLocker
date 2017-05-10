@@ -32,12 +32,7 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,6 +50,7 @@ public class MainActivity extends AppCompatActivity
 
     private ListView myBeacons;
     private ListView scannedBeacons;
+    private TextView emptyListText;
     private final int REQUEST_ENABLE_BT=9999;
     private BluetoothAdapter mBluetoothAdapter;
     private FirebaseUser mUser;
@@ -62,13 +58,15 @@ public class MainActivity extends AppCompatActivity
     private TextView mEmail;
     private TextView mName;
     private GoogleApiClient mGoogleApiClient;
+    private Intent bleService;
 
+    private boolean usingTracking;
     private HashMap<String, BleDeviceInfo> scannedMap;
 
     //myItem
     private HashMap<String, BleDeviceInfo> mItemMap;
-    private BluetoothService mBleService;
-    private boolean mScanning=false;
+    private BluetoothScan mBleScan;
+    //private boolean mScanning=false;
     private boolean isScannig=false;
 
 
@@ -83,7 +81,7 @@ public class MainActivity extends AppCompatActivity
 
     public static String BEACON_UUID;       // changsu
     public static  Boolean saveRSSI;
-    private static final long SCAN_PERIOD = 1000;       // 10초동안 SCAN 과정을 수행함
+    private static final long CEHCK_PERIOD = 1000;       // 10초동안 SCAN 과정을 수행함
 
     private static final long TIMEOUT_LIMIT = 20;
     private static final long TIMEOUT_PERIOD = 1000;
@@ -92,33 +90,61 @@ public class MainActivity extends AppCompatActivity
     private BleDeviceListAdapter mBleDeviceListAdapter;
     private MyBeaconsListAdapter mBeaconsListAdapter;
 
+
+
     private FirebaseDatabase mDatabase;
 
+
+    private boolean mScan;
 
     private Handler mHandler= new Handler()
     {
         public void handleMessage(Message msg)
         {
-            Log.d("main","in handler");
-            if(mScanning)
+            Log.d("main","in main handler : ");
+            if(mBleScan.getMod()== Values.USE_SCAN) {
+
+                if(mScan) {
+                    mBleScan.getBtAdapter().stopLeScan(mBleScan.mLeScanCallback);
+                    mScan=false;
+                    Log.d("main","scan stop");
+                    Log.d("main","scan break time ; "+Values.scanBreakTime);
+                    mHandler.sendEmptyMessageDelayed(0, Values.scanBreakTime);
+
+
+                }
+                else
+                {
+                    mBleScan.getBtAdapter().startLeScan(mBleScan.mLeScanCallback);
+                    mScan=true;
+                    Log.d("main","scan start");
+                    Log.d("main","scan time ; "+Values.scanTime);
+                    mHandler.sendEmptyMessageDelayed(0, Values.scanTime);
+
+
+                }
+            }
+            else if(mBleScan.getMod()== Values.USE_NOTHING)
             {
-                mScanning = false;
-                mBleService.getBtAdapter().stopLeScan(mBleService.mLeScanCallback);
+                if(mScan)
+                {
+                    mScan=false;
+                    mBleScan.getBtAdapter().stopLeScan(mBleScan.mLeScanCallback);
+                }
+                mBeaconsListAdapter.notifyDataSetChanged();
+                mHandler.sendEmptyMessageDelayed(0, CEHCK_PERIOD);
             }
 
-            mScanning = true;
-            mBleService.getBtAdapter().startLeScan(mBleService.mLeScanCallback);
-            mHandler.sendEmptyMessageDelayed(0, SCAN_PERIOD);
         }
     };
 
     private Handler mTimeOut = new Handler(){
         public void handleMessage(Message msg){
-            Log.i("TAG","TIMEOUT UPDATE");
+            //Log.i("TAG","TIMEOUT UPDATE");
 
             HashMap<String, BleDeviceInfo> tMap;
             ArrayList<BleDeviceInfo> tArray;
-            int mod=mBleService.getMod();
+            int mod= mBleScan.getMod();
 
 
 
@@ -126,7 +152,7 @@ public class MainActivity extends AppCompatActivity
             int maxIndex = -1;
 
 
-            if(mod==Use.USE_SCAN) {
+            if(mod== Values.USE_SCAN) {
                 tMap = scannedMap;
                 tArray = mArrayListBleDevice;
 
@@ -168,8 +194,11 @@ public class MainActivity extends AppCompatActivity
         mBleUtils=new BleUtils();
         mBluetoothAdapter= BluetoothAdapter.getDefaultAdapter();
 
+        GetMainActivity.setMA(this);
+
         myBeacons=(ListView)findViewById(R.id.ble_list);
         scannedBeacons=(ListView)findViewById(R.id.scan_list);
+        emptyListText=(TextView)findViewById(R.id.text_have_no_ble);
         if(myBeacons==null||scannedBeacons==null)
         {
             Log.d("sss","cannot find listview");
@@ -184,8 +213,14 @@ public class MainActivity extends AppCompatActivity
         mBeaconsListAdapter = new MyBeaconsListAdapter(this, R.layout.ble_device_row,
                 mAssignedItem, mItemMap);
 
+        Values.scanBreakTime=5000;
+        Values.scanTime=5000;
 
+        bleService= new Intent(this,BleService.class);
+        startService(bleService);
 
+        usingTracking=true;
+        mScan=false;
 
         scannedBeacons = (ListView)findViewById(R.id.scan_list);
         scannedBeacons.setAdapter(mBleDeviceListAdapter);
@@ -193,7 +228,7 @@ public class MainActivity extends AppCompatActivity
         myBeacons=(ListView)findViewById(R.id.ble_list);
         myBeacons.setAdapter(mBeaconsListAdapter);
 
-        mBleService=new BluetoothService(this,mBleDeviceListAdapter,mBeaconsListAdapter);
+        mBleScan =new BluetoothScan(this,mBleDeviceListAdapter,mBeaconsListAdapter);
 
         mAuth=LoginActivity.getAuth();
         mUser=LoginActivity.getUser();
@@ -211,20 +246,36 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 //ble 검색 및 추가
-                if(mBleService.getMod()==Use.USE_TRACK) {
+                if(mBleScan.getMod()== Values.USE_NOTHING) {
+
                     myBeacons.setVisibility(View.GONE);
                     scannedBeacons.setVisibility(View.VISIBLE);
-                    mBleService.changeMod(Use.USE_SCAN);
+                    emptyListText.setVisibility(View.GONE);
+                    mBleScan.changeMod(Values.USE_SCAN);
+                    mBleScan.checkBluetooth();
 
-                }else if(mBleService.getMod()==Use.USE_SCAN)
+
+                }else if(mBleScan.getMod()== Values.USE_SCAN)
                 {
-                    myBeacons.setVisibility(View.VISIBLE);
+                    if(mItemMap.isEmpty())
+                    {
+                        emptyListText.setVisibility(View.VISIBLE);
+                        myBeacons.setVisibility(View.GONE);
+
+                    }
+                    else
+                    {
+                        emptyListText.setVisibility(View.GONE);
+                        myBeacons.setVisibility(View.VISIBLE);
+                    }
+
                     scannedBeacons.setVisibility(View.GONE);
-                    mBleService.changeMod(Use.USE_TRACK);
+                    mBleScan.changeMod(Values.USE_NOTHING);
 
                 }
 
 
+                Log.d("main","scan mod changed "+mBleScan.getMod());
 
            }
         });
@@ -263,7 +314,7 @@ public class MainActivity extends AppCompatActivity
 //            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 //            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
 //        }
-        mBleService.checkBluetooth();
+        mBleScan.checkBluetooth();
 
         View headerLayout = navigationView.getHeaderView(0);
         mEmail=(TextView)headerLayout.findViewById(R.id.slide_user_email);
@@ -298,6 +349,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         //displayBeacons();
+        super.onStart();
         Log.v("Testing Print", "onStart");
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -307,7 +359,9 @@ public class MainActivity extends AppCompatActivity
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
         mGoogleApiClient.connect();
-        super.onStart();
+
+        mHandler.sendEmptyMessageDelayed(0, CEHCK_PERIOD);
+        mTimeOut.sendEmptyMessageDelayed(0, TIMEOUT_PERIOD);
 
         //My Data List 갱신
         DataFetch dataFetch = new DataFetch(mAssignedItem, mItemMap);
@@ -334,13 +388,21 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
 
+
+
         //BEACON_UUID = getBeaconUuid(setting);
 
+        if(mItemMap.isEmpty())
+        {
+            myBeacons.setVisibility(View.GONE);
+            scannedBeacons.setVisibility(View.GONE);
+            emptyListText.setVisibility(View.VISIBLE);
+
+        }
         //saveRSSI = setting.getBoolean("saveRSSI", true);
 
-        mBleService.checkBluetooth();
-        mHandler.sendEmptyMessageDelayed(0, SCAN_PERIOD);
-        mTimeOut.sendEmptyMessageDelayed(0, TIMEOUT_PERIOD);
+
+
 
 //        if(isScannig) {
 //            //scanBleDevice(true);            // BLE 장치 검색\
