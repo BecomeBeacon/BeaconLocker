@@ -61,6 +61,8 @@ public class MainActivity extends AppCompatActivity
 
     private boolean usingTracking;
     private HashMap<String, BleDeviceInfo> scannedMap;
+
+    //myItem
     private HashMap<String, BleDeviceInfo> mItemMap;
     private BluetoothScan mBleScan;
     //private boolean mScanning=false;
@@ -68,6 +70,8 @@ public class MainActivity extends AppCompatActivity
 
 
     public ArrayList<BleDeviceInfo> mArrayListBleDevice;    ;
+
+    //myItem
     public ArrayList<BleDeviceInfo> mAssignedItem;
 
     public ArrayList<BeaconOnDB> mMyBleDeviceList;
@@ -357,6 +361,24 @@ public class MainActivity extends AppCompatActivity
 
         mHandler.sendEmptyMessageDelayed(0, CEHCK_PERIOD);
         mTimeOut.sendEmptyMessageDelayed(0, TIMEOUT_PERIOD);
+
+        //My Data List 갱신
+        DataFetch dataFetch = new DataFetch(mAssignedItem, mItemMap);
+        dataFetch.displayBeacons();
+
+        //Log.v("mAssignedItem1 Addr", mAssignedItem.get(0).devAddress);
+        Log.v("Test_Print", "Test1");
+
+        //mItemMap = new HashMap<String, BleDeviceInfo>();
+//        for(int i = 0; i < mAssignedItem.size(); i++) {
+//            mItemMap.put(mAssignedItem.get(i).devAddress, mAssignedItem.get(i));
+//        }
+
+        //Log.v("mAssignedItem2 Addr", mAssignedItem.get(0).devAddress);
+        Log.v("Test_Print", "Test2");
+
+        //Log.v("mItemMap Addr", mItemMap.get("EC:08:81:F9:2A:D3").devAddress);
+        //Log.v("mItemMap nick", mItemMap.get("EC:08:81:F9:2A:D3").getNickname());
     }
 
     protected void onResume() {

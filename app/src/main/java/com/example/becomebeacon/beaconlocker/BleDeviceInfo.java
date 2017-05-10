@@ -34,6 +34,10 @@ public class BleDeviceInfo {
     public String nickname;
     public String picture;
 
+    //Coordination
+    public String latitude;
+    public String longitude;
+
     public boolean isFar;
     public boolean isLost;
 
@@ -57,6 +61,38 @@ public class BleDeviceInfo {
         this.fwVersion = "";
 
         this.rssiKalmanFileter = new KalmanFilter(0);
+
+        this.nickname = "";
+        this.picture = "";
+
+        this.latitude = "";
+        this.longitude = "";
+    }
+
+    //Constructor
+    public BleDeviceInfo(String devAddress, String nickname) {
+        this.proximityUuid = "";
+        this.devName = "";
+        this.devAddress = devAddress;
+
+        this.major = 0;
+        this.minor = 0;
+        this.measuredPower = 0;
+        this.txPower = 0;
+        this.rssi = 0;
+        this.distance = 0;
+        this.distance2 = 0;
+
+        this.hwVersion = "";
+        this.fwVersion = "";
+
+        this.rssiKalmanFileter = new KalmanFilter(0);
+
+        this.nickname = nickname;
+        this.picture = "";
+
+        this.latitude = "";
+        this.longitude = "";
     }
 
 
@@ -82,6 +118,12 @@ public class BleDeviceInfo {
         this.timeout = TIME_OUT;
 
         this.rssiKalmanFileter = new KalmanFilter(this.rssi);
+
+        this.nickname = "";
+        this.picture = "";
+
+        this.latitude = "";
+        this.longitude = "";
     }
 
     // Measured Power 제외, 거리 1개
@@ -101,6 +143,12 @@ public class BleDeviceInfo {
         this.timeout = TIME_OUT;
 
         this.rssiKalmanFileter = new KalmanFilter(this.rssi);
+
+        this.nickname = "";
+        this.picture = "";
+
+        this.latitude = "";
+        this.longitude = "";
     }
 
     // Measured Power를 제외한 생성자

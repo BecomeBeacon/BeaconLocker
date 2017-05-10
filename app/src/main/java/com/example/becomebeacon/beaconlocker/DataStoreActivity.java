@@ -34,7 +34,8 @@ import com.google.firebase.database.ValueEventListener;
 public class DataStoreActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
-    private static FirebaseDatabase mDatabase;
+    private FirebaseDatabase mDatabase;
+    private DatabaseReference mUserAddressRef;
 
     private TextView et_Address;
     private EditText et_Nickname;
@@ -43,7 +44,7 @@ public class DataStoreActivity extends AppCompatActivity {
     //private EditText et_LATITUDE;
     //private EditText et_LONGITUDE;
 
-    private DatabaseReference mUserAddressRef;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,13 +63,12 @@ public class DataStoreActivity extends AppCompatActivity {
         if(getSupportActionBar() != null) {
 //            getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            Log.v("Test Print","i'm in supportActionBar22");
         }
 
         mAuth= LoginActivity.getAuth();
         mUser= LoginActivity.getUser();
-        mDatabase = FirebaseDatabase.getInstance();
-        mUserAddressRef = mDatabase.getReference("users/"+mUser.getUid()+"/beacons");
+        mDatabase = DataFetch.getDatabase();
+//        mUserAddressRef = mDatabase.getReference("users/"+mUser.getUid()+"/beacons");
 
         et_Address = (TextView) findViewById(R.id.et_address);
         et_Nickname = (EditText) findViewById(R.id.et_NICKNAME);
@@ -76,14 +76,14 @@ public class DataStoreActivity extends AppCompatActivity {
         //et_LATITUDE = (EditText) findViewById(R.id.et_LATITUDE);
         //et_LONGITUDE = (EditText) findViewById(R.id.et_LONGITUDE);
 
+        mUserAddressRef = mDatabase.getReference("users/"+mUser.getUid()+"/beacons");
+
         //TODO :: 인증 실패시 조치
         //if(mFirebaseUser == null) {
             //startActivity(new Intent(MainActivity.this, LoginActivity.class));
             //finish();
             //return;
         //}
-
-        displayBeacons();
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -154,52 +154,47 @@ public class DataStoreActivity extends AppCompatActivity {
                 });
     }
 
-    private void displayBeacons() {
-        // users/$Uid/beacons/"Address"
-
-        Log.v("Testing Print Uid", mUser.getUid());
-
-        mUserAddressRef
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        for(DataSnapshot addressSnapshot : dataSnapshot.getChildren()) {
-                            BeaconOnUser myBeaconOnUser = addressSnapshot.getValue(BeaconOnUser.class);
-                            Log.v("Test Print ADDR", myBeaconOnUser.address);
-
-                            findBeaconByAddress(myBeaconOnUser.address);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-
-    }
-
-    private void findBeaconByAddress(String address) {
-        // beacon/address/"beaconOnDB"
-        DatabaseReference beaconInfoRef = mDatabase.getReference("beacon/");
-
-        beaconInfoRef.child(address)
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        BeaconOnDB beaconOnDB = dataSnapshot.getValue(BeaconOnDB.class);
-                        Log.v("Test Print nick", beaconOnDB.nickname);
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-    }
-
-    public static FirebaseDatabase getDatabase()
-    {
-        return mDatabase;
-    }
+//    private void displayBeacons() {
+//        // users/$Uid/beacons/"Address"
+//
+//        Log.v("Testing Print Uid", mUser.getUid());
+//
+//        mUserAddressRef
+//                .addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(DataSnapshot dataSnapshot) {
+//                        for(DataSnapshot addressSnapshot : dataSnapshot.getChildren()) {
+//                            BeaconOnUser myBeaconOnUser = addressSnapshot.getValue(BeaconOnUser.class);
+//                            Log.v("Test Print ADDR", myBeaconOnUser.address);
+//
+//                            findBeaconByAddress(myBeaconOnUser.address);
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(DatabaseError databaseError) {
+//
+//                    }
+//                });
+//
+//    }
+//
+//    private void findBeaconByAddress(String address) {
+//        // beacon/address/"beaconOnDB"
+//        DatabaseReference beaconInfoRef = mDatabase.getReference("beacon/");
+//
+//        beaconInfoRef.child(address)
+//                .addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(DataSnapshot dataSnapshot) {
+//                        BeaconOnDB beaconOnDB = dataSnapshot.getValue(BeaconOnDB.class);
+//                        Log.v("Test Print nick", beaconOnDB.nickname);
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(DatabaseError databaseError) {
+//
+//                    }
+//                });
+//    }
 }
