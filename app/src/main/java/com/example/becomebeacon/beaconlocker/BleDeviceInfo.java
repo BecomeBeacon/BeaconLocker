@@ -16,6 +16,7 @@ public class BleDeviceInfo {
     public String devAddress;          // Device Address
     public int timeout;                // defatlt: 10; decrease per second
 
+    public int limitDistance;
     public int major;                  // Major
     public int minor;                  // Minor
     public int measuredPower;          // Measured Power
@@ -33,11 +34,16 @@ public class BleDeviceInfo {
     public String nickname;
     public String picture;
 
+    public boolean isFar;
+    public boolean isLost;
+
     //Constructor
     public BleDeviceInfo() {
         this.proximityUuid = "";
         this.devName = "";
         this.devAddress = "";
+        this.isFar=false;
+        this.isLost=false;
 
         this.major = 0;
         this.minor = 0;
@@ -68,6 +74,8 @@ public class BleDeviceInfo {
         this.minor = minor;
         this.measuredPower = mPower;
         this.txPower = txPower;
+        this.isFar=false;
+        this.isLost=false;
 
         this.rssi = rssi;
         this.distance = distance;
@@ -249,10 +257,21 @@ public class BleDeviceInfo {
         this.nickname = nickname;
     }
 
+    public void setLimitDistance(int d)
+    {
+        this.limitDistance=d;
+    }
+
     /*----------------------------------------------------------*/
     /*
         거리 계산
      */
+
+    public static void setLimitTime(int t)
+    {
+        TIME_OUT=t;
+    }
+
     public double estimateDistance(int rssiValue, int txPower)
     {
         if(txPower == 0)

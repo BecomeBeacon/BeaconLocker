@@ -58,6 +58,9 @@
             android:label="Beacon Locker">
         </activity>
 
+
+
+
         <activity
             android:name=".DataStoreActivity"
             android:label="Beacon Locker">

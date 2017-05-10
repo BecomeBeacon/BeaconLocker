@@ -148,15 +148,16 @@ public class BleDeviceListAdapter extends BaseAdapter {
             public void onClick(View v)
             {
 
+                Log.d("listadapter","pos : "+pos);
+                Log.d("listadapter","list : "+mBleDeviceInfoArrayList.toString());
                 if(!mAssignedBleMap.containsKey(mBleDeviceInfoArrayList.get(pos).devAddress)) {
                     mAssignedArrayList.add(mBleDeviceInfoArrayList.get(pos));
                     mAssignedBleMap.put(mBleDeviceInfoArrayList.get(pos).getDevAddress(), mBleDeviceInfoArrayList.get(pos));
-                    mHashBleMap.get(mBleDeviceInfoArrayList.get(pos).devAddress).setTimeout(1);
-//                mBleDeviceInfoArrayList.remove(pos);
-//                mHashBleMap.remove(mBleDeviceInfoArrayList.get(pos).devAddress);
+                    //mHashBleMap.get(mBleDeviceInfoArrayList.get(pos).devAddress).setTimeout(1);
+                    mHashBleMap.remove(mBleDeviceInfoArrayList.get(pos).devAddress);
+                    mBleDeviceInfoArrayList.remove(pos);
+
                     notifyDataSetChanged();
-                    Log.d("sss", "Assigned");
-                    Log.d("sss", "mAssigned list : " + mAssignedArrayList.toString());
                 }
 
             }
