@@ -4,15 +4,11 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.media.Image;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.renderscript.RenderScript;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,18 +20,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.becomebeacon.beaconlocker.database.DataStore;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -43,23 +31,25 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import org.w3c.dom.Text;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private MainActivity mActivity;
-    private BluetoothService btService = null;
-    private Handler mHandler;
+
     private LayoutInflater layoutInflater;
 
-    private ListView lvArticleList;
 
 
+
+
+    private ListView myBeacons;
+    private ListView scannedBeacons;
+    private TextView emptyListText;
     private final int REQUEST_ENABLE_BT=9999;
     private BluetoothAdapter mBluetoothAdapter;
     private FirebaseUser mUser;
@@ -67,25 +57,183 @@ public class MainActivity extends AppCompatActivity
     private TextView mEmail;
     private TextView mName;
     private GoogleApiClient mGoogleApiClient;
+    private Intent bleService;
+
+    private boolean usingTracking;
+    private HashMap<String, BleDeviceInfo> scannedMap;
+
+    //myItem
+    private HashMap<String, BleDeviceInfo> mItemMap;
+    private BluetoothScan mBleScan;
+    //private boolean mScanning=false;
+    private boolean isScannig=false;
 
 
+    public ArrayList<BleDeviceInfo> mArrayListBleDevice;    ;
+
+    //myItem
+    public ArrayList<BleDeviceInfo> mAssignedItem;
+
+    public ArrayList<BeaconOnDB> mMyBleDeviceList;
+
+    private BleUtils mBleUtils;
+
+    public static String BEACON_UUID;       // changsu
+    public static  Boolean saveRSSI;
+    private static final long CEHCK_PERIOD = 1000;       // 10초동안 SCAN 과정을 수행함
+
+    private static final long TIMEOUT_LIMIT = 20;
+    private static final long TIMEOUT_PERIOD = 1000;
+    //private static final boolean USING_WINI = true; // TI CC2541 사용: true
+
+    private BleDeviceListAdapter mBleDeviceListAdapter;
+    private MyBeaconsListAdapter mBeaconsListAdapter;
+
+
+
+    private FirebaseDatabase mDatabase;
+
+
+    private boolean mScan;
+
+    private Handler mHandler= new Handler()
+    {
+        public void handleMessage(Message msg)
+        {
+            Log.d("main","in main handler : ");
+            if(mBleScan.getMod()== Values.USE_SCAN) {
+
+                if(mScan) {
+                    mBleScan.getBtAdapter().stopLeScan(mBleScan.mLeScanCallback);
+                    mScan=false;
+                    Log.d("main","scan stop");
+                    Log.d("main","scan break time ; "+Values.scanBreakTime);
+                    mHandler.sendEmptyMessageDelayed(0, Values.scanBreakTime);
+
+
+                }
+                else
+                {
+                    mBleScan.getBtAdapter().startLeScan(mBleScan.mLeScanCallback);
+                    mScan=true;
+                    Log.d("main","scan start");
+                    Log.d("main","scan time ; "+Values.scanTime);
+                    mHandler.sendEmptyMessageDelayed(0, Values.scanTime);
+
+
+                }
+            }
+            else if(mBleScan.getMod()== Values.USE_NOTHING)
+            {
+                if(mScan)
+                {
+                    mScan=false;
+                    mBleScan.getBtAdapter().stopLeScan(mBleScan.mLeScanCallback);
+                }
+                mBeaconsListAdapter.notifyDataSetChanged();
+                mHandler.sendEmptyMessageDelayed(0, CEHCK_PERIOD);
+            }
+
+        }
+    };
+
+    private Handler mTimeOut = new Handler(){
+        public void handleMessage(Message msg){
+            //Log.i("TAG","TIMEOUT UPDATE");
+
+            HashMap<String, BleDeviceInfo> tMap;
+            ArrayList<BleDeviceInfo> tArray;
+            int mod= mBleScan.getMod();
+
+
+
+            int maxRssi = 0;
+            int maxIndex = -1;
+
+
+            if(mod== Values.USE_SCAN) {
+                tMap = scannedMap;
+                tArray = mArrayListBleDevice;
+
+
+                //timeout counter update
+                for (int i = 0; i < tArray.size(); i++) {
+                    tArray.get(i).timeout--;
+                    if (tArray.get(i).timeout == 0) {
+                        tMap.remove(tArray.get(i).devAddress);
+                        tArray.remove(i);
+                    } else {
+                        if (tArray.get(i).rssi > maxRssi || maxRssi == 0) {
+                            maxRssi = tArray.get(i).rssi;
+                            maxIndex = i;
+                        }
+                    }
+                }
+                //TextView text_max_dev = (TextView)findViewById(R.id.text_max_dev);
+
+                if (maxIndex == -1) {
+                    //text_max_dev.setText("No Dev");
+                } else {
+                    //text_max_dev.setText(maxIndex+1 +"th    "
+                    //        + "major: " + mArrayListBleDevice.get(maxIndex).major + "  "
+                    //        + "minor: " + mArrayListBleDevice.get(maxIndex).minor + "  "
+                    //        + mArrayListBleDevice.get(maxIndex).getRssi() +"dbm");
+                }
+            }
+
+            mTimeOut.sendEmptyMessageDelayed(0, TIMEOUT_PERIOD);
+
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mBleUtils=new BleUtils();
+        mBluetoothAdapter= BluetoothAdapter.getDefaultAdapter();
 
+        GetMainActivity.setMA(this);
+
+        myBeacons=(ListView)findViewById(R.id.ble_list);
+        scannedBeacons=(ListView)findViewById(R.id.scan_list);
+        emptyListText=(TextView)findViewById(R.id.text_have_no_ble);
+        if(myBeacons==null||scannedBeacons==null)
+        {
+            Log.d("sss","cannot find listview");
+        }
         mActivity=this;
+        mArrayListBleDevice = new ArrayList<BleDeviceInfo>();
+        mAssignedItem=new ArrayList<BleDeviceInfo>();
+        scannedMap = new HashMap<String, BleDeviceInfo>();
+        mItemMap = new HashMap<String, BleDeviceInfo>();
+        mBleDeviceListAdapter = new BleDeviceListAdapter(this, R.layout.ble_device_row,
+                mArrayListBleDevice, scannedMap,mAssignedItem, mItemMap);
+        mBeaconsListAdapter = new MyBeaconsListAdapter(this, R.layout.ble_device_row,
+                mAssignedItem, mItemMap);
 
+        Values.scanBreakTime=5000;
+        Values.scanTime=5000;
 
+        bleService= new Intent(this,BleService.class);
+        startService(bleService);
+
+        usingTracking=true;
+        mScan=false;
+
+        scannedBeacons = (ListView)findViewById(R.id.scan_list);
+        scannedBeacons.setAdapter(mBleDeviceListAdapter);
+
+        myBeacons=(ListView)findViewById(R.id.ble_list);
+        myBeacons.setAdapter(mBeaconsListAdapter);
+
+        mBleScan =new BluetoothScan(this,mBleDeviceListAdapter,mBeaconsListAdapter);
 
         mAuth=LoginActivity.getAuth();
         mUser=LoginActivity.getUser();
 
 
-        if(btService == null) {
-            btService = new BluetoothService(this, mHandler);
-        }
+
 
         //Slide
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -97,10 +245,48 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 //ble 검색 및 추가
-                //btService.getBleDeviceInfoFromLeScan();
-                Intent intent = new Intent(mActivity, BleScanActivity.class);
-                startActivity(intent);
+                if(mBleScan.getMod()== Values.USE_NOTHING) {
+
+                    myBeacons.setVisibility(View.GONE);
+                    scannedBeacons.setVisibility(View.VISIBLE);
+                    emptyListText.setVisibility(View.GONE);
+                    mBleScan.changeMod(Values.USE_SCAN);
+                    mBleScan.checkBluetooth();
+
+
+                }else if(mBleScan.getMod()== Values.USE_SCAN)
+                {
+                    if(mItemMap.isEmpty())
+                    {
+                        emptyListText.setVisibility(View.VISIBLE);
+                        myBeacons.setVisibility(View.GONE);
+
+                    }
+                    else
+                    {
+                        emptyListText.setVisibility(View.GONE);
+                        myBeacons.setVisibility(View.VISIBLE);
+                    }
+
+                    scannedBeacons.setVisibility(View.GONE);
+                    mBleScan.changeMod(Values.USE_NOTHING);
+
+                }
+
+
+                Log.d("main","scan mod changed "+mBleScan.getMod());
+
            }
+        });
+
+        //TODO : fab - test용 버튼 (db저장메뉴)
+        FloatingActionButton fab_test = (FloatingActionButton) findViewById(R.id.fab_test);
+        fab_test.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), DataStoreActivity.class);
+                startActivity(intent);
+            }
         });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -111,6 +297,7 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
 
 
 
@@ -126,7 +313,7 @@ public class MainActivity extends AppCompatActivity
 //            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 //            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
 //        }
-        btService.checkBluetooth();
+        mBleScan.checkBluetooth();
 
         View headerLayout = navigationView.getHeaderView(0);
         mEmail=(TextView)headerLayout.findViewById(R.id.slide_user_email);
@@ -144,43 +331,8 @@ public class MainActivity extends AppCompatActivity
             mName.setText(mUser.getDisplayName());
         }
 
-        //리스트
-        lvArticleList = (ListView) findViewById(R.id.ble_list);
-        List articleList = new ArrayList();
-
-        articleList.add(new ItemData("노트북", "소지", 15));
-
-        lvArticleList.setAdapter(new ItemListViewAdapter(articleList, this));
 
 
-
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                // 현재 UI 스레드가 아니기 때문에 메시지 큐에 Runnable을 등록 함
-//                runOnUiThread(new Runnable() {
-//                    public void run() {
-//                        // 메시지 큐에 저장될 메시지의 내용
-//
-//                        if (mEmail != null)
-//                            Log.d("sss","mEmail is not null and Email is "+mUser.getEmail());
-//                        else
-//                            Log.d("sss","mEmail is null");
-//                        if (mName != null)
-//                            Log.d("sss","mName is not null and Name is "+mUser.getDisplayName());
-//                         else
-//                            Log.d("sss","mName is null");
-//
-//                        if (mEmail != null)
-//                            mEmail.setText(mUser.getEmail());
-//                        if (mName != null)
-//                            mName.setText(mUser.getDisplayName());
-//
-//                    }
-//                });
-//            }
-//        }).start();
-//
 
 
 
@@ -190,8 +342,15 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+
+
+
     @Override
     protected void onStart() {
+        //displayBeacons();
+        super.onStart();
+        Log.v("Testing Print", "onStart");
+
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -199,7 +358,59 @@ public class MainActivity extends AppCompatActivity
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
         mGoogleApiClient.connect();
-        super.onStart();
+
+        mHandler.sendEmptyMessageDelayed(0, CEHCK_PERIOD);
+        mTimeOut.sendEmptyMessageDelayed(0, TIMEOUT_PERIOD);
+
+        //My Data List 갱신
+        DataFetch dataFetch = new DataFetch(mAssignedItem, mItemMap);
+        dataFetch.displayBeacons();
+
+        //Log.v("mAssignedItem1 Addr", mAssignedItem.get(0).devAddress);
+        Log.v("Test_Print", "Test1");
+
+        //mItemMap = new HashMap<String, BleDeviceInfo>();
+//        for(int i = 0; i < mAssignedItem.size(); i++) {
+//            mItemMap.put(mAssignedItem.get(i).devAddress, mAssignedItem.get(i));
+//        }
+
+        //Log.v("mAssignedItem2 Addr", mAssignedItem.get(0).devAddress);
+        Log.v("Test_Print", "Test2");
+
+        //Log.v("mItemMap Addr", mItemMap.get("EC:08:81:F9:2A:D3").devAddress);
+        //Log.v("mItemMap nick", mItemMap.get("EC:08:81:F9:2A:D3").getNickname());
+    }
+
+    protected void onResume() {
+        super.onResume();
+
+
+
+        //BEACON_UUID = getBeaconUuid(setting);
+
+        if(mItemMap.isEmpty())
+        {
+            myBeacons.setVisibility(View.GONE);
+            scannedBeacons.setVisibility(View.GONE);
+            emptyListText.setVisibility(View.VISIBLE);
+
+        }
+        //saveRSSI = setting.getBoolean("saveRSSI", true);
+
+
+
+
+//        if(isScannig) {
+//            //scanBleDevice(true);            // BLE 장치 검색\
+//            mHandler.sendEmptyMessageDelayed(0, SCAN_PERIOD);
+//            mTimeOut.sendEmptyMessageDelayed(0, TIMEOUT_PERIOD);
+//        }
+//        else
+//        {
+//
+//        }
+
+
     }
 
     //Slide Back
@@ -291,4 +502,93 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    public String getBeaconUuid(SharedPreferences pref)
+    {
+        String uuid = "";
+
+        uuid = pref.getString("keyUUID", BluetoothUuid.WINI_UUID.toString());
+
+        /*
+        if(USING_WINI) {
+            uuid = pref.getString("keyUUID", BluetoothUuid.WINI_UUID.toString());
+            //uuid = BluetoothUuid.WINI_UUID.toString();
+        }
+        else {
+
+            uuid = pref.getString("keyUUID", BluetoothUuid.WIZTURN_PROXIMITY_UUID.toString());
+            //uuid = BluetoothUuid.WIZTURN_PROXIMITY_UUID.toString();
+        }
+        */
+
+        return uuid;
+    }
+
+//    private void displayBeacons(){
+//        Log.v("Testing Print Uid", mUser.getUid());
+//        DatabaseReference userUuidRef = mDatabase.getReference("users");
+//
+//        userUuidRef
+//                .addChildEventListener(new ChildEventListener() {
+//                    @Override
+//                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//                        Log.v("Testing Print", "ChildAdded");
+//                        //get UUID
+//                        for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
+//                            String Uuid = (String) messageSnapshot.getValue();
+//                            Log.v("Testing Print Uuid", Uuid);
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(DatabaseError databaseError) {
+//
+//                    }
+//                });
+//    }
+
+
+
+    private void displayBeaconList(BeaconOnDB beaconOnDB) {
+        mMyBleDeviceList.add(beaconOnDB);
+        Log.v("Testing Print Nick", beaconOnDB.getNickname());
+    }
+
+
+
+
+
+    public HashMap<String, BleDeviceInfo> getScannedMap()
+    {
+        return scannedMap;
+    }
+
+    public HashMap<String, BleDeviceInfo> getmItemMap()
+    {
+        return mItemMap;
+    }
+
+    public ArrayList<BleDeviceInfo> getmArrayListBleDevice()
+    {
+        return mArrayListBleDevice;
+    }
+
+    public ArrayList<BleDeviceInfo> getmAssignedItem()
+    {
+        return mAssignedItem;
+    }
 }

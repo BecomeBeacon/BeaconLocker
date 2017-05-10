@@ -16,10 +16,11 @@ public class BleDeviceInfo {
     public String devAddress;          // Device Address
     public int timeout;                // defatlt: 10; decrease per second
 
-    //public int major;                  // Major
-    //public int minor;                  // Minor
+    public int limitDistance;
+    public int major;                  // Major
+    public int minor;                  // Minor
     public int measuredPower;          // Measured Power
-    //public int txPower;                // Tx Power
+    public int txPower;                // Tx Power
     public int rssi;                   // RSSI
     public double distance;            // Distance
     public double distance2;            // Distance
@@ -29,16 +30,29 @@ public class BleDeviceInfo {
     public String fwVersion;           // Firmware Version
     public KalmanFilter rssiKalmanFileter;
 
+    //User info
+    public String nickname;
+    public String picture;
+
+    //Coordination
+    public String latitude;
+    public String longitude;
+
+    public boolean isFar;
+    public boolean isLost;
+
     //Constructor
     public BleDeviceInfo() {
         this.proximityUuid = "";
         this.devName = "";
         this.devAddress = "";
+        this.isFar=false;
+        this.isLost=false;
 
-        //this.major = 0;
-        //this.minor = 0;
+        this.major = 0;
+        this.minor = 0;
         this.measuredPower = 0;
-        //this.txPower = 0;
+        this.txPower = 0;
         this.rssi = 0;
         this.distance = 0;
         this.distance2 = 0;
@@ -47,6 +61,38 @@ public class BleDeviceInfo {
         this.fwVersion = "";
 
         this.rssiKalmanFileter = new KalmanFilter(0);
+
+        this.nickname = "";
+        this.picture = "";
+
+        this.latitude = "";
+        this.longitude = "";
+    }
+
+    //Constructor
+    public BleDeviceInfo(String devAddress, String nickname) {
+        this.proximityUuid = "";
+        this.devName = "";
+        this.devAddress = devAddress;
+
+        this.major = 0;
+        this.minor = 0;
+        this.measuredPower = 0;
+        this.txPower = 0;
+        this.rssi = 0;
+        this.distance = 0;
+        this.distance2 = 0;
+
+        this.hwVersion = "";
+        this.fwVersion = "";
+
+        this.rssiKalmanFileter = new KalmanFilter(0);
+
+        this.nickname = nickname;
+        this.picture = "";
+
+        this.latitude = "";
+        this.longitude = "";
     }
 
 
@@ -60,36 +106,49 @@ public class BleDeviceInfo {
         this.proximityUuid = proximityUuid;
         this.devName = devName;
         this.devAddress = devAddress;
-        //this.major = major;
-        //this.minor = minor;
+        this.major = major;
+        this.minor = minor;
         this.measuredPower = mPower;
-        //this.txPower = txPower;
+        this.txPower = txPower;
+        this.isFar=false;
+        this.isLost=false;
 
         this.rssi = rssi;
         this.distance = distance;
         this.timeout = TIME_OUT;
 
         this.rssiKalmanFileter = new KalmanFilter(this.rssi);
+
+        this.nickname = "";
+        this.picture = "";
+
+        this.latitude = "";
+        this.longitude = "";
     }
 
     // Measured Power 제외, 거리 1개
     public BleDeviceInfo(String proximityUuid, String devName,
                          String devAddress, int major, int minor, int txPower, int rssi, double distance)
     {
-
         this.proximityUuid = proximityUuid;
         this.devName = devName;
         this.devAddress = devAddress;
-        //this.major = major;
-        //this.minor = minor;
+        this.major = major;
+        this.minor = minor;
         //this.measuredPower = mPower;
-        //this.txPower = txPower;
+        this.txPower = txPower;
 
         this.rssi = rssi;
         this.distance = distance;
         this.timeout = TIME_OUT;
 
         this.rssiKalmanFileter = new KalmanFilter(this.rssi);
+
+        this.nickname = "";
+        this.picture = "";
+
+        this.latitude = "";
+        this.longitude = "";
     }
 
     // Measured Power를 제외한 생성자
@@ -100,10 +159,10 @@ public class BleDeviceInfo {
         this.proximityUuid = proximityUuid;
         this.devName = devName;
         this.devAddress = devAddress;
-        //this.major = major;
-        //this.minor = minor;
+        this.major = major;
+        this.minor = minor;
         //this.measuredPower = mPower;
-        //this.txPower = txPower;
+        this.txPower = txPower;
 
         this.rssi = rssi;
         this.distance = distance;
@@ -146,7 +205,6 @@ public class BleDeviceInfo {
         this.devAddress = deviceAddr;
     }
 
-    /*
     public int getMajor()
     {
         return this.major;
@@ -165,7 +223,7 @@ public class BleDeviceInfo {
     public void setMinor(int minor)
     {
         this.minor = minor;
-    }*/
+    }
 
     public String getMeasuredPower()
     {
@@ -187,7 +245,6 @@ public class BleDeviceInfo {
         this.rssi = rssi;
     }
 
-    /*
     public int getTxPower()
     {
         return this.txPower;
@@ -196,7 +253,7 @@ public class BleDeviceInfo {
     public void setTxPower(int power)
     {
         this.txPower = power;
-    }*/
+    }
 
     public String getHwVersion()
     {
@@ -231,10 +288,38 @@ public class BleDeviceInfo {
     public int getTimeout(){ return this.timeout; }
 
     public void setTimeout(int timeout){ this.timeout = timeout; }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void setLimitDistance(int d)
+    {
+        this.limitDistance=d;
+    }
+
     /*----------------------------------------------------------*/
     /*
         거리 계산
      */
+
+    public static void setLimitTime(int t)
+    {
+        TIME_OUT=t;
+    }
+
     public double estimateDistance(int rssiValue, int txPower)
     {
         if(txPower == 0)
@@ -260,6 +345,12 @@ public class BleDeviceInfo {
             return true;
         else
             return false;
+    }
+
+    public BeaconOnDB toDB() {
+        BeaconOnDB beaconOnDB = new BeaconOnDB(getNickname());
+
+        return beaconOnDB;
     }
 
 }

@@ -19,6 +19,15 @@
         android:visibility="visible"
         tools:layout_editor_absoluteX="8dp"
         tools:layout_editor_absoluteY="8dp">
+        android:visibility="visible">
+
+    </ListView>
+
+    <ListView
+        android:id="@+id/scan_list"
+        android:layout_width="368dp"
+        android:layout_height="495dp"
+        android:visibility="invisible">
 
 
     </ListView>

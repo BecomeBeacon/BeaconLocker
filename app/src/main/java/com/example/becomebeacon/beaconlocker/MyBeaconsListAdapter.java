@@ -1,70 +1,42 @@
 package com.example.becomebeacon.beaconlocker;
 
+import android.bluetooth.BluetoothDevice;
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
 /**
  * Created by 함상혁입니다 on 2017-04-27.
  */
 
-import android.bluetooth.BluetoothDevice;
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-
-/**
- * Created by changsu on 2015-03-23.
- */
-
-import android.bluetooth.BluetoothDevice;
-import android.content.Context;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.content.Intent;
-
-import org.w3c.dom.Text;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
-
-public class BleDeviceListAdapter extends BaseAdapter {
+public class MyBeaconsListAdapter extends BaseAdapter {
     private Context mContext;
     LayoutInflater mInflater;
     int mLayout;
     private boolean isScanning = false;
-    //private ArrayList<BluetoothDevice> mBleDeviceArrayList;
+    private ArrayList<BluetoothDevice> mBleDeviceArrayList;
     private ArrayList<BleDeviceInfo> mBleDeviceInfoArrayList;
-    private ArrayList<BleDeviceInfo> mAssignedArrayList;
 
     // 검색된 BLE 장치가 중복 추가되는 부분을 방지하기 위해 HashMap을 사용
     // String: Device Address(key값)
     private HashMap<String, BleDeviceInfo> mHashBleMap = new HashMap<String, BleDeviceInfo>();
-    private HashMap<String, BleDeviceInfo> mAssignedBleMap = new HashMap<String, BleDeviceInfo>();
 
-    public BleDeviceListAdapter(Context context, int layout, ArrayList<BleDeviceInfo> arBleList,
-                                HashMap<String, BleDeviceInfo> hashBleMap,ArrayList<BleDeviceInfo> mBleList,HashMap<String, BleDeviceInfo> mBleMap)
+    public MyBeaconsListAdapter(Context context, int layout, ArrayList<BleDeviceInfo> arBleList,
+                                HashMap<String, BleDeviceInfo> hashBleMap)
     {
         mContext = context;
         mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         mBleDeviceInfoArrayList = arBleList;
-        mAssignedArrayList=mBleList;
-
         mLayout = layout;
         mHashBleMap = hashBleMap;
-        mAssignedBleMap=mBleMap;
     }
 
     public synchronized void addOrUpdateItem(BleDeviceInfo info)
@@ -107,7 +79,6 @@ public class BleDeviceListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         final int pos = position;
 
-
         if(convertView == null)
         {
             convertView = mInflater.inflate(mLayout, parent, false);
@@ -137,59 +108,42 @@ public class BleDeviceListAdapter extends BaseAdapter {
         txtTxPower.setText("Tx Power: " + String.valueOf(mBleDeviceInfoArrayList.get(position).txPower) + " dbm");      // changsu
 
         TextView txtDistance = (TextView)convertView.findViewById(R.id.text_distance);
-        txtDistance.setText("Distance: " //+ String.format("%.2f",String.valueOf(mBleDeviceInfoArrayList.get(position).distance))+ " m ("
-                 + String.format("%.2f", mBleDeviceInfoArrayList.get(position).distance2) +"m");
+        txtDistance.setText("Distance: "// + String.valueOf(mBleDeviceInfoArrayList.get(position).distance) + " m ("
+                + String.format("%.2f", mBleDeviceInfoArrayList.get(position).distance2) + "m");
 
         TextView txtTimeout = (TextView)convertView.findViewById(R.id.text_timeout);
         txtTimeout.setText("Timeout: " + String.valueOf(mBleDeviceInfoArrayList.get(position).timeout));
 
         Button btnConnect = (Button)convertView.findViewById(R.id.button_connect);
-        btnConnect.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v)
-            {
-
-                Log.d("listadapter","pos : "+pos);
-                Log.d("listadapter","list : "+mBleDeviceInfoArrayList.toString());
-                if(!mAssignedBleMap.containsKey(mBleDeviceInfoArrayList.get(pos).devAddress)) {
-                    mAssignedArrayList.add(mBleDeviceInfoArrayList.get(pos));
-                    mAssignedBleMap.put(mBleDeviceInfoArrayList.get(pos).getDevAddress(), mBleDeviceInfoArrayList.get(pos));
-                    //mHashBleMap.get(mBleDeviceInfoArrayList.get(pos).devAddress).setTimeout(1);
-                    mHashBleMap.remove(mBleDeviceInfoArrayList.get(pos).devAddress);
-                    mBleDeviceInfoArrayList.remove(pos);
-
-                    notifyDataSetChanged();
-                }
-
-            }
-        });
+        btnConnect.setVisibility(View.GONE);
 //
 //
-        return convertView;
+       return convertView;
     }
 
 
-//    public void addDevice(BluetoothDevice device)
-//    {
-//        if(!mBleDeviceArrayList.contains(device))
-//        {
-//            mBleDeviceArrayList.add(device);
-//        }
-//    }
+    public void addDevice(BluetoothDevice device)
+    {
+        if(!mBleDeviceArrayList.contains(device))
+        {
+            mBleDeviceArrayList.add(device);
+        }
+    }
 
-//    public BluetoothDevice getDevice(int position)
-//    {
-//        return mBleDeviceArrayList.get(position);
-//    }
-//
-//    public int getBleDeviceCount()
-//    {
-//        return mBleDeviceArrayList.size();
-//    }
-//
-//    public Object getBleDeviceItem(int i)
-//    {
-//        return mBleDeviceArrayList.get(i);
-//    }
+    public BluetoothDevice getDevice(int position)
+    {
+        return mBleDeviceArrayList.get(position);
+    }
+
+    public int getBleDeviceCount()
+    {
+        return mBleDeviceArrayList.size();
+    }
+
+    public Object getBleDeviceItem(int i)
+    {
+        return mBleDeviceArrayList.get(i);
+    }
 
     /*  BleDeviceScanActivity에서 최대 RSSI Beacon을 계산함
     public BleDeviceInfo getMaxRssiBeacon()
