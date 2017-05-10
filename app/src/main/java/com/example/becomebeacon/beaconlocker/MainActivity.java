@@ -1,5 +1,6 @@
 package com.example.becomebeacon.beaconlocker;
 
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
@@ -312,10 +313,13 @@ public class MainActivity extends AppCompatActivity
         DataFetch dataFetch = new DataFetch(mAssignedItem, mItemMap);
         dataFetch.displayBeacons();
 
+        ProgressDialog asyncDialog = new ProgressDialog(
+                MainActivity.this);
+
         //Log.v("mAssignedItem1 Addr", mAssignedItem.get(0).devAddress);
         Log.v("Test_Print", "Test1");
 
-        //mItemMap = new HashMap<String, BleDeviceInfo>();
+//        mItemMap = new HashMap<String, BleDeviceInfo>();
 //        for(int i = 0; i < mAssignedItem.size(); i++) {
 //            mItemMap.put(mAssignedItem.get(i).devAddress, mAssignedItem.get(i));
 //        }
