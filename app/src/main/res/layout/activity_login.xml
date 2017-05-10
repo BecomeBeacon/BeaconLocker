@@ -2,8 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/common_google_signin_btn_text_dark_default"
+    android:orientation="vertical"
     android:weightSum="1">
 
 
@@ -16,9 +18,9 @@
         android:theme="?attr/actionBarTheme" />
 
     <LinearLayout
-        android:layout_marginTop="33dp"
         android:layout_width="match_parent"
         android:layout_height="157dp"
+        android:layout_marginTop="33dp"
         android:orientation="horizontal">
 
         <ImageView

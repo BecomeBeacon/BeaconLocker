@@ -16,10 +16,10 @@ public class BleDeviceInfo {
     public String devAddress;          // Device Address
     public int timeout;                // defatlt: 10; decrease per second
 
-    public int major;                  // Major
-    public int minor;                  // Minor
+    //public int major;                  // Major
+    //public int minor;                  // Minor
     public int measuredPower;          // Measured Power
-    public int txPower;                // Tx Power
+    //public int txPower;                // Tx Power
     public int rssi;                   // RSSI
     public double distance;            // Distance
     public double distance2;            // Distance
@@ -35,10 +35,10 @@ public class BleDeviceInfo {
         this.devName = "";
         this.devAddress = "";
 
-        this.major = 0;
-        this.minor = 0;
+        //this.major = 0;
+        //this.minor = 0;
         this.measuredPower = 0;
-        this.txPower = 0;
+        //this.txPower = 0;
         this.rssi = 0;
         this.distance = 0;
         this.distance2 = 0;
@@ -60,10 +60,10 @@ public class BleDeviceInfo {
         this.proximityUuid = proximityUuid;
         this.devName = devName;
         this.devAddress = devAddress;
-        this.major = major;
-        this.minor = minor;
+        //this.major = major;
+        //this.minor = minor;
         this.measuredPower = mPower;
-        this.txPower = txPower;
+        //this.txPower = txPower;
 
         this.rssi = rssi;
         this.distance = distance;
@@ -80,10 +80,10 @@ public class BleDeviceInfo {
         this.proximityUuid = proximityUuid;
         this.devName = devName;
         this.devAddress = devAddress;
-        this.major = major;
-        this.minor = minor;
+        //this.major = major;
+        //this.minor = minor;
         //this.measuredPower = mPower;
-        this.txPower = txPower;
+        //this.txPower = txPower;
 
         this.rssi = rssi;
         this.distance = distance;
@@ -100,10 +100,10 @@ public class BleDeviceInfo {
         this.proximityUuid = proximityUuid;
         this.devName = devName;
         this.devAddress = devAddress;
-        this.major = major;
-        this.minor = minor;
+        //this.major = major;
+        //this.minor = minor;
         //this.measuredPower = mPower;
-        this.txPower = txPower;
+        //this.txPower = txPower;
 
         this.rssi = rssi;
         this.distance = distance;
@@ -146,6 +146,7 @@ public class BleDeviceInfo {
         this.devAddress = deviceAddr;
     }
 
+    /*
     public int getMajor()
     {
         return this.major;
@@ -164,7 +165,7 @@ public class BleDeviceInfo {
     public void setMinor(int minor)
     {
         this.minor = minor;
-    }
+    }*/
 
     public String getMeasuredPower()
     {
@@ -186,6 +187,7 @@ public class BleDeviceInfo {
         this.rssi = rssi;
     }
 
+    /*
     public int getTxPower()
     {
         return this.txPower;
@@ -194,7 +196,7 @@ public class BleDeviceInfo {
     public void setTxPower(int power)
     {
         this.txPower = power;
-    }
+    }*/
 
     public String getHwVersion()
     {
