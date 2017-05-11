@@ -37,6 +37,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static android.view.View.VISIBLE;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -132,6 +134,15 @@ public class MainActivity extends AppCompatActivity
                     mBleScan.getBtAdapter().stopLeScan(mBleScan.mLeScanCallback);
                 }
                 mBeaconsListAdapter.notifyDataSetChanged();
+                if(mItemMap.isEmpty()) {
+                    emptyListText.setVisibility(View.VISIBLE);
+                    myBeacons.setVisibility(View.GONE);
+                }
+                else {
+                    emptyListText.setVisibility(View.GONE);
+                    myBeacons.setVisibility(View.VISIBLE);
+                }
+                Log.v("Test Print", "mItem.:"+mItemMap.toString());
                 mHandler.sendEmptyMessageDelayed(0, CEHCK_PERIOD);
             }
 
@@ -249,7 +260,7 @@ public class MainActivity extends AppCompatActivity
                 if(mBleScan.getMod()== Values.USE_NOTHING) {
 
                     myBeacons.setVisibility(View.GONE);
-                    scannedBeacons.setVisibility(View.VISIBLE);
+                    scannedBeacons.setVisibility(VISIBLE);
                     emptyListText.setVisibility(View.GONE);
                     mBleScan.changeMod(Values.USE_SCAN);
                     mBleScan.checkBluetooth();
@@ -259,14 +270,14 @@ public class MainActivity extends AppCompatActivity
                 {
                     if(mItemMap.isEmpty())
                     {
-                        emptyListText.setVisibility(View.VISIBLE);
+                        emptyListText.setVisibility(VISIBLE);
                         myBeacons.setVisibility(View.GONE);
 
                     }
                     else
                     {
                         emptyListText.setVisibility(View.GONE);
-                        myBeacons.setVisibility(View.VISIBLE);
+                        myBeacons.setVisibility(VISIBLE);
                     }
 
                     scannedBeacons.setVisibility(View.GONE);
@@ -396,7 +407,7 @@ public class MainActivity extends AppCompatActivity
         {
             myBeacons.setVisibility(View.GONE);
             scannedBeacons.setVisibility(View.GONE);
-            emptyListText.setVisibility(View.VISIBLE);
+            emptyListText.setVisibility(VISIBLE);
 
         }
         //saveRSSI = setting.getBoolean("saveRSSI", true);
