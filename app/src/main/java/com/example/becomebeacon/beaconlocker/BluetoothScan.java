@@ -359,8 +359,8 @@ public class BluetoothScan {
             if(mItemMap.containsKey(item.devAddress))
             {
                 Log.d("SCAN","Tracking.. contain");
-                if(item.limitDistance<item.distance2) {
-                //if(0.2<item.distance2) {
+                //if(item.limitDistance<item.distance2) {
+                if(0.2<item.distance2) {
                     //멀다 팝업 띄운다
                     mBleService.pushNotification();
 

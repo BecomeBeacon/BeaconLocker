@@ -127,9 +127,15 @@ public class BleService extends Service {
 
         //커스텀 화면 만들기
         RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.push_alarm);
+        //remoteViews.setImageViewResource(R.id.img, R.drawable.main_logo);
+        //remoteViews.setTextViewText(R.id.title, "Title");
         remoteViews.setImageViewResource(R.id.img, R.mipmap.ic_launcher);
         remoteViews.setTextViewText(R.id.title, "Title");
-        remoteViews.setTextViewText(R.id.message, "message");
+
+
+
+
+
 
         //노티피케이션에 커스텀 뷰 장착
         mBuilder.setContent(remoteViews);
@@ -142,7 +148,7 @@ public class BleService extends Service {
 
 
         //토스트 띄우기
-        Toast.makeText(BleService.this, "뜸?", Toast.LENGTH_LONG).show();
+        Toast.makeText(BleService.this, "비컨 멀어짐", Toast.LENGTH_LONG).show();
     }
 
     private PendingIntent createPendingIntent(){

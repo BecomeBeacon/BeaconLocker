@@ -35,8 +35,6 @@ public class DataFetch {
 
         mUserAddressRef = mDatabase.getReference("users/"+mUser.getUid()+"/beacons");
 
-        myBleInfo = new ArrayList<BleDeviceInfo>();
-
         Log.v("Test_Print_Uid", mUser.getUid());
 
         mUserAddressRef
