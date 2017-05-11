@@ -488,6 +488,8 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_logout) {
             signOut();
+            mHandler.removeMessages(0);
+            mTimeOut.removeMessages(0);
             finish();
 
         }
