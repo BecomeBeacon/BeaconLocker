@@ -12,10 +12,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
-
-
     <application
-
         android:name=".MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -30,21 +27,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name">
-
-        </activity>
-
+            android:label="@string/app_name"></activity>
         <activity
             android:name=".ItemAcitivity"
             android:label="@string/app_name">
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-
+            <meta-data
+                android:name="com.google.android.gms.version"
+                android:value="@integer/google_play_services_version" />
         </activity>
 
         <service
@@ -60,17 +51,11 @@
 
         <activity
             android:name=".MapActivity"
-            android:label="Beacon Locker">
-        </activity>
-
-
-
-
+            android:label="Beacon Locker"></activity>
         <activity
             android:name=".DataStoreActivity"
-            android:label="Beacon Locker">
-
-        </activity>
+            android:label="Beacon Locker"></activity>
+        <activity android:name=".LafActivity"></activity>
     </application>
 
 </manifest>
