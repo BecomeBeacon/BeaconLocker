@@ -16,7 +16,7 @@ public class BleDeviceInfo {
     public String devAddress;          // Device Address
     public int timeout;                // defatlt: 10; decrease per second
 
-    public int limitDistance;
+    public double limitDistance;
     public int major;                  // Major
     public int minor;                  // Minor
     public int measuredPower;          // Measured Power
@@ -56,6 +56,7 @@ public class BleDeviceInfo {
         this.rssi = 0;
         this.distance = 0;
         this.distance2 = 0;
+        this.limitDistance=Values.basicLimitDistance;
 
         this.hwVersion = "";
         this.fwVersion = "";
@@ -74,6 +75,7 @@ public class BleDeviceInfo {
         this.proximityUuid = "";
         this.devName = "";
         this.devAddress = devAddress;
+        this.limitDistance=Values.basicLimitDistance;
 
         this.major = 0;
         this.minor = 0;
@@ -116,6 +118,7 @@ public class BleDeviceInfo {
         this.rssi = rssi;
         this.distance = distance;
         this.timeout = TIME_OUT;
+        this.limitDistance=Values.basicLimitDistance;
 
         this.rssiKalmanFileter = new KalmanFilter(this.rssi);
 

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -190,10 +191,16 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+
         mBleUtils=new BleUtils();
         mBluetoothAdapter= BluetoothAdapter.getDefaultAdapter();
 
         GetMainActivity.setMA(this);
+
+        bleService= new Intent(this,BleService.class);
+        startService(bleService);
 
         myBeacons=(ListView)findViewById(R.id.ble_list);
         scannedBeacons=(ListView)findViewById(R.id.scan_list);
@@ -215,8 +222,7 @@ public class MainActivity extends AppCompatActivity
         Values.scanBreakTime=5000;
         Values.scanTime=5000;
 
-        bleService= new Intent(this,BleService.class);
-        startService(bleService);
+
 
         usingTracking=true;
         mScan=false;

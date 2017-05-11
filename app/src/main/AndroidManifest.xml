@@ -47,6 +47,11 @@
 
         </activity>
 
+        <service
+            android:name=".BleService"
+            android:label="BleService" />
+
+
 
 
         <meta-data
