@@ -86,7 +86,13 @@ public class DataStoreActivity extends AppCompatActivity {
             //finish();
             //return;
         //}
-        et_Address.setText(mBleDeviceInfo.devAddress);
+        if(et_Address!=null&&mBleDeviceInfo!=null) {
+            et_Address.setText(mBleDeviceInfo.devAddress);
+        }
+        else if(mBleDeviceInfo==null)
+        {
+            Log.d("DSA","mble is null");
+        }
 
     }
     @Override

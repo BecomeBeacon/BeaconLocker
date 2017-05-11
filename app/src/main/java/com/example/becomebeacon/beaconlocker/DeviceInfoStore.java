@@ -13,6 +13,6 @@ public class DeviceInfoStore {
     }
     static public void setBleInfo(BleDeviceInfo bd)
     {
-        bdi=bdi;
+        bdi=bd;
     }
 }

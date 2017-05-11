@@ -97,7 +97,10 @@ public class BluetoothScan {
 
         //saveRSSI = setting.getBoolean("saveRSSI", true);
 
-        mItemMap=mActivity.getmItemMap();
+        if(mActivity!=null) {
+            mItemMap = mActivity.getmItemMap();
+        }
+
         mBleUtils=new BleUtils();
         mod = Values.USE_TRACK;
 
