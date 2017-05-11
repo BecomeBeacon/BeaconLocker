@@ -26,7 +26,7 @@ public class LafActivity extends AppCompatActivity {
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             view.loadUrl(url);
             view.loadUrl("javascript:syncAuth('" + LoginActivity.getAuth() + "')");
-            return true;
+            return true; //asdfasdf
         }
     }
 
