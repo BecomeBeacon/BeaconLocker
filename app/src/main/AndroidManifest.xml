@@ -38,6 +38,13 @@
                 android:value="@integer/google_play_services_version" />
         </activity>
 
+        <service
+            android:name=".BleService"
+            android:label="BleService" />
+
+
+
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBiSqQMWvOqr3d6BUAx5MkM3Xp0i83ODl0" />

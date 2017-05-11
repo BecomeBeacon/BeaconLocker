@@ -10,4 +10,5 @@ public class Values {
     public static final int USE_NOTHING=55;
     public static int scanBreakTime=5000;
     public static int scanTime=5000;
+    public static double basicLimitDistance = 0.6;
 }

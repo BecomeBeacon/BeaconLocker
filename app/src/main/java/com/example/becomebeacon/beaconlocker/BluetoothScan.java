@@ -1,6 +1,9 @@
 package com.example.becomebeacon.beaconlocker;
 
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
@@ -8,6 +11,9 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.ListView;
+import android.content.SharedPreferences;
+import android.widget.Toast;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -78,15 +84,23 @@ public class BluetoothScan {
     private BleUtils mBleUtils;
 
 
-    BluetoothScan()
+    BleService mBleService;
+
+
+    BluetoothScan(BleService bleS )
     {
-        setting = PreferenceManager.getDefaultSharedPreferences(mActivity);
-        BEACON_UUID = getBeaconUuid(setting);
+        mBleService=bleS;
+        mActivity=GetMainActivity.getMainActity();
+        //setting = getSharedPreferences;
+        BEACON_UUID = getBeaconUuid();
 
-        saveRSSI = setting.getBoolean("saveRSSI", true);
 
+        //saveRSSI = setting.getBoolean("saveRSSI", true);
+
+        mItemMap=mActivity.getmItemMap();
         mBleUtils=new BleUtils();
         mod = Values.USE_TRACK;
+
 
         btAdapter = BluetoothAdapter.getDefaultAdapter();
     }
@@ -222,7 +236,6 @@ public class BluetoothScan {
 
         txPower = scanRecord[29];
 
-        Log.d("SCAN", "in lescan");
         //Log.d(TAG, "proximityUUID: " + proximityUUID);
 
 
@@ -341,10 +354,17 @@ public class BluetoothScan {
         }
         else if(mod== Values.USE_TRACK)
         {
+            Log.d("SCAN","Tracking...");
+            Log.d("SCAN","mItem : "+mItemMap.toString());
             if(mItemMap.containsKey(item.devAddress))
             {
+                Log.d("SCAN","Tracking.. contain");
                 if(item.limitDistance<item.distance2) {
+                //if(0.2<item.distance2) {
                     //멀다 팝업 띄운다
+                    mBleService.pushNotification();
+
+                    //Log.d("SCAN","too far");
                     mItemMap.get(item.devAddress).isFar=true;
                     //팝업 내용에따라 isLost 갱신
                 }
@@ -382,25 +402,27 @@ public class BluetoothScan {
         public void onLeScan(final BluetoothDevice device, final int rssi, final byte[] scanRecord) {
             mScanning = true;
             Log.d("SCAN","mod is "+mod);
-            Log.d("SCAN","in callback");
+
             getBleDeviceInfoFromLeScan(device, rssi, scanRecord);
                     /*
                         Exception 방지를 위해 runOnUiThread()에서 notifyDataSetChanged()를 호출함
                         - Only the original thread that created a view hierarchy can touch its views
                      */
-            mActivity.runOnUiThread(new Runnable() {
-                public void run() {
-                    if(mod== Values.USE_SCAN) {//스캔중일시
+            if(mod==Values.USE_SCAN) {
+                mActivity.runOnUiThread(new Runnable() {
+                    public void run() {
+                        if (mod == Values.USE_SCAN) {//스캔중일시
 
-                        mBleDeviceListAdapter.notifyDataSetChanged();
+                            mBleDeviceListAdapter.notifyDataSetChanged();
 
-                    }else{//자기 비컨만 표시
+                        } else {//자기 비컨만 표시
 
-                        //mBeaconsListAdapter.notifyDataSetChanged();
+                            //mBeaconsListAdapter.notifyDataSetChanged();
+                        }
+
                     }
-
-                }
-            });
+                });
+            }
 
         }
     };
@@ -435,7 +457,29 @@ public class BluetoothScan {
     {
         String uuid = "";
 
-        uuid = pref.getString("keyUUID", BluetoothUuid.WINI_UUID.toString());
+        //uuid = pref.getString("keyUUID", BluetoothUuid.WINI_UUID.toString());
+        uuid=BluetoothUuid.WINI_UUID.toString();
+
+        /*
+        if(USING_WINI) {
+            uuid = pref.getString("keyUUID", BluetoothUuid.WINI_UUID.toString());
+            //uuid = BluetoothUuid.WINI_UUID.toString();
+        }
+        else {
+
+            uuid = pref.getString("keyUUID", BluetoothUuid.WIZTURN_PROXIMITY_UUID.toString());
+            //uuid = BluetoothUuid.WIZTURN_PROXIMITY_UUID.toString();
+        }
+        */
+
+        return uuid;
+    }
+    public String getBeaconUuid()
+    {
+        String uuid = "";
+
+        //uuid = pref.getString("keyUUID", BluetoothUuid.WINI_UUID.toString());
+        uuid=BluetoothUuid.WINI_UUID.toString();
 
         /*
         if(USING_WINI) {
