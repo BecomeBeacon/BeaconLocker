@@ -36,6 +36,7 @@ public class DataStoreActivity extends AppCompatActivity {
     private FirebaseUser mUser;
     private FirebaseDatabase mDatabase;
     private DatabaseReference mUserAddressRef;
+    private BleDeviceInfo mBleDeviceInfo;
 
     private TextView et_Address;
     private EditText et_Nickname;
@@ -49,6 +50,7 @@ public class DataStoreActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
+        mBleDeviceInfo=DeviceInfoStore.getBleInfo();
 
         //툴바 세팅
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_additem);
@@ -84,6 +86,14 @@ public class DataStoreActivity extends AppCompatActivity {
             //finish();
             //return;
         //}
+        if(et_Address!=null&&mBleDeviceInfo!=null) {
+            et_Address.setText(mBleDeviceInfo.devAddress);
+        }
+        else if(mBleDeviceInfo==null)
+        {
+            Log.d("DSA","mble is null");
+        }
+
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
