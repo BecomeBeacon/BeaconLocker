@@ -457,7 +457,8 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_machine) {
 
         } else if (id == R.id.nav_laf) {
-
+            Intent intent = new Intent(getApplicationContext(), LafActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_map) {
             Intent intent = new Intent(getApplicationContext(), MapActivity.class);
             startActivity(intent);
