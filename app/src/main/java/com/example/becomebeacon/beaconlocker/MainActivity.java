@@ -24,6 +24,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.becomebeacon.beaconlocker.database.SettingActivity;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -454,15 +455,14 @@ public class MainActivity extends AppCompatActivity
 
         int id = item.getItemId();
 
-        if (id == R.id.nav_machine) {
-
-        } else if (id == R.id.nav_laf) {
+        if (id == R.id.nav_laf) {
 
         } else if (id == R.id.nav_map) {
             Intent intent = new Intent(getApplicationContext(), MapActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_setting) {
-
+            Intent intent1 = new Intent(getApplicationContext(), SettingActivity.class);
+            startActivity(intent1);
         } else if (id == R.id.nav_logout) {
             signOut();
             finish();

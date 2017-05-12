@@ -75,11 +75,11 @@ public class ItemListViewAdapter extends BaseAdapter {
         }
 
         TextView tvSubject = (TextView) convertView.findViewById(R.id.tvNickname);
-        TextView tvAuthor = (TextView) convertView.findViewById(R.id.tvIslost);
+        //TextView tvAuthor = (TextView) convertView.findViewById(R.id.tvIslost);
         TextView tvHitCount = (TextView) convertView.findViewById(R.id.tvMeter);
 
         ItemData article = (ItemData) getItem(position); tvSubject.setText(article.getNickname());
-        tvAuthor.setText(article.getIslost());
+        //tvAuthor.setText(article.getIslost());
         String str = article.getMeter() + "m";
         tvHitCount.setText(str);
         return convertView;

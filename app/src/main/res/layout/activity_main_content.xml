@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/background_light"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.becomebeacon.beaconlocker.MainActivity"
     tools:showIn="@layout/activity_main_slide">
@@ -14,11 +13,6 @@
         android:id="@+id/ble_list"
         android:layout_width="368dp"
         android:layout_height="495dp"
-        android:background="?android:attr/selectableItemBackground"
-        android:clickable="true"
-        android:visibility="visible"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="8dp">
         android:visibility="visible">
 
     </ListView>

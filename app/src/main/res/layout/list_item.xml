@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="5dp">
@@ -23,9 +24,9 @@
 
         <TextView
             android:id="@+id/tvMeter"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="22990.73"
+            android:layout_weight="475.23"
             android:gravity="right"
             android:paddingRight="5dp"
             android:text="15m"
@@ -34,10 +35,27 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/tvIslost"
+        android:id="@+id/textView7"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="33.71"
         android:paddingLeft="5dp"
         android:text="글쓴이" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="473dp"
+        android:layout_weight="12.18">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/floatingActionButton3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:clickable="true"
+            app:fabSize="mini"
+            app:srcCompat="@android:drawable/ic_dialog_map" />
+    </RelativeLayout>
 
 </LinearLayout>

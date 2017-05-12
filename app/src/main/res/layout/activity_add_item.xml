@@ -5,7 +5,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="1">
+    android:weightSum="1"
+    tools:context=".ItemAcitivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_additem"
@@ -24,24 +25,24 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="208dp"
+        android:layout_weight="0.72"
         android:columnCount="2"
         android:orientation="horizontal"
-        android:rowCount="4"
-        android:layout_weight="0.51">
+        android:rowCount="4">
 
 
         <TextView
+            android:id="@+id/textView2"
             android:layout_width="96dp"
             android:layout_height="49dp"
+            android:layout_alignBaseline="@+id/et_address"
+            android:layout_alignBottom="@+id/et_address"
+            android:layout_alignParentStart="true"
             android:layout_column="0"
             android:layout_row="0"
             android:ems="10"
             android:text="Addr"
-            android:textSize="20sp"
-            android:id="@+id/textView2"
-            android:layout_alignBaseline="@+id/et_address"
-            android:layout_alignBottom="@+id/et_address"
-            android:layout_alignParentStart="true" />
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/et_address"
@@ -55,56 +56,78 @@
             android:textSize="12sp" />
 
         <TextView
+            android:id="@+id/textView3"
             android:layout_width="94dp"
             android:layout_height="40dp"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/textView2"
             android:layout_column="0"
             android:layout_row="1"
             android:text="별칭"
-            android:textSize="20sp"
-            android:id="@+id/textView3"
-            android:layout_below="@+id/textView2"
-            android:layout_alignParentStart="true" />
+            android:textSize="20sp" />
 
         <EditText
             android:id="@+id/et_NICKNAME"
             android:layout_width="258dp"
             android:layout_height="49dp"
+            android:layout_alignBaseline="@+id/textView3"
+            android:layout_alignBottom="@+id/textView3"
             android:layout_column="1"
             android:layout_row="1"
+            android:layout_toEndOf="@+id/textView2"
             android:inputType="textPersonName"
             android:text="노트북"
-            android:textSize="15sp"
-            android:layout_above="@+id/textView4"
-            android:layout_toEndOf="@+id/textView2" />
+            android:textSize="15sp" />
 
         <TextView
+            android:id="@+id/textView4"
             android:layout_width="94dp"
             android:layout_height="43dp"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/textView5"
             android:layout_column="0"
+            android:layout_marginTop="15dp"
             android:layout_row="2"
             android:text="사진"
-            android:textSize="20sp"
-            android:id="@+id/textView4"
-            android:layout_below="@+id/textView3"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="14dp" />
+            android:textSize="20sp" />
 
 
         <ImageView
             android:id="@+id/et_PICTURE"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/textView4"
-            android:background="@mipmap/ic_launcher_round" />
+            android:layout_marginBottom="11dp"
+            android:background="@android:color/darker_gray" />
 
         <Button
             android:id="@+id/btn_add_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="사진선택"
-            android:layout_alignBottom="@+id/iv_image"
-            android:layout_toEndOf="@+id/iv_image" />
+            android:layout_alignBottom="@+id/et_PICTURE"
+            android:layout_alignEnd="@+id/textView6"
+            android:text="사진선택" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="94dp"
+            android:layout_height="40dp"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/et_NICKNAME"
+            android:layout_marginTop="15dp"
+            android:text="측적거리"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/textView5"
+            android:layout_alignStart="@+id/et_NICKNAME"
+            android:layout_alignTop="@+id/textView5"
+            android:layout_marginStart="14dp"
+            android:text="40m" />
 
     </RelativeLayout>
 

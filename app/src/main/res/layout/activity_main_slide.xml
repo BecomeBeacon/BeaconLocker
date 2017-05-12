@@ -29,8 +29,9 @@
         android:layout_height="76dp"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:backgroundTint="@color/colorPrimary"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        android:tint="@color/common_google_signin_btn_text_dark_default"
+        app:backgroundTint="@color/colorButton"
+        app:srcCompat="@drawable/ic_main_ble" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_test"
@@ -38,9 +39,10 @@
         android:layout_height="76dp"
         android:layout_gravity="top|right"
         android:layout_margin="@dimen/fab_margin"
-        app:backgroundTint="@color/colorPrimary"
+        android:tint="@color/common_google_signin_btn_text_dark_default"
+        app:backgroundTint="@color/colorButton"
         app:layout_anchor="@+id/include"
         app:layout_anchorGravity="bottom|left"
-        app:srcCompat="@mipmap/ic_launcher" />
+        app:srcCompat="@drawable/ic_main_item" />
 
 </android.support.design.widget.CoordinatorLayout>
