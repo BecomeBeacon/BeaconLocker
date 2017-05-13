@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_additem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/AppTheme.AppBarOverlay">
+    </android.support.v7.widget.Toolbar>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.12" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="208dp"
+        android:columnCount="2"
+        android:orientation="horizontal"
+        android:rowCount="4"
+        android:layout_weight="0.51">
+
+
+        <TextView
+            android:layout_width="96dp"
+            android:layout_height="49dp"
+            android:layout_column="0"
+            android:layout_row="0"
+            android:ems="10"
+            android:text="Addr"
+            android:textSize="20sp"
+            android:id="@+id/textView2"
+            android:layout_alignBaseline="@+id/et_address"
+            android:layout_alignBottom="@+id/et_address"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:id="@+id/et_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_marginTop="14dp"
+            android:layout_row="0"
+            android:layout_toEndOf="@+id/textView2"
+            android:textSize="12sp" />
+
+        <TextView
+            android:layout_width="94dp"
+            android:layout_height="40dp"
+            android:layout_column="0"
+            android:layout_row="1"
+            android:text="별칭"
+            android:textSize="20sp"
+            android:id="@+id/textView3"
+            android:layout_below="@+id/textView2"
+            android:layout_alignParentStart="true" />
+
+        <EditText
+            android:id="@+id/et_NICKNAME"
+            android:layout_width="258dp"
+            android:layout_height="49dp"
+            android:layout_column="1"
+            android:layout_row="1"
+            android:inputType="textPersonName"
+            android:text="노트북"
+            android:textSize="15sp"
+            android:layout_above="@+id/textView4"
+            android:layout_toEndOf="@+id/textView2" />
+
+        <TextView
+            android:layout_width="94dp"
+            android:layout_height="43dp"
+            android:layout_column="0"
+            android:layout_row="2"
+            android:text="사진"
+            android:textSize="20sp"
+            android:id="@+id/textView4"
+            android:layout_below="@+id/textView3"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="14dp" />
+
+
+        <ImageView
+            android:id="@+id/iv_image"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/textView4"
+            android:background="@mipmap/ic_launcher_round" />
+
+        <Button
+            android:id="@+id/btn_add_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="사진선택"
+            android:layout_alignBottom="@+id/iv_image"
+            android:layout_toEndOf="@+id/iv_image" />
+
+    </RelativeLayout>
+
+    <!--<Button-->
+        <!--android:id="@+id/button_saveForm"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:layout_weight="0.18"-->
+        <!--android:background="@color/colorPrimary"-->
+        <!--android:text="저장하기"-->
+        <!--android:textColor="@android:color/white" />-->
+
+
+    <!--
+    <Button
+        android:id="@+id/button_clearForm"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.42"
+        android:text="초기화" />
+
+    <EditText
+        android:id="@+id/et_LATITUDE"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="LATITUDE" />
+
+    <EditText
+        android:id="@+id/et_LONGITUDE"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="LONGITUDE" />
+
+         <TextView
+            android:id="@+id/et_PICTURE"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_row="2"
+            android:inputType="textPersonName"
+            android:text="개발중"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true" />
+-->
+
+</LinearLayout>
