@@ -64,19 +64,21 @@ public class MainActivity extends AppCompatActivity
     private Intent bleService;
 
     private boolean usingTracking;
-    private HashMap<String, BleDeviceInfo> scannedMap;
 
-    //myItem
-    private HashMap<String, BleDeviceInfo> mItemMap;
     private BluetoothScan mBleScan;
     //private boolean mScanning=false;
     private boolean isScannig=false;
 
 
-    public ArrayList<BleDeviceInfo> mArrayListBleDevice;    ;
+    private HashMap<String, BleDeviceInfo> scannedMap;
+    //myItem
+    private HashMap<String, BleDeviceInfo> mItemMap;
+
+    private ArrayList<BleDeviceInfo> mArrayListBleDevice;    ;
+    private ArrayList<BleDeviceInfo> mAssignedItem;
 
     //myItem
-    public ArrayList<BleDeviceInfo> mAssignedItem;
+
 
     public ArrayList<BeaconOnDB> mMyBleDeviceList;
 
@@ -223,10 +225,10 @@ public class MainActivity extends AppCompatActivity
             Log.d("sss","cannot find listview");
         }
         mActivity=this;
-        mArrayListBleDevice = new ArrayList<BleDeviceInfo>();
-        mAssignedItem=new ArrayList<BleDeviceInfo>();
-        scannedMap = new HashMap<String, BleDeviceInfo>();
-        mItemMap = new HashMap<String, BleDeviceInfo>();
+        mArrayListBleDevice = BeaconList.mArrayListBleDevice;
+        mAssignedItem=BeaconList.mAssignedItem;
+        scannedMap = BeaconList.scannedMap;
+        mItemMap = BeaconList.mItemMap;
         mBleDeviceListAdapter = new BleDeviceListAdapter(this, R.layout.ble_device_row,
                 mArrayListBleDevice, scannedMap,mAssignedItem, mItemMap);
         mBeaconsListAdapter = new MyBeaconsListAdapter(this, R.layout.ble_device_row,
@@ -303,8 +305,7 @@ public class MainActivity extends AppCompatActivity
         fab_test.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), DataStoreActivity.class);
-                startActivity(intent);
+                stopService(bleService);
             }
         });
 
@@ -586,7 +587,16 @@ public class MainActivity extends AppCompatActivity
 //                });
 //    }
 
+    @Override
+    public void onDestroy() {
+        // TODO Auto-generated method stub
+        mBleScan.end();
+        mHandler.removeMessages(0);
+        mTimeOut.removeMessages(0);
+        //stopService(bleService);
+        super.onDestroy();
 
+    }
 
     private void displayBeaconList(BeaconOnDB beaconOnDB) {
         mMyBleDeviceList.add(beaconOnDB);
@@ -597,23 +607,7 @@ public class MainActivity extends AppCompatActivity
 
 
 
-    public HashMap<String, BleDeviceInfo> getScannedMap()
-    {
-        return scannedMap;
-    }
 
-    public HashMap<String, BleDeviceInfo> getmItemMap()
-    {
-        return mItemMap;
-    }
 
-    public ArrayList<BleDeviceInfo> getmArrayListBleDevice()
-    {
-        return mArrayListBleDevice;
-    }
 
-    public ArrayList<BleDeviceInfo> getmAssignedItem()
-    {
-        return mAssignedItem;
-    }
 }

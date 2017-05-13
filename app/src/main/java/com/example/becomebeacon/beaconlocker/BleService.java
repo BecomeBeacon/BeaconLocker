@@ -1,5 +1,7 @@
 package com.example.becomebeacon.beaconlocker;
 
+import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -33,18 +35,22 @@ public class BleService extends Service {
     NotificationManager Notifi_M;
     Notification Notifi ;
 
-    MainActivity mActivity;
+
 
 
     @Override
     public void onCreate()
     {
         super.onCreate();
-        mActivity=GetMainActivity.getMainActity();
+
+        if(isServiceRunningCheck())
+            stopSelf();
+
+
         Notifi_M = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         mBleScan =new BluetoothScan(this);
 
-        mAssignedItem = mActivity.mAssignedItem;
+        mAssignedItem = BeaconList.mAssignedItem;
         mScan=false;
         mHandler.sendEmptyMessage(0);
     }
@@ -64,9 +70,11 @@ public class BleService extends Service {
     @Override
     public void onDestroy() {
         // TODO Auto-generated method stub
+        Log.d("Service","service destory");
         mBleScan.end();
         mHandler.removeMessages(0);
         super.onDestroy();
+
 
     }
 
@@ -183,6 +191,16 @@ public class BleService extends Service {
                     .setVisibility(Notification.VISIBILITY_PUBLIC);
         }
         return builder;
+    }
+
+    public boolean isServiceRunningCheck() {
+        ActivityManager manager = (ActivityManager) this.getSystemService(Activity.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if ("BleService".equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
 

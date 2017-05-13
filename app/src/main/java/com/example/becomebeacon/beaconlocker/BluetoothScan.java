@@ -1,6 +1,7 @@
 package com.example.becomebeacon.beaconlocker;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -70,9 +71,6 @@ public class BluetoothScan {
     SharedPreferences setting;
     //private LogFile logFile;
 
-
-
-    private BluetoothAdapter btAdapter;
     private boolean IS_DEBUG=true;
 
 
@@ -98,14 +96,14 @@ public class BluetoothScan {
         //saveRSSI = setting.getBoolean("saveRSSI", true);
 
         if(mActivity!=null) {
-            mItemMap = mActivity.getmItemMap();
+            mItemMap = BeaconList.mItemMap;
         }
 
         mBleUtils=new BleUtils();
         mod = Values.USE_TRACK;
 
 
-        btAdapter = BluetoothAdapter.getDefaultAdapter();
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     }
 
 
@@ -113,11 +111,11 @@ public class BluetoothScan {
     {
 
         mActivity=ma;
-        mItemMap=mActivity.getmItemMap();
-        mScannedMap=mActivity.getScannedMap();
+        mItemMap=BeaconList.mItemMap;
+        mScannedMap=BeaconList.scannedMap;
 
-        mArrayListBleDevice=mActivity.getmArrayListBleDevice();
-        mAssignedItem=mActivity.getmAssignedItem();
+        mArrayListBleDevice=BeaconList.mArrayListBleDevice;
+        mAssignedItem=BeaconList.mAssignedItem;
 
         setting = PreferenceManager.getDefaultSharedPreferences(mActivity);
         BEACON_UUID = getBeaconUuid(setting);
@@ -129,7 +127,7 @@ public class BluetoothScan {
         mBeaconsListAdapter=mbla;
         mod = Values.USE_NOTHING;
 
-        btAdapter = BluetoothAdapter.getDefaultAdapter();
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
     }
 
@@ -145,7 +143,7 @@ public class BluetoothScan {
 
     public boolean getDeviceState() {
         Log.d(TAG, "Check the Bluetooth support");
-        if(btAdapter == null) { Log.d(TAG, "Bluetooth is not available");
+        if(mBluetoothAdapter == null) { Log.d(TAG, "Bluetooth is not available");
             return false;
         } else {
             Log.d(TAG, "Bluetooth is available");
@@ -175,7 +173,7 @@ public class BluetoothScan {
     public void enableBluetooth()
     {
         Log.i(TAG, "Check the enabled Bluetooth");
-        if(btAdapter.isEnabled())
+        if(mBluetoothAdapter.isEnabled())
         {
             // 기기의 블루투스 상태가 On인 경우
             Log.d(TAG, "Bluetooth Enable Now");
@@ -434,7 +432,7 @@ public class BluetoothScan {
 
     public BluetoothAdapter getBtAdapter()
     {
-        return btAdapter;
+        return mBluetoothAdapter;
     }
 
     public void changeMod(int m)
@@ -498,6 +496,9 @@ public class BluetoothScan {
 
         return uuid;
     }
+
+
+
 
 
 }

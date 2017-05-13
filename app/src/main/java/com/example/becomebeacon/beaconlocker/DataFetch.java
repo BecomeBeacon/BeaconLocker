@@ -68,11 +68,13 @@ public class DataFetch {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         BeaconOnDB beaconOnDB = dataSnapshot.getValue(BeaconOnDB.class);
 
-                        BleDeviceInfo bleDeviceInfo = new BleDeviceInfo(myAddress, beaconOnDB.nickname);
+                        if(beaconOnDB!=null) {
+                            BleDeviceInfo bleDeviceInfo = new BleDeviceInfo(myAddress, beaconOnDB.nickname);
 
-                        myBleInfo.add(bleDeviceInfo);
-                        myItemMap.put(myAddress, bleDeviceInfo);
-                        Log.v("Test_Print_nick", beaconOnDB.nickname);
+                            myBleInfo.add(bleDeviceInfo);
+                            myItemMap.put(myAddress, bleDeviceInfo);
+                            Log.v("Test_Print_nick", beaconOnDB.nickname);
+                        }
                     }
 
                     @Override
