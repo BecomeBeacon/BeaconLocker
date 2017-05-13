@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -30,6 +31,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+
+import static com.estimote.sdk.EstimoteSDK.getApplicationContext;
 
 public class LoginActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
@@ -102,6 +105,7 @@ public class LoginActivity extends AppCompatActivity implements
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        Log.d("TAG","onActivityresult");
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
@@ -110,6 +114,8 @@ public class LoginActivity extends AppCompatActivity implements
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
+
+                Log.d("TAG","afterfireba");
             } else {
                 // Google Sign In failed, update UI appropriately
                 // [START_EXCLUDE]
@@ -124,39 +130,42 @@ public class LoginActivity extends AppCompatActivity implements
     // [START auth_with_google]
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
 
-        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
+        Log.d("TAG", "firebaseAuthWithGoogle:" + acct.getId());
 
 
-        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            mAccount=user;
-                            updateUI(user);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            updateUI(null);
-                        }
-
-                        // [START_EXCLUDE]
-
-                        // [END_EXCLUDE]
-                    }
-                });
+        FirebaseAuthWithGoogleProgress task = new FirebaseAuthWithGoogleProgress();
+        task.execute(acct);
+//        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+//        mAuth.signInWithCredential(credential)
+//                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<AuthResult> task) {
+//                        if (task.isSuccessful()) {
+//                            // Sign in success, update UI with the signed-in user's information
+//                            Log.d("TAG", "signInWithCredential:success");
+//                            FirebaseUser user = mAuth.getCurrentUser();
+//                            mAccount=user;
+//                            updateUI(user);
+//                        } else {
+//                            // If sign in fails, display a message to the user.
+//                            Log.w(TAG, "signInWithCredential:failure", task.getException());
+//                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+//                                    Toast.LENGTH_SHORT).show();
+//                            updateUI(null);
+//                        }
+//
+//                        // [START_EXCLUDE]
+//
+//                        // [END_EXCLUDE]
+//                    }
+//                });
     }
     // [END auth_with_google]
 
     // [START signin]
     private void signIn() {
         Log.d("sss","In signIn");
+
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
@@ -216,7 +225,9 @@ public class LoginActivity extends AppCompatActivity implements
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.login_google) {
-            signIn();
+            LoginProgress task = new LoginProgress();
+            task.execute();
+//            signIn();
         }
     }
 
@@ -233,4 +244,86 @@ public class LoginActivity extends AppCompatActivity implements
 
 
 
+    private class LoginProgress extends AsyncTask<Void, Void, Void> {
+
+        ProgressDialog asyncDialog = new ProgressDialog(LoginActivity.this);
+
+        @Override
+        protected void onPreExecute() {
+            asyncDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            asyncDialog.setMessage("로딩중입니다..");
+
+            // show dialog
+            asyncDialog.show();
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... arg0) {
+            signIn();
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            asyncDialog.dismiss();
+            super.onPostExecute(result);
+        }
+    }
+
+    private class FirebaseAuthWithGoogleProgress extends AsyncTask<GoogleSignInAccount, Void, Void> {
+
+        ProgressDialog asyncDialog = new ProgressDialog(LoginActivity.this);
+
+        @Override
+        protected void onPreExecute() {
+            asyncDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            asyncDialog.setMessage("로딩중입니다..");
+
+            // show dialog
+            asyncDialog.show();
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(GoogleSignInAccount... acct) {
+            Log.v("TAG","DoinBackStart");
+
+            AuthCredential credential = GoogleAuthProvider.getCredential(acct[0].getIdToken(), null);
+            mAuth.signInWithCredential(credential)
+                    .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                Log.d("TAG", "signInWithCredential:success");
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                mAccount=user;
+                                asyncDialog.dismiss();
+                                updateUI(user);
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Log.w(TAG, "signInWithCredential:failure", task.getException());
+                                Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                        Toast.LENGTH_SHORT).show();
+                                asyncDialog.dismiss();
+                                updateUI(null);
+                            }
+
+                            // [START_EXCLUDE]
+
+                            // [END_EXCLUDE]
+                        }
+                    });
+            Log.v("TAG","DoinBackFinish");
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            Log.v("TAG","OnPoAc`");
+            super.onPostExecute(result);
+        }
+    }
 }

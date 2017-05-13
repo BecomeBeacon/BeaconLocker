@@ -52,7 +52,6 @@
             android:layout_marginTop="14dp"
             android:layout_row="0"
             android:layout_toEndOf="@+id/textView2"
-            android:text="EC:08:81:F9:2A:D3"
             android:textSize="12sp" />
 
         <TextView
