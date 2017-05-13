@@ -89,7 +89,7 @@ public class MyBeaconsListAdapter extends BaseAdapter {
         txtUuid.setText("UUID: " + mBleDeviceInfoArrayList.get(position).proximityUuid);
 
         TextView txtBdName = (TextView)convertView.findViewById(R.id.text_bd_name);
-        txtBdName.setText("Device Name: " + mBleDeviceInfoArrayList.get(position).devName);
+        txtBdName.setText("Device Name: " + mBleDeviceInfoArrayList.get(position).nickname);
 
         TextView txtBdAddress = (TextView)convertView.findViewById(R.id.text_bd_address);
         txtBdAddress.setText("Dev Address: " + mBleDeviceInfoArrayList.get(position).devAddress);
