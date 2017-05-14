@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity
     //myItem
 
 
-    public ArrayList<BeaconOnDB> mMyBleDeviceList;
+    public ArrayList<BleDeviceInfo> mMyBleDeviceList;
 
     private BleUtils mBleUtils;
 
@@ -604,11 +604,6 @@ public class MainActivity extends AppCompatActivity
         //stopService(bleService);
         super.onDestroy();
 
-    }
-
-    private void displayBeaconList(BeaconOnDB beaconOnDB) {
-        mMyBleDeviceList.add(beaconOnDB);
-        Log.v("Testing Print Nick", beaconOnDB.getNickname());
     }
 
 

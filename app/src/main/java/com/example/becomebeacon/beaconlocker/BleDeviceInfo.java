@@ -228,9 +228,10 @@ public class BleDeviceInfo {
         this.minor = minor;
     }
 
-    public String getMeasuredPower()
+    public int getMeasuredPower()
     {
-        return String.valueOf(this.measuredPower);
+        return measuredPower;
+        //return String.valueOf(this.measuredPower);
     }
 
     public void setMeasuredPower(int mPower)
