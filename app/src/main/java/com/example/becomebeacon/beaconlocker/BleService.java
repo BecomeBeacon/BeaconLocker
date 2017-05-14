@@ -88,6 +88,10 @@ public class BleService extends Service {
             if(mBleScan.getMod()== Values.USE_TRACK) {
 
                 if(mScan) {
+                    if(Values.useGPS)
+                    {
+                        //여기서 Values.latitude, Values.longitude에 현재 좌표 저장
+                    }
                     if(Values.useBLE) {
                         Log.d("SERVICE", "scan stop");
                         mBleScan.getBtAdapter().stopLeScan(mBleScan.mLeScanCallback);

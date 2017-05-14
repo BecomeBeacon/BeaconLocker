@@ -494,6 +494,7 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
         } else if (id == R.id.nav_setting) {
 
+
         } else if (id == R.id.nav_logout) {
             signOut();
             mHandler.removeMessages(0);

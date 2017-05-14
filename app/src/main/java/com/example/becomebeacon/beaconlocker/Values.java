@@ -13,4 +13,6 @@ public class Values {
     public static double basicLimitDistance = 0.6;
     public static boolean useBLE;
     public static boolean useGPS;
+    public static String latitude;
+    public static String longitude;
 }

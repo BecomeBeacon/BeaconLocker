@@ -109,6 +109,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
         showMap.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v)
             {
+
                 //Map 보여주기
             }
         });
