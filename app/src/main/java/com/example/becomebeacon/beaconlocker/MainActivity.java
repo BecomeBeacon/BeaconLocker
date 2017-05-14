@@ -147,7 +147,12 @@ public class MainActivity extends AppCompatActivity
                 }
                 if(BeaconDetailsActivity.getBDA()!=null)
                 {
+                    Log.d("Main","bda exist");
                     BeaconDetailsActivity.getBDA().refreshDistance();
+                }
+                else
+                {
+                    Log.d("Main","bda is null");
                 }
 
                 mHandler.sendEmptyMessageDelayed(0, CEHCK_PERIOD);

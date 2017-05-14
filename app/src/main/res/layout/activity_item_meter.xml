@@ -10,7 +10,7 @@
         android:layout_height="223dp"
         app:srcCompat="@drawable/item_notebook" />
 
-    <TextView
+    <EditText
         android:id="@+id/et_NICKNAME"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

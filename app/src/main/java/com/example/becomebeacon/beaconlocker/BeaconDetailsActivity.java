@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,7 +38,7 @@ import static com.example.becomebeacon.beaconlocker.R.id.imageView;
 public class BeaconDetailsActivity extends AppCompatActivity {
 
     private BleDeviceInfo item;
-    private TextView nickName;
+    private EditText nickName;
     private TextView address;
     private TextView meter;
     private Button showMap;
@@ -81,7 +82,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
 
     private void initUI() {
         mImage= (ImageView) findViewById(imageView);
-        nickName=(TextView)findViewById(R.id.et_NICKNAME);
+        nickName=(EditText)findViewById(R.id.et_NICKNAME);
         address=(TextView)findViewById(R.id.et_Address);
         meter=(TextView)findViewById(R.id.meter);
         disconnect=(Button)findViewById(R.id.disconnect);
@@ -114,6 +115,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
         main.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v)
             {
+                item.nickname=nickName.getText().toString();
                 finish();
             }
         });
