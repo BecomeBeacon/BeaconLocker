@@ -359,7 +359,16 @@ public class BluetoothScan {
             Log.d("SCAN","mItem : "+mItemMap.toString());
             if(mItemMap.containsKey(item.devAddress))
             {
-                Log.d("SCAN","Tracking.. contain");
+                Log.d("SCAN","Tracking.. contain1");
+                BleDeviceInfo tItem=mItemMap.get(item.devAddress);
+
+                tItem.rssi=(int) tItem.rssiKalmanFileter.update(item.rssi);
+                KalmanRSSI = tItem.rssi;
+                tItem.distance=mBleUtils.getDistance(KalmanRSSI, item.txPower);
+                tItem.distance2=mBleUtils.getDistance_20150515(KalmanRSSI, item.txPower);
+                tItem.timeout = item.timeout;
+                Log.d("SCAN","Tracking.. contain2");
+
                 //if(item.limitDistance<item.distance2) {
                 if(2<item.distance2) {
                     //멀다 팝업 띄운다

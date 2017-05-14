@@ -1,7 +1,9 @@
 package com.example.becomebeacon.beaconlocker;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +23,6 @@ public class MyBeaconsListAdapter extends BaseAdapter {
     LayoutInflater mInflater;
     int mLayout;
     private boolean isScanning = false;
-    private ArrayList<BluetoothDevice> mBleDeviceArrayList;
     private ArrayList<BleDeviceInfo> mBleDeviceInfoArrayList;
 
     // 검색된 BLE 장치가 중복 추가되는 부분을 방지하기 위해 HashMap을 사용
@@ -115,52 +116,30 @@ public class MyBeaconsListAdapter extends BaseAdapter {
         txtTimeout.setText("Timeout: " + String.valueOf(mBleDeviceInfoArrayList.get(position).timeout));
 
         Button btnConnect = (Button)convertView.findViewById(R.id.button_connect);
-        btnConnect.setVisibility(View.GONE);
+        //btnConnect.setVisibility(View.GONE);
+        btnConnect.setText("Detail");
+        btnConnect.setOnClickListener(new Button.OnClickListener() {
+            public void onClick(View v)
+            {
+
+//
+
+
+            DeviceInfoStore.setBleInfo(mBleDeviceInfoArrayList.get(pos));
+
+            Activity mActi=GetMainActivity.getMainActity();
+            Intent intent = new Intent(mActi, BeaconDetailsActivity.class);
+            mActi.startActivity(intent);
+
+
+
+            }
+        });
 //
 //
        return convertView;
     }
 
 
-    public void addDevice(BluetoothDevice device)
-    {
-        if(!mBleDeviceArrayList.contains(device))
-        {
-            mBleDeviceArrayList.add(device);
-        }
-    }
-
-    public BluetoothDevice getDevice(int position)
-    {
-        return mBleDeviceArrayList.get(position);
-    }
-
-    public int getBleDeviceCount()
-    {
-        return mBleDeviceArrayList.size();
-    }
-
-    public Object getBleDeviceItem(int i)
-    {
-        return mBleDeviceArrayList.get(i);
-    }
-
-    /*  BleDeviceScanActivity에서 최대 RSSI Beacon을 계산함
-    public BleDeviceInfo getMaxRssiBeacon()
-    {
-        int pos = 0;
-        int maxRssi = mBleDeviceInfoArrayList.get(0).rssi;
-
-        for(int i = 1; i  < mBleDeviceInfoArrayList.size() ; i++)
-        {
-            if(maxRssi < mBleDeviceInfoArrayList.get(pos).rssi)
-            {
-                maxRssi = mBleDeviceInfoArrayList.get(pos).rssi;
-                pos = i;
-            }
-        }
-        return mBleDeviceInfoArrayList.get(pos);
-    }
-    */
 
 }

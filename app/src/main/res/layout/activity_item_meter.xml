@@ -17,11 +17,11 @@
         android:gravity="center_horizontal"
         android:text="testNICKNAME"
         android:layout_marginBottom="13dp"
-        android:layout_above="@+id/et_UUID"
+        android:layout_above="@+id/et_Address"
         android:layout_alignParentStart="true" />
 
     <TextView
-        android:id="@+id/et_UUID"
+        android:id="@+id/et_Address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
@@ -37,7 +37,7 @@
         android:gravity="center_horizontal"
         android:text="거리(m 단위)"
         android:layout_marginTop="17dp"
-        android:layout_below="@+id/et_UUID"
+        android:layout_below="@+id/et_Address"
         android:layout_alignParentStart="true" />
 
     <TextView

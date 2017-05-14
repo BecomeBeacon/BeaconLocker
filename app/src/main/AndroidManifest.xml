@@ -53,6 +53,9 @@
             android:name=".MapActivity"
             android:label="Beacon Locker"></activity>
         <activity
+            android:name=".BeaconDetailsActivity"
+            android:label="Beacon Locker"></activity>
+        <activity
             android:name=".DataStoreActivity"
             android:label="Beacon Locker"></activity>
         <activity android:name=".LafActivity"></activity>
