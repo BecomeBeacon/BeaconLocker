@@ -38,7 +38,7 @@ import static com.example.becomebeacon.beaconlocker.R.id.imageView;
 public class BeaconDetailsActivity extends AppCompatActivity {
 
     private BleDeviceInfo item;
-    private EditText nickName;
+    private TextView nickName;
     private TextView address;
     private TextView meter;
     private Button showMap;
@@ -82,7 +82,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
 
     private void initUI() {
         mImage= (ImageView) findViewById(imageView);
-        nickName=(EditText)findViewById(R.id.et_NICKNAME);
+        nickName=(TextView)findViewById(R.id.et_NICKNAME);
         address=(TextView)findViewById(R.id.et_Address);
         meter=(TextView)findViewById(R.id.meter);
         disconnect=(Button)findViewById(R.id.disconnect);
