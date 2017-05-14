@@ -3,21 +3,17 @@ package com.example.becomebeacon.beaconlocker;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -26,8 +22,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
-
-import static android.view.View.VISIBLE;
 
 /**
  * Created by 함상혁입니다 on 2017-05-14.
@@ -81,7 +75,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
         disconnect=(Button)findViewById(R.id.disconnect);
         main=(Button)findViewById(R.id.toMain);
         changeImage=(Button)findViewById(R.id.changeImage);
-        showMap=(Button)findViewById(R.id.showMap);
+        showMap=(Button)findViewById(R.id.disconnect);
     }
     private void initListeners() {
         disconnect.setOnClickListener(new Button.OnClickListener() {
@@ -121,7 +115,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
         showMap.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v)
             {
-
+                 //좌표는 item에 있다
                 //Map 보여주기
             }
         });

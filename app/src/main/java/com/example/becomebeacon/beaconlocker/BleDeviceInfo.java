@@ -34,7 +34,7 @@ public class BleDeviceInfo {
 
     //User info
     public String nickname;
-    public String picture;
+    public String pictureUri;
 
     //Coordination
     public String latitude;
@@ -67,7 +67,7 @@ public class BleDeviceInfo {
         this.rssiKalmanFileter = new KalmanFilter(0);
 
         this.nickname = "";
-        this.picture = "";
+        this.pictureUri = "";
 
         this.latitude = "";
         this.longitude = "";
@@ -95,7 +95,7 @@ public class BleDeviceInfo {
         this.rssiKalmanFileter = new KalmanFilter(0);
 
         this.nickname = nickname;
-        this.picture = "";
+        this.pictureUri = "";
 
         this.latitude = "";
         this.longitude = "";
@@ -128,7 +128,7 @@ public class BleDeviceInfo {
         this.rssiKalmanFileter = new KalmanFilter(this.rssi);
 
         this.nickname = "";
-        this.picture = "";
+        this.pictureUri = "";
 
         this.latitude = "";
         this.longitude = "";
@@ -154,7 +154,7 @@ public class BleDeviceInfo {
         this.rssiKalmanFileter = new KalmanFilter(this.rssi);
 
         this.nickname = "";
-        this.picture = "";
+        this.pictureUri = "";
 
         this.latitude = "";
         this.longitude = "";
@@ -300,11 +300,11 @@ public class BleDeviceInfo {
     public void setTimeout(int timeout){ this.timeout = timeout; }
 
     public String getPicture() {
-        return picture;
+        return pictureUri;
     }
 
     public void setPicture(String picture) {
-        this.picture = picture;
+        this.pictureUri = picture;
     }
 
     public String getNickname() {

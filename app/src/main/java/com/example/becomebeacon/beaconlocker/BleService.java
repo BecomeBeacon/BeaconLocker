@@ -112,6 +112,7 @@ public class BleService extends Service {
 
                     mHandler.sendEmptyMessageDelayed(0, Values.scanTime);
 
+
                 }
             }
 

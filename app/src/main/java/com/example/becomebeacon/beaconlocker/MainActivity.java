@@ -242,7 +242,7 @@ public class MainActivity extends AppCompatActivity
         Values.scanBreakTime=5000;
         Values.scanTime=5000;
         Values.useBLE=true;
-        Values.useGPS=false;
+        Values.useGPS=true;
 
 
 
@@ -461,6 +461,8 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -493,7 +495,8 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(getApplicationContext(), MapActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_setting) {
-
+            Intent intent = new Intent(this, SettingActivity.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_logout) {
             signOut();

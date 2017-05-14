@@ -69,20 +69,20 @@
         android:text="사진 바꾸기" />
 
     <Button
-        android:id="@+id/showMap"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="연결 해제"
-        android:layout_above="@+id/showMap"
-        android:layout_alignParentStart="true" />
-
-    <Button
-        android:id="@+id/showMap"
+        android:id="@+id/disconnect"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:layout_marginBottom="70dp"
         android:text="연결 해제" />
+
+    <Button
+        android:id="@+id/showMap"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/disconnect"
+        android:layout_alignParentStart="true"
+        android:text="지도 보기" />
 
 </RelativeLayout>
