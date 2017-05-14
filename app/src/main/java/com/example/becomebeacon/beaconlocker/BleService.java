@@ -43,10 +43,12 @@ public class BleService extends Service {
     {
         super.onCreate();
 
+
         if(isServiceRunningCheck()) {
             Log.d("BLESERVICE","already exist");
             stopSelf();
         }
+        Log.d("BLESERVICE","service start");
 
         Notifi_M = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         mBleScan =new BluetoothScan(this);
@@ -84,7 +86,7 @@ public class BleService extends Service {
     {
         public void handleMessage(Message msg)
         {
-            Log.d("SERVICE","in handler");
+            Log.d("SERVICE",this.toString()+" in handler");
             if(mBleScan.getMod()== Values.USE_TRACK) {
 
                 if(mScan) {
@@ -93,7 +95,7 @@ public class BleService extends Service {
                         //여기서 Values.latitude, Values.longitude에 현재 좌표 저장
                     }
                     if(Values.useBLE) {
-                        Log.d("SERVICE", "scan stop");
+                        Log.d("SERVICE", "scan stop "+Values.scanBreakTime);
                         mBleScan.getBtAdapter().stopLeScan(mBleScan.mLeScanCallback);
                     }
                     mScan = false;
@@ -105,7 +107,7 @@ public class BleService extends Service {
                 else
                 {
                     if(Values.useBLE) {
-                        Log.d("SERVICE", "scan start");
+                        Log.d("SERVICE", "scan start "+Values.scanTime );
                         mBleScan.getBtAdapter().startLeScan(mBleScan.mLeScanCallback);
                     }
                     mScan = true;

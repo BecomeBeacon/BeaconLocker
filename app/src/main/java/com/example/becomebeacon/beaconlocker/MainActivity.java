@@ -325,7 +325,7 @@ public class MainActivity extends AppCompatActivity
         fab_test.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                stopService(bleService);
+                stopBleService();
             }
         });
 
@@ -383,6 +383,10 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    public void stopBleService()
+    {
+        stopService(bleService);
+    }
 
 
     @Override

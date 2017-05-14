@@ -11,13 +11,12 @@
 
     <EditText
         android:id="@+id/et_NICKNAME"
-        android:layout_width="match_parent"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:text="testNICKNAME"
-        android:layout_marginBottom="13dp"
-        android:layout_above="@+id/et_Address"
-        android:layout_alignParentStart="true" />
+        android:layout_below="@+id/imageView"
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:id="@+id/et_Address"
