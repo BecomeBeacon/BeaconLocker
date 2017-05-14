@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="223dp"
         app:srcCompat="@drawable/item_notebook" />
@@ -52,12 +52,29 @@
         android:layout_alignParentStart="true" />
 
     <Button
-        android:id="@+id/button_fromItem_toMain"
+        android:id="@+id/toMain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="메인으로"
-        android:layout_marginBottom="70dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="26dp"
+        android:text="메인으로" />
+
+    <Button
+        android:id="@+id/changeImage"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageView"
+        android:layout_alignParentEnd="true"
+        android:text="사진 바꾸기" />
+
+    <Button
+        android:id="@+id/disconnect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="70dp"
+        android:text="연결 해제" />
 
 </RelativeLayout>
