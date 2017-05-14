@@ -34,7 +34,7 @@ public class BleService extends Service {
     boolean mScan;
     NotificationManager Notifi_M;
     Notification Notifi ;
-
+    private GpsInfo gps;
 
 
 
@@ -91,6 +91,12 @@ public class BleService extends Service {
                     if(Values.useGPS)
                     {
                         //여기서 Values.latitude, Values.longitude에 현재 좌표 저장
+                        gps = new GpsInfo();
+                        gps.getLocation();
+
+                         Values.latitude = Double.toString(gps.lat);
+                         Values.longitude = Double.toString(gps.lon);
+
                     }
                     if(Values.useBLE) {
                         Log.d("SERVICE", "scan stop");

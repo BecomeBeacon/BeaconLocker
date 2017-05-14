@@ -58,5 +58,23 @@
         android:layout_alignEnd="@+id/scan_on_off"
         android:layout_marginEnd="11dp"
         android:layout_alignTop="@+id/textView13" />
+    <Button
+        android:id="@+id/GpsBotton"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:text="GPS"
+        android:layout_marginTop="19dp"
+        android:layout_below="@+id/scan_period"
+        android:layout_alignStart="@+id/scan_on_off" />
+
+    <TextView
+        android:id="@+id/textView15"
+        android:layout_width="120dp"
+        android:layout_height="30dp"
+        android:text="GPS ON OFF"
+        android:textSize="20dp"
+        android:layout_alignBaseline="@+id/GpsBotton"
+        android:layout_alignBottom="@+id/GpsBotton"
+        android:layout_alignStart="@+id/textView13" />
 
 </RelativeLayout>

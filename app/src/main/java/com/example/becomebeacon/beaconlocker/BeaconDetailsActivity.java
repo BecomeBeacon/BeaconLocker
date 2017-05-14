@@ -127,8 +127,10 @@ public class BeaconDetailsActivity extends AppCompatActivity {
         showMap.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v)
             {
-                 //좌표는 item에 있다
-                //Map 보여주기
+                Intent intent = new Intent(getApplicationContext(), MapActivity.class);
+                intent.putExtra("LAT",item.latitude);
+                intent.putExtra("LON",item.longitude);
+                startActivity(intent);
             }
         });
     }
