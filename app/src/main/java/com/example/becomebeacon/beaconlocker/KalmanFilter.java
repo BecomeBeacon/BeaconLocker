@@ -12,6 +12,10 @@ public class KalmanFilter {
     private double P = 1;           // Estimated Error
     private double K;               // Kalman Gain
 
+    public KalmanFilter() {
+
+    }
+
     KalmanFilter(double initValue) {
         X = initValue;
     }

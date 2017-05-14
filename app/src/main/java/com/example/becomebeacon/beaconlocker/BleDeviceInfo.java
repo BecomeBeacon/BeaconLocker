@@ -235,9 +235,10 @@ public class BleDeviceInfo {
         this.minor = minor;
     }
 
-    public String getMeasuredPower()
+    public int getMeasuredPower()
     {
-        return String.valueOf(this.measuredPower);
+        return measuredPower;
+        //return String.valueOf(this.measuredPower);
     }
 
     public void setMeasuredPower(int mPower)
@@ -299,7 +300,7 @@ public class BleDeviceInfo {
 
     public void setTimeout(int timeout){ this.timeout = timeout; }
 
-    public String getPicture() {
+    public String getPictureUri() {
         return pictureUri;
     }
 
