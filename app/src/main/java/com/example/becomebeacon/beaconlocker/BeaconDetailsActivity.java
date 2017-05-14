@@ -1,25 +1,19 @@
 package com.example.becomebeacon.beaconlocker;
 
-import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +39,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
     private TextView nickName;
     private TextView address;
     private TextView meter;
+    private Button showMap;
     private Button disconnect;
     private Button main;
     private Button changeImage;
@@ -91,6 +86,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
         disconnect=(Button)findViewById(R.id.disconnect);
         main=(Button)findViewById(R.id.toMain);
         changeImage=(Button)findViewById(R.id.changeImage);
+        showMap=(Button)findViewById(R.id.disconnect);
     }
     private void initListeners() {
         disconnect.setOnClickListener(new Button.OnClickListener() {
@@ -103,6 +99,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
                     if(BeaconList.mAssignedItem.get(i).devAddress==item.devAddress) {
                         BeaconList.mAssignedItem.remove(i);
                         Log.d("BDA","removed");
+                        finish();
 
                     }
                 }
@@ -123,6 +120,14 @@ public class BeaconDetailsActivity extends AppCompatActivity {
             {
                 //이부분 새로운 사진어쩌구 쓴다
                 showChoosePicDialog();
+            }
+        });
+
+        showMap.setOnClickListener(new Button.OnClickListener() {
+            public void onClick(View v)
+            {
+                 //좌표는 item에 있다
+                //Map 보여주기
             }
         });
     }

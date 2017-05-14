@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+
+    <Switch
+        android:id="@+id/scan_on_off"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_alignBottom="@+id/textView11"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="36dp"
+        android:layout_alignParentTop="true" />
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="70dp"
+        android:layout_height="30dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="23dp"
+        android:text="추적"
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="120dp"
+        android:layout_height="30dp"
+        android:layout_alignStart="@+id/textView11"
+        android:layout_below="@+id/textView11"
+        android:layout_marginTop="12dp"
+        android:text="스캘주기 설정"
+        android:textSize="20dp" />
+
+    <EditText
+        android:id="@+id/scan_period"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textView13"
+        android:layout_alignEnd="@+id/scan_on_off"
+        android:layout_marginEnd="49dp"
+        android:ems="10"
+        android:inputType="time" />
+
+    <TextView
+        android:id="@+id/textView14"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:text="초"
+        android:textSize="20dp"
+        android:layout_alignBottom="@+id/scan_period"
+        android:layout_alignEnd="@+id/scan_on_off"
+        android:layout_marginEnd="11dp"
+        android:layout_alignTop="@+id/textView13" />
+
+</RelativeLayout>

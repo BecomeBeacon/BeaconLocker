@@ -366,7 +366,13 @@ public class BluetoothScan {
                 KalmanRSSI = tItem.rssi;
                 tItem.distance=mBleUtils.getDistance(KalmanRSSI, item.txPower);
                 tItem.distance2=mBleUtils.getDistance_20150515(KalmanRSSI, item.txPower);
-                tItem.timeout = item.timeout;
+                tItem.timeout = item.TIME_OUT;
+
+                if(Values.useGPS)
+                {
+                    tItem.setCoordinate(Values.latitude,Values.longitude);
+                }
+
                 Log.d("SCAN","Tracking.. contain2");
 
                 //if(item.limitDistance<item.distance2) {

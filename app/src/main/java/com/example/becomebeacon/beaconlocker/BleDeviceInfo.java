@@ -10,6 +10,8 @@ public class BleDeviceInfo {
 
     public static int TIME_OUT = 20;
 
+    public boolean isCheckLocation;
+
     public BluetoothDevice btDevice;   // Bluetooth Device
     public String proximityUuid;       // UUID
     public String devName;             // Device Name
@@ -43,6 +45,7 @@ public class BleDeviceInfo {
 
     //Constructor
     public BleDeviceInfo() {
+        isCheckLocation=false;
         this.proximityUuid = "";
         this.devName = "";
         this.devAddress = "";
@@ -72,6 +75,7 @@ public class BleDeviceInfo {
 
     //Constructor
     public BleDeviceInfo(String devAddress, String nickname) {
+        isCheckLocation=false;
         this.proximityUuid = "";
         this.devName = "";
         this.devAddress = devAddress;
@@ -104,6 +108,7 @@ public class BleDeviceInfo {
                          String devAddress, int major, int minor, int mPower, int rssi,
                          int txPower, double distance)
     {
+        isCheckLocation=false;
         this.btDevice = device;
         this.proximityUuid = proximityUuid;
         this.devName = devName;
@@ -133,6 +138,7 @@ public class BleDeviceInfo {
     public BleDeviceInfo(String proximityUuid, String devName,
                          String devAddress, int major, int minor, int txPower, int rssi, double distance)
     {
+        isCheckLocation=false;
         this.proximityUuid = proximityUuid;
         this.devName = devName;
         this.devAddress = devAddress;
@@ -159,6 +165,7 @@ public class BleDeviceInfo {
                          String devAddress, int major, int minor, int txPower, int rssi, double distance, double distance2)
     {
 
+        isCheckLocation=false;
         this.proximityUuid = proximityUuid;
         this.devName = devName;
         this.devAddress = devAddress;
@@ -293,11 +300,11 @@ public class BleDeviceInfo {
 
     public void setTimeout(int timeout){ this.timeout = timeout; }
 
-    public String getPictureUri() {
+    public String getPicture() {
         return pictureUri;
     }
 
-    public void setPictureUri(String picture) {
+    public void setPicture(String picture) {
         this.pictureUri = picture;
     }
 
@@ -349,6 +356,18 @@ public class BleDeviceInfo {
             return true;
         else
             return false;
+    }
+
+    public BeaconOnDB toDB() {
+        BeaconOnDB beaconOnDB = new BeaconOnDB(getNickname());
+
+        return beaconOnDB;
+    }
+
+    public void setCoordinate(String lati,String longi)
+    {
+        latitude=lati;
+        longitude=longi;
     }
 
 }
