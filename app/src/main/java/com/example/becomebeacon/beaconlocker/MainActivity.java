@@ -149,8 +149,7 @@ public class MainActivity extends AppCompatActivity
                 {
                     BeaconDetailsActivity.getBDA().refreshDistance();
                 }
-                Log.v("Test Print", "mArray.:"+mAssignedItem.toString());
-                Log.v("Test Print", "mItem.:"+mItemMap.toString());
+
                 mHandler.sendEmptyMessageDelayed(0, CEHCK_PERIOD);
             }
 
@@ -242,6 +241,8 @@ public class MainActivity extends AppCompatActivity
 
         Values.scanBreakTime=5000;
         Values.scanTime=5000;
+        Values.useBLE=true;
+        Values.useGPS=false;
 
 
 

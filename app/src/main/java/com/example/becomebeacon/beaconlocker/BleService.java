@@ -88,17 +88,24 @@ public class BleService extends Service {
             if(mBleScan.getMod()== Values.USE_TRACK) {
 
                 if(mScan) {
-                    mBleScan.getBtAdapter().stopLeScan(mBleScan.mLeScanCallback);
-                    mScan=false;
-                    Log.d("SERVICE","scan stop");
+                    if(Values.useBLE) {
+                        Log.d("SERVICE", "scan stop");
+                        mBleScan.getBtAdapter().stopLeScan(mBleScan.mLeScanCallback);
+                    }
+                    mScan = false;
+
                     mHandler.sendEmptyMessageDelayed(0, Values.scanBreakTime);
+
 
                 }
                 else
                 {
-                    mBleScan.getBtAdapter().startLeScan(mBleScan.mLeScanCallback);
-                    mScan=true;
-                    Log.d("SERVICE","scan start");
+                    if(Values.useBLE) {
+                        Log.d("SERVICE", "scan start");
+                        mBleScan.getBtAdapter().startLeScan(mBleScan.mLeScanCallback);
+                    }
+                    mScan = true;
+
                     mHandler.sendEmptyMessageDelayed(0, Values.scanTime);
 
                 }
