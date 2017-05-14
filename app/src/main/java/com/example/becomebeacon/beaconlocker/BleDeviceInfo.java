@@ -32,7 +32,7 @@ public class BleDeviceInfo {
 
     //User info
     public String nickname;
-    public String picture;
+    public String pictureUri;
 
     //Coordination
     public String latitude;
@@ -64,7 +64,7 @@ public class BleDeviceInfo {
         this.rssiKalmanFileter = new KalmanFilter(0);
 
         this.nickname = "";
-        this.picture = "";
+        this.pictureUri = "";
 
         this.latitude = "";
         this.longitude = "";
@@ -91,7 +91,7 @@ public class BleDeviceInfo {
         this.rssiKalmanFileter = new KalmanFilter(0);
 
         this.nickname = nickname;
-        this.picture = "";
+        this.pictureUri = "";
 
         this.latitude = "";
         this.longitude = "";
@@ -123,7 +123,7 @@ public class BleDeviceInfo {
         this.rssiKalmanFileter = new KalmanFilter(this.rssi);
 
         this.nickname = "";
-        this.picture = "";
+        this.pictureUri = "";
 
         this.latitude = "";
         this.longitude = "";
@@ -148,7 +148,7 @@ public class BleDeviceInfo {
         this.rssiKalmanFileter = new KalmanFilter(this.rssi);
 
         this.nickname = "";
-        this.picture = "";
+        this.pictureUri = "";
 
         this.latitude = "";
         this.longitude = "";
@@ -292,12 +292,12 @@ public class BleDeviceInfo {
 
     public void setTimeout(int timeout){ this.timeout = timeout; }
 
-    public String getPicture() {
-        return picture;
+    public String getPictureUri() {
+        return pictureUri;
     }
 
-    public void setPicture(String picture) {
-        this.picture = picture;
+    public void setPictureUri(String picture) {
+        this.pictureUri = picture;
     }
 
     public String getNickname() {
@@ -348,12 +348,6 @@ public class BleDeviceInfo {
             return true;
         else
             return false;
-    }
-
-    public BeaconOnDB toDB() {
-        BeaconOnDB beaconOnDB = new BeaconOnDB(getNickname());
-
-        return beaconOnDB;
     }
 
 }
