@@ -23,10 +23,12 @@ public class BeaconDetailsActivity extends AppCompatActivity {
     private TextView nickName;
     private TextView address;
     private TextView meter;
+    static private BeaconDetailsActivity mContext;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_meter);
+        mContext=this;
 
         item=DeviceInfoStore.getBleInfo();
         nickName=(TextView)findViewById(R.id.et_NICKNAME);
@@ -43,5 +45,24 @@ public class BeaconDetailsActivity extends AppCompatActivity {
 
 
     }
+
+    @Override
+    public void onDestroy()
+    {
+        Log.d("BDA","BDA destroyed");
+        mContext=null;
+        super.onDestroy();
+    }
+
+    static public BeaconDetailsActivity getBDA()
+    {
+        return mContext;
+    }
+
+    public void refreshDistance()
+    {
+        meter.setText(String.format("%.2f",item.distance2));
+    }
+
 
 }

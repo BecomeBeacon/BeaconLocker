@@ -145,6 +145,10 @@ public class MainActivity extends AppCompatActivity
                     emptyListText.setVisibility(View.GONE);
                     myBeacons.setVisibility(View.VISIBLE);
                 }
+                if(BeaconDetailsActivity.getBDA()!=null)
+                {
+                    BeaconDetailsActivity.getBDA().refreshDistance();
+                }
                 Log.v("Test Print", "mArray.:"+mAssignedItem.toString());
                 Log.v("Test Print", "mItem.:"+mItemMap.toString());
                 mHandler.sendEmptyMessageDelayed(0, CEHCK_PERIOD);

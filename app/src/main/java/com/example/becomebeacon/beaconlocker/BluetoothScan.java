@@ -372,6 +372,7 @@ public class BluetoothScan {
                 //if(item.limitDistance<item.distance2) {
                 if(2<item.distance2) {
                     //멀다 팝업 띄운다
+                    Log.d("SCAN","too far");
                     mBleService.pushNotification();
 
                     //Log.d("SCAN","too far");
