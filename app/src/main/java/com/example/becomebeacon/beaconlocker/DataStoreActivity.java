@@ -332,15 +332,17 @@ public class DataStoreActivity extends AppCompatActivity {
             switch (requestCode) {
                 case TAKE_PICTURE:
                     cutImage(tempUri); // 사진 마름질하다.
+                    filePath = tempUri;
+                    Log.v("Test", "filepath = " + filePath);
                     break;
                 case CHOOSE_PICTURE:
                     cutImage(data.getData());
+                    filePath = data.getData();
+                    Log.v("Test", "filepath = " + filePath);
                     break;
                 case CROP_SMALL_PICTURE:
                     if (data != null) {
                         setImageToView(data); // 사진은 미리보기
-                        Log.v("Test","Filepath in switch = " + filePath);
-                        Log.v("Test","Filepath in switch = " + String.valueOf(filePath));
                     }
                     break;
             }
