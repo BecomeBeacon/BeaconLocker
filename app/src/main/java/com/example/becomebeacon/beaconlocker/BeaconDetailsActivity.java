@@ -75,7 +75,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
         disconnect=(Button)findViewById(R.id.disconnect);
         main=(Button)findViewById(R.id.toMain);
         changeImage=(Button)findViewById(R.id.changeImage);
-        showMap=(Button)findViewById(R.id.disconnect);
+        showMap=(Button)findViewById(R.id.showMap);
     }
     private void initListeners() {
         disconnect.setOnClickListener(new Button.OnClickListener() {
@@ -88,12 +88,14 @@ public class BeaconDetailsActivity extends AppCompatActivity {
                     if(BeaconList.mAssignedItem.get(i).devAddress==item.devAddress) {
                         BeaconList.mAssignedItem.remove(i);
                         Log.d("BDA","removed");
-                        finish();
+                        break;
 
                     }
                 }
 
+
                 //서버에서도 없애줘야한다 무조건
+                finish();
             }
         });
 
