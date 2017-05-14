@@ -300,7 +300,7 @@ public class BleDeviceInfo {
 
     public void setTimeout(int timeout){ this.timeout = timeout; }
 
-    public String getPicture() {
+    public String getPictureUri() {
         return pictureUri;
     }
 
