@@ -239,9 +239,13 @@ public class MainActivity extends AppCompatActivity
         mBeaconsListAdapter = new MyBeaconsListAdapter(this, R.layout.ble_device_row,
                 mAssignedItem, mItemMap);
 
-        Values.scanBreakTime=5000;
-        Values.scanTime=5000;
-        Values.useBLE=true;
+        SharedPreferences pref = getSharedPreferences("pref", AppCompatActivity.MODE_PRIVATE); // Shared Preference를 불러옵니다.
+        // 저장된 값들을 불러옵니다.
+        int scanTime = pref.getInt("ScanPeriod", Values.scanBreakTime);
+        Boolean useScan = pref.getBoolean("UseScan", true);
+
+        Values.scanBreakTime=scanTime;
+        Values.useBLE=useScan;
         Values.useGPS=true;
 
 
@@ -260,6 +264,10 @@ public class MainActivity extends AppCompatActivity
         mAuth=LoginActivity.getAuth();
         mUser=LoginActivity.getUser();
 
+
+
+        mHandler.sendEmptyMessageDelayed(0, CEHCK_PERIOD);
+        mTimeOut.sendEmptyMessageDelayed(0, TIMEOUT_PERIOD);
 
 
 
@@ -386,8 +394,7 @@ public class MainActivity extends AppCompatActivity
                 .build();
         mGoogleApiClient.connect();
 
-        mHandler.sendEmptyMessageDelayed(0, CEHCK_PERIOD);
-        mTimeOut.sendEmptyMessageDelayed(0, TIMEOUT_PERIOD);
+
 
         //My Data List 갱신
         DataFetch dataFetch = new DataFetch(mAssignedItem, mItemMap);
