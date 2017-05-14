@@ -71,9 +71,18 @@ public class DataFetch {
                         if(beaconOnDB!=null) {
                             BleDeviceInfo bleDeviceInfo = new BleDeviceInfo(myAddress, beaconOnDB.nickname);
 
+<<<<<<< HEAD
                             myBleInfo.add(bleDeviceInfo);
                             myItemMap.put(myAddress, bleDeviceInfo);
                             Log.v("Test_Print_nick", beaconOnDB.nickname);
+=======
+                            if(!myItemMap.containsKey(myAddress)) {
+                                myBleInfo.add(bleDeviceInfo);
+                                myItemMap.put(myAddress, bleDeviceInfo);
+                                Log.v("Test_Print_nick", beaconOnDB.nickname);
+                            }
+
+>>>>>>> 2d9cfb6e78d76a1d33d959fb658e57d3a67f81a0
                         }
                     }
 

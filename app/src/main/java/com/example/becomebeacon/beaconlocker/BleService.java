@@ -43,9 +43,16 @@ public class BleService extends Service {
     {
         super.onCreate();
 
+<<<<<<< HEAD
         if(isServiceRunningCheck())
             stopSelf();
 
+=======
+        if(isServiceRunningCheck()) {
+            Log.d("BLESERVICE","already exist");
+            stopSelf();
+        }
+>>>>>>> 2d9cfb6e78d76a1d33d959fb658e57d3a67f81a0
 
         Notifi_M = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         mBleScan =new BluetoothScan(this);

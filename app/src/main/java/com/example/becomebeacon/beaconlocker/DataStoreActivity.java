@@ -1,8 +1,19 @@
 package com.example.becomebeacon.beaconlocker;
+<<<<<<< HEAD
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Message;
 import android.provider.ContactsContract;
+=======
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Message;
+import android.provider.ContactsContract;
+import android.provider.MediaStore;
+>>>>>>> 2d9cfb6e78d76a1d33d959fb658e57d3a67f81a0
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -11,6 +22,10 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+<<<<<<< HEAD
+=======
+import android.widget.ImageView;
+>>>>>>> 2d9cfb6e78d76a1d33d959fb658e57d3a67f81a0
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +41,17 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+<<<<<<< HEAD
+=======
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+>>>>>>> 2d9cfb6e78d76a1d33d959fb658e57d3a67f81a0
 
 /**
  * Created by gwmail on 2017-04-26.
@@ -45,6 +71,16 @@ public class DataStoreActivity extends AppCompatActivity {
     //private EditText et_LATITUDE;
     //private EditText et_LONGITUDE;
 
+<<<<<<< HEAD
+=======
+    //storage 관련 변수
+    private Button btChoose;
+    private Button btUpload;
+    private ImageView ivPreview;
+
+    private Uri filePath;
+
+>>>>>>> 2d9cfb6e78d76a1d33d959fb658e57d3a67f81a0
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +99,10 @@ public class DataStoreActivity extends AppCompatActivity {
         toolbar.setSubtitleTextColor(Color.GRAY);
 
         if(getSupportActionBar() != null) {
+<<<<<<< HEAD
 //            getSupportActionBar().setHomeButtonEnabled(true);
+=======
+>>>>>>> 2d9cfb6e78d76a1d33d959fb658e57d3a67f81a0
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
@@ -94,6 +133,24 @@ public class DataStoreActivity extends AppCompatActivity {
             Log.d("DSA","mble is null");
         }
 
+<<<<<<< HEAD
+=======
+        //사진 선택
+        btChoose = (Button) findViewById(R.id.btn_add_image);
+        ivPreview = (ImageView) findViewById(R.id.iv_image);
+
+        btChoose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //이미지를 선택
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "이미지를 선택하세요."), 0);
+            }
+        });
+
+>>>>>>> 2d9cfb6e78d76a1d33d959fb658e57d3a67f81a0
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -142,12 +199,21 @@ public class DataStoreActivity extends AppCompatActivity {
 
         //store beacon info to 'Beacon' DB in Uid order
         bleDeviceInfo.setNickname(et_Nickname.getText().toString());
+<<<<<<< HEAD
         bleDeviceInfo.setPicture("in develop");
+=======
+        bleDeviceInfo.setPictureUri(uploadFile());
+
+>>>>>>> 2d9cfb6e78d76a1d33d959fb658e57d3a67f81a0
 
         mDatabase
                 .getReference("beacon/")
                 .child(bleDeviceInfo.getDevAddress())
+<<<<<<< HEAD
                 .setValue(bleDeviceInfo.toDB())
+=======
+                .setValue(bleDeviceInfo)
+>>>>>>> 2d9cfb6e78d76a1d33d959fb658e57d3a67f81a0
                 .addOnSuccessListener(DataStoreActivity.this, new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -162,6 +228,20 @@ public class DataStoreActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "저장에 실패하였습니다.", Toast.LENGTH_LONG).show();
                     }
                 });
+<<<<<<< HEAD
+=======
+
+        BeaconList.scannedMap.remove(bleDeviceInfo.devAddress);
+        Log.d("dataStoreActivity","size : "+BeaconList.mArrayListBleDevice.size());
+        for(int i=0;i<BeaconList.mArrayListBleDevice.size();i++)
+        {
+            if(BeaconList.mArrayListBleDevice.get(i).devAddress==bleDeviceInfo.devAddress) {
+                BeaconList.mArrayListBleDevice.remove(i);
+                Log.d("dataStoreActivity","removed");
+
+            }
+        }
+>>>>>>> 2d9cfb6e78d76a1d33d959fb658e57d3a67f81a0
     }
 
 //    private void displayBeacons() {
@@ -207,4 +287,77 @@ public class DataStoreActivity extends AppCompatActivity {
 //                    }
 //                });
 //    }
+<<<<<<< HEAD
+=======
+
+    //결과 처리
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //request코드가 0이고 OK를 선택했고 data에 뭔가가 들어 있다면
+        if(requestCode == 0 && resultCode == RESULT_OK){
+            filePath = data.getData();
+            Log.d("TAG", "uri:" + String.valueOf(filePath));
+            try {
+                //Uri 파일을 Bitmap으로 만들어서 ImageView에 집어 넣는다.
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                ivPreview.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    //upload the file
+    private String uploadFile() {
+        //업로드할 파일이 있으면 수행
+        if (filePath != null) {
+            //업로드 진행 Dialog 보이기
+//            final ProgressDialog progressDialog = new ProgressDialog(this);
+//            progressDialog.setTitle("업로드중...");
+//            progressDialog.show();
+
+            //storage
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+
+            //Unique한 파일명을 만들자.
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMHH_mmss");
+            Date now = new Date();
+            String filename = formatter.format(now) + ".png";
+            //storage 주소와 폴더 파일명을 지정해 준다.
+            StorageReference storageRef = storage.getReferenceFromUrl("gs://beaconlocker-51c69.appspot.com/").child("beacon_images/" + filename);
+            storageRef.putFile(filePath)
+                    //성공시
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                            progressDialog.dismiss(); //업로드 진행 Dialog 상자 닫기
+                            Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    //실패시
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+//                            progressDialog.dismiss();
+                            Toast.makeText(getApplicationContext(), "업로드 실패!", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    //진행중
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            @SuppressWarnings("VisibleForTests")
+                            double progress = (100 * taskSnapshot.getBytesTransferred()) /  taskSnapshot.getTotalByteCount();
+                            //dialog에 진행률을 퍼센트로 출력해 준다
+//                            progressDialog.setMessage("Uploaded " + ((int) progress) + "% ...");
+                        }
+                    });
+            return "beacon_images/" + filename;
+        } else {
+            //TODO:: 사진파일 미첨부 시
+            return null;
+        }
+    }
+>>>>>>> 2d9cfb6e78d76a1d33d959fb658e57d3a67f81a0
 }

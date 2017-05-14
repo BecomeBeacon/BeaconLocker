@@ -2,17 +2,29 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
+<<<<<<< HEAD
 
+=======
+        <item
+            android:id="@+id/nav_machine"
+            android:icon="@drawable/ic_menu_machine"
+            android:title="내 기기" />
+>>>>>>> 2d9cfb6e78d76a1d33d959fb658e57d3a67f81a0
         <item
             android:id="@+id/nav_laf"
             android:icon="@drawable/ic_menu_laf"
             android:title="Lost and Found" />
         <item
             android:id="@+id/nav_map"
+<<<<<<< HEAD
             android:icon="@drawable/ic_menu_zoom"
             android:title="지도 보기" />
 
 
+=======
+            android:icon="@android:drawable/ic_menu_zoom"
+            android:title="지도 보기" />
+>>>>>>> 2d9cfb6e78d76a1d33d959fb658e57d3a67f81a0
         <item
             android:id="@+id/nav_setting"
             android:icon="@drawable/ic_menu_setting"
@@ -20,7 +32,11 @@
 
         <item
             android:id="@+id/nav_logout"
+<<<<<<< HEAD
             android:icon="@drawable/ic_partial_secure"
+=======
+            android:icon="@android:drawable/ic_partial_secure"
+>>>>>>> 2d9cfb6e78d76a1d33d959fb658e57d3a67f81a0
             android:title="로그아웃" />
 
     </group>

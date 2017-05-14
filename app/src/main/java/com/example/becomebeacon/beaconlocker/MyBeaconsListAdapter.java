@@ -1,7 +1,14 @@
 package com.example.becomebeacon.beaconlocker;
 
+<<<<<<< HEAD
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+=======
+import android.app.Activity;
+import android.bluetooth.BluetoothDevice;
+import android.content.Context;
+import android.content.Intent;
+>>>>>>> 2d9cfb6e78d76a1d33d959fb658e57d3a67f81a0
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +28,10 @@ public class MyBeaconsListAdapter extends BaseAdapter {
     LayoutInflater mInflater;
     int mLayout;
     private boolean isScanning = false;
+<<<<<<< HEAD
     private ArrayList<BluetoothDevice> mBleDeviceArrayList;
+=======
+>>>>>>> 2d9cfb6e78d76a1d33d959fb658e57d3a67f81a0
     private ArrayList<BleDeviceInfo> mBleDeviceInfoArrayList;
 
     // 검색된 BLE 장치가 중복 추가되는 부분을 방지하기 위해 HashMap을 사용
@@ -115,6 +125,7 @@ public class MyBeaconsListAdapter extends BaseAdapter {
         txtTimeout.setText("Timeout: " + String.valueOf(mBleDeviceInfoArrayList.get(position).timeout));
 
         Button btnConnect = (Button)convertView.findViewById(R.id.button_connect);
+<<<<<<< HEAD
         btnConnect.setVisibility(View.GONE);
 //
 //
@@ -162,5 +173,32 @@ public class MyBeaconsListAdapter extends BaseAdapter {
         return mBleDeviceInfoArrayList.get(pos);
     }
     */
+=======
+        //btnConnect.setVisibility(View.GONE);
+        btnConnect.setText("Detail");
+        btnConnect.setOnClickListener(new Button.OnClickListener() {
+            public void onClick(View v)
+            {
+
+//
+
+
+            DeviceInfoStore.setBleInfo(mBleDeviceInfoArrayList.get(pos));
+
+            Activity mActi=GetMainActivity.getMainActity();
+            Intent intent = new Intent(mActi, BeaconDetailsActivity.class);
+            mActi.startActivity(intent);
+
+
+
+            }
+        });
+//
+//
+       return convertView;
+    }
+
+
+>>>>>>> 2d9cfb6e78d76a1d33d959fb658e57d3a67f81a0
 
 }

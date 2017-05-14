@@ -5,8 +5,12 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+<<<<<<< HEAD
     android:weightSum="1"
     tools:context=".ItemAcitivity">
+=======
+    android:weightSum="1">
+>>>>>>> 2d9cfb6e78d76a1d33d959fb658e57d3a67f81a0
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_additem"
@@ -25,6 +29,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="208dp"
+<<<<<<< HEAD
         android:layout_weight="0.72"
         android:columnCount="2"
         android:orientation="horizontal"
@@ -38,11 +43,30 @@
             android:layout_alignBaseline="@+id/et_address"
             android:layout_alignBottom="@+id/et_address"
             android:layout_alignParentStart="true"
+=======
+        android:columnCount="2"
+        android:orientation="horizontal"
+        android:rowCount="4"
+        android:layout_weight="0.51">
+
+
+        <TextView
+            android:layout_width="96dp"
+            android:layout_height="49dp"
+>>>>>>> 2d9cfb6e78d76a1d33d959fb658e57d3a67f81a0
             android:layout_column="0"
             android:layout_row="0"
             android:ems="10"
             android:text="Addr"
+<<<<<<< HEAD
             android:textSize="20sp" />
+=======
+            android:textSize="20sp"
+            android:id="@+id/textView2"
+            android:layout_alignBaseline="@+id/et_address"
+            android:layout_alignBottom="@+id/et_address"
+            android:layout_alignParentStart="true" />
+>>>>>>> 2d9cfb6e78d76a1d33d959fb658e57d3a67f81a0
 
         <TextView
             android:id="@+id/et_address"
@@ -55,6 +79,7 @@
             android:textSize="12sp" />
 
         <TextView
+<<<<<<< HEAD
             android:id="@+id/textView3"
             android:layout_width="94dp"
             android:layout_height="40dp"
@@ -64,11 +89,23 @@
             android:layout_row="1"
             android:text="별칭"
             android:textSize="20sp" />
+=======
+            android:layout_width="94dp"
+            android:layout_height="40dp"
+            android:layout_column="0"
+            android:layout_row="1"
+            android:text="별칭"
+            android:textSize="20sp"
+            android:id="@+id/textView3"
+            android:layout_below="@+id/textView2"
+            android:layout_alignParentStart="true" />
+>>>>>>> 2d9cfb6e78d76a1d33d959fb658e57d3a67f81a0
 
         <EditText
             android:id="@+id/et_NICKNAME"
             android:layout_width="258dp"
             android:layout_height="49dp"
+<<<<<<< HEAD
             android:layout_alignBaseline="@+id/textView3"
             android:layout_alignBottom="@+id/textView3"
             android:layout_column="1"
@@ -99,11 +136,42 @@
             android:layout_alignParentStart="true"
             android:layout_marginBottom="11dp"
             android:background="@android:color/darker_gray" />
+=======
+            android:layout_column="1"
+            android:layout_row="1"
+            android:inputType="textPersonName"
+            android:text="노트북"
+            android:textSize="15sp"
+            android:layout_above="@+id/textView4"
+            android:layout_toEndOf="@+id/textView2" />
+
+        <TextView
+            android:layout_width="94dp"
+            android:layout_height="43dp"
+            android:layout_column="0"
+            android:layout_row="2"
+            android:text="사진"
+            android:textSize="20sp"
+            android:id="@+id/textView4"
+            android:layout_below="@+id/textView3"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="14dp" />
+
+
+        <ImageView
+            android:id="@+id/iv_image"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/textView4"
+            android:background="@mipmap/ic_launcher_round" />
+>>>>>>> 2d9cfb6e78d76a1d33d959fb658e57d3a67f81a0
 
         <Button
             android:id="@+id/btn_add_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+<<<<<<< HEAD
             android:layout_alignBottom="@+id/et_PICTURE"
             android:layout_alignEnd="@+id/textView6"
             android:text="사진선택" />
@@ -127,6 +195,11 @@
             android:layout_alignTop="@+id/textView5"
             android:layout_marginStart="14dp"
             android:text="40m" />
+=======
+            android:text="사진선택"
+            android:layout_alignBottom="@+id/iv_image"
+            android:layout_toEndOf="@+id/iv_image" />
+>>>>>>> 2d9cfb6e78d76a1d33d959fb658e57d3a67f81a0
 
     </RelativeLayout>
 

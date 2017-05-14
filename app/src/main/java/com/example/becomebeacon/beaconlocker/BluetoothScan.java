@@ -355,6 +355,7 @@ public class BluetoothScan {
         }
         else if(mod== Values.USE_TRACK)
         {
+<<<<<<< HEAD
             Log.d("SCAN","Tracking...");
             Log.d("SCAN","mItem : "+mItemMap.toString());
             if(mItemMap.containsKey(item.devAddress))
@@ -363,6 +364,26 @@ public class BluetoothScan {
                 //if(item.limitDistance<item.distance2) {
                 if(0.2<item.distance2) {
                     //멀다 팝업 띄운다
+=======
+            Log.d("SCAN","Tracking...: "+item.devAddress);
+            Log.d("SCAN","mItem : "+mItemMap.toString());
+            if(mItemMap.containsKey(item.devAddress))
+            {
+                Log.d("SCAN","Tracking.. contain1");
+                BleDeviceInfo tItem=mItemMap.get(item.devAddress);
+
+                tItem.rssi=(int) tItem.rssiKalmanFileter.update(item.rssi);
+                KalmanRSSI = tItem.rssi;
+                tItem.distance=mBleUtils.getDistance(KalmanRSSI, item.txPower);
+                tItem.distance2=mBleUtils.getDistance_20150515(KalmanRSSI, item.txPower);
+                tItem.timeout = item.timeout;
+                Log.d("SCAN","Tracking.. contain2");
+
+                //if(item.limitDistance<item.distance2) {
+                if(2<item.distance2) {
+                    //멀다 팝업 띄운다
+                    Log.d("SCAN","too far");
+>>>>>>> 2d9cfb6e78d76a1d33d959fb658e57d3a67f81a0
                     mBleService.pushNotification();
 
                     //Log.d("SCAN","too far");

@@ -12,10 +12,14 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
+<<<<<<< HEAD
 
 
     <application
 
+=======
+    <application
+>>>>>>> 2d9cfb6e78d76a1d33d959fb658e57d3a67f81a0
         android:name=".MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -30,6 +34,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+<<<<<<< HEAD
 
 
         <activity
@@ -46,6 +51,16 @@
             android:value="@integer/google_play_services_version" />
 
         </activity>
+=======
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"></activity>
+
+        <service
+            android:name=".BleService"
+            android:label="BleService" />
+
+>>>>>>> 2d9cfb6e78d76a1d33d959fb658e57d3a67f81a0
 
 
 
@@ -55,6 +70,7 @@
 
         <activity
             android:name=".MapActivity"
+<<<<<<< HEAD
             android:label="Beacon Locker">
         </activity>
 
@@ -71,6 +87,16 @@
             android:label="Beacon Locker">
 
         </activity>
+=======
+            android:label="Beacon Locker"></activity>
+        <activity
+            android:name=".BeaconDetailsActivity"
+            android:label="Beacon Locker"></activity>
+        <activity
+            android:name=".DataStoreActivity"
+            android:label="Beacon Locker"></activity>
+        <activity android:name=".LafActivity"></activity>
+>>>>>>> 2d9cfb6e78d76a1d33d959fb658e57d3a67f81a0
     </application>
 
 </manifest>

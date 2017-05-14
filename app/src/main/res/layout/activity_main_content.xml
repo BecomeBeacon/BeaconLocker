@@ -21,9 +21,13 @@
         android:id="@+id/scan_list"
         android:layout_width="368dp"
         android:layout_height="495dp"
+<<<<<<< HEAD
         android:visibility="invisible"
         tools:layout_editor_absoluteY="-82dp"
         tools:layout_editor_absoluteX="492dp">
+=======
+        android:visibility="invisible">
+>>>>>>> 2d9cfb6e78d76a1d33d959fb658e57d3a67f81a0
 
 
     </ListView>
@@ -40,4 +44,8 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+<<<<<<< HEAD
 </android.support.constraint.ConstraintLayout>
+=======
+</android.support.constraint.ConstraintLayout>
+>>>>>>> 2d9cfb6e78d76a1d33d959fb658e57d3a67f81a0

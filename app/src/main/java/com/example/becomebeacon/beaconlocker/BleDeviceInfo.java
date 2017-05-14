@@ -32,7 +32,11 @@ public class BleDeviceInfo {
 
     //User info
     public String nickname;
+<<<<<<< HEAD
     public String picture;
+=======
+    public String pictureUri;
+>>>>>>> 2d9cfb6e78d76a1d33d959fb658e57d3a67f81a0
 
     //Coordination
     public String latitude;
@@ -64,7 +68,11 @@ public class BleDeviceInfo {
         this.rssiKalmanFileter = new KalmanFilter(0);
 
         this.nickname = "";
+<<<<<<< HEAD
         this.picture = "";
+=======
+        this.pictureUri = "";
+>>>>>>> 2d9cfb6e78d76a1d33d959fb658e57d3a67f81a0
 
         this.latitude = "";
         this.longitude = "";
@@ -91,7 +99,11 @@ public class BleDeviceInfo {
         this.rssiKalmanFileter = new KalmanFilter(0);
 
         this.nickname = nickname;
+<<<<<<< HEAD
         this.picture = "";
+=======
+        this.pictureUri = "";
+>>>>>>> 2d9cfb6e78d76a1d33d959fb658e57d3a67f81a0
 
         this.latitude = "";
         this.longitude = "";
@@ -123,7 +135,11 @@ public class BleDeviceInfo {
         this.rssiKalmanFileter = new KalmanFilter(this.rssi);
 
         this.nickname = "";
+<<<<<<< HEAD
         this.picture = "";
+=======
+        this.pictureUri = "";
+>>>>>>> 2d9cfb6e78d76a1d33d959fb658e57d3a67f81a0
 
         this.latitude = "";
         this.longitude = "";
@@ -148,7 +164,11 @@ public class BleDeviceInfo {
         this.rssiKalmanFileter = new KalmanFilter(this.rssi);
 
         this.nickname = "";
+<<<<<<< HEAD
         this.picture = "";
+=======
+        this.pictureUri = "";
+>>>>>>> 2d9cfb6e78d76a1d33d959fb658e57d3a67f81a0
 
         this.latitude = "";
         this.longitude = "";
@@ -292,12 +312,21 @@ public class BleDeviceInfo {
 
     public void setTimeout(int timeout){ this.timeout = timeout; }
 
+<<<<<<< HEAD
     public String getPicture() {
         return picture;
     }
 
     public void setPicture(String picture) {
         this.picture = picture;
+=======
+    public String getPictureUri() {
+        return pictureUri;
+    }
+
+    public void setPictureUri(String picture) {
+        this.pictureUri = picture;
+>>>>>>> 2d9cfb6e78d76a1d33d959fb658e57d3a67f81a0
     }
 
     public String getNickname() {
@@ -350,10 +379,13 @@ public class BleDeviceInfo {
             return false;
     }
 
+<<<<<<< HEAD
     public BeaconOnDB toDB() {
         BeaconOnDB beaconOnDB = new BeaconOnDB(getNickname());
 
         return beaconOnDB;
     }
 
+=======
+>>>>>>> 2d9cfb6e78d76a1d33d959fb658e57d3a67f81a0
 }
