@@ -3,19 +3,31 @@ package com.example.becomebeacon.beaconlocker;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
 import java.io.File;
+
+import static android.view.View.VISIBLE;
 
 /**
  * Created by 함상혁입니다 on 2017-05-14.
@@ -66,7 +78,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
         nickName=(TextView)findViewById(R.id.et_NICKNAME);
         address=(TextView)findViewById(R.id.et_Address);
         meter=(TextView)findViewById(R.id.meter);
-        disconnect=(Button)findViewById(R.id.showMap);
+        disconnect=(Button)findViewById(R.id.disconnect);
         main=(Button)findViewById(R.id.toMain);
         changeImage=(Button)findViewById(R.id.changeImage);
         showMap=(Button)findViewById(R.id.showMap);
@@ -214,6 +226,25 @@ public class BeaconDetailsActivity extends AppCompatActivity {
             //사진은 사각형
             mImage.setImageBitmap(mBitmap);//미리보기...
         }
+    }
+
+    public void fetchPicture() {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReferenceFromUrl("gs://beaconlocker-51c69.appspot.com/").child(item.pictureUri);
+
+        final long ONE_MEGABYTE = 1024 * 1024;
+        storageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                // Data for "images/island.jpg" is returns, use this as needed
+                //b = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+            }
+        });
     }
 
 
