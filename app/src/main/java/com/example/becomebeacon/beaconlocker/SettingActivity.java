@@ -211,6 +211,7 @@ public class SettingActivity extends AppCompatActivity {
         gpsSwitch.setOnCheckedChangeListener(new myListener());
 
 
+        Values.useGPS=op;
 
         editor.putBoolean("UseGPS",op);
         editor.commit();
@@ -224,6 +225,7 @@ public class SettingActivity extends AppCompatActivity {
         scanOnOff.setOnCheckedChangeListener(new myListener());
 
 
+        Values.useBLE=op;
 
         editor.putBoolean("UseScan",op);
         editor.commit();
