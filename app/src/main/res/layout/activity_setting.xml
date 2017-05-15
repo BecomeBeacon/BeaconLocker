@@ -35,7 +35,7 @@
         android:layout_alignStart="@+id/textView11"
         android:layout_below="@+id/textView11"
         android:layout_marginTop="12dp"
-        android:text="스캘주기 설정"
+        android:text="스캔주기 설정"
         android:textSize="20dp" />
 
     <EditText
