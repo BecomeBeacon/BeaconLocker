@@ -360,6 +360,7 @@ public class BluetoothScan {
                 if(Values.useGPS)
                 {
                     tItem.setCoordinate(Values.latitude,Values.longitude);
+                    Log.d(TAG,"in useGps : lat : "+tItem.latitude+" long : "+tItem.longitude);
                 }
 
                 Log.d("SCAN","Tracking.. contain2");

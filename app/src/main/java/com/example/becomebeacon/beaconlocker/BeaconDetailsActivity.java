@@ -122,6 +122,8 @@ public class BeaconDetailsActivity extends AppCompatActivity {
                 item.nickname=nickName.getText().toString();
                 item.limitDistance = Double.valueOf(limitDist.getText().toString());
 
+                //서버에서도 바꿔줘야한다 무조건
+
                 finish();
             }
         });
@@ -138,6 +140,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
             public void onClick(View v)
             {
                 Intent intent = new Intent(getApplicationContext(), MapActivity.class);
+                Log.d("BDA","lat : "+item.latitude+" long : "+item.longitude);
                 intent.putExtra("LAT",item.latitude);
                 intent.putExtra("LON",item.longitude);
                 startActivity(intent);

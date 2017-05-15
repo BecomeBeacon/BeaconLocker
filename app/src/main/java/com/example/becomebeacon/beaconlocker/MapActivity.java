@@ -36,10 +36,12 @@ public class MapActivity extends FragmentActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Intent intent = getIntent();
-        inlat = intent.getExtras().getDouble("LAT");
-        inlon = intent.getExtras().getDouble("LON");
+        inlat = Double.valueOf(intent.getExtras().getString("LAT"));
+        inlon = Double.valueOf(intent.getExtras().getString("LON"));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+
+        Log.d("MAP","lat : "+inlat+" long : "+inlon);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
