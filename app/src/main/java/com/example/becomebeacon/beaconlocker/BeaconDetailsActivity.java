@@ -28,7 +28,6 @@ import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.io.IOException;
 
-import static android.view.View.VISIBLE;
 import static com.example.becomebeacon.beaconlocker.R.id.imageView;
 
 /**
@@ -38,10 +37,11 @@ import static com.example.becomebeacon.beaconlocker.R.id.imageView;
 public class BeaconDetailsActivity extends AppCompatActivity {
 
     private BleDeviceInfo item;
-    private TextView nickName;
+    private EditText nickName;
     private TextView address;
     private TextView meter;
     private Button showMap;
+    private EditText limitDist;
     private Button disconnect;
     private Button main;
     private Button changeImage;
@@ -65,7 +65,9 @@ public class BeaconDetailsActivity extends AppCompatActivity {
 
         Log.d("BDA","item: "+item.nickname+", "+item.devAddress+", "+item.pictureUri);
         nickName.setText(item.nickname);
+        limitDist.setText(item.limitDistance+"");
         address.setText(item.devAddress);
+
 
         meter.setText(String.format("%.2f",item.distance2));
 
@@ -82,13 +84,15 @@ public class BeaconDetailsActivity extends AppCompatActivity {
 
     private void initUI() {
         mImage= (ImageView) findViewById(imageView);
-        nickName=(TextView)findViewById(R.id.et_NICKNAME);
-        address=(TextView)findViewById(R.id.et_Address);
+        nickName=(EditText)findViewById(R.id.et_NICKNAME);
+        address=(TextView)findViewById(R.id.et_address);
         meter=(TextView)findViewById(R.id.meter);
         disconnect=(Button)findViewById(R.id.disconnect);
         main=(Button)findViewById(R.id.toMain);
         changeImage=(Button)findViewById(R.id.changeImage);
         showMap=(Button)findViewById(R.id.showMap);
+        limitDist=(EditText) findViewById(R.id.limit_distance);
+
     }
     private void initListeners() {
         disconnect.setOnClickListener(new Button.OnClickListener() {
@@ -116,6 +120,8 @@ public class BeaconDetailsActivity extends AppCompatActivity {
             public void onClick(View v)
             {
                 item.nickname=nickName.getText().toString();
+                item.limitDistance = Double.valueOf(limitDist.getText().toString());
+
                 finish();
             }
         });

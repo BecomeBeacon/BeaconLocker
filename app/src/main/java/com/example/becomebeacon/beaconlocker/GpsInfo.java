@@ -30,10 +30,10 @@ public class GpsInfo extends Service implements LocationListener {
     public Activity mActivity;
 
     // 현재 GPS 사용유무
-    boolean isGPSEnabled = false;
+    static boolean isGPSEnabled = false;
 
     // 네트워크 사용유무
-    boolean isNetworkEnabled = false;
+    static boolean isNetworkEnabled = false;
 
     // GPS 상태값
     boolean isGetLocation = false;
@@ -54,25 +54,27 @@ public class GpsInfo extends Service implements LocationListener {
     public GpsInfo(Context context, Activity activity) {
         this.mContext = context;
         this.mActivity = activity;
-        getLocation();
+        //getLocation();
+        locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
     }
-    public GpsInfo()
-    {
+
+    public GpsInfo() {
 
     }
+
+
 
     public Location getLocation() {
 
         try {
-            locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
-
-            // GPS 정보 가져오기
-            isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-            // 현재 네트워크 상태 값 알아오기
-            isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+            //locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
+            GpsEnabled();
+            NetworkEnabled();
+            Log.d("GPS","test1");
             if (Build.VERSION.SDK_INT >= 23) {
                 if (ContextCompat.checkSelfPermission(mContext,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     // 이 권한을 필요한 이유를 설명해야하는가?
+                    Log.d("GPS","test2");
                     if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity,Manifest.permission.ACCESS_FINE_LOCATION))
                     {
                         // 다이어로그같은것을 띄워서 사용자에게 해당 권한이 필요한 이유에 대해 설명합니다
@@ -91,19 +93,22 @@ public class GpsInfo extends Service implements LocationListener {
                 showSettingsAlert();
             }
             isGetLocation = true;
+            Log.d("GPS","test3");
 
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES,this);
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES,this);
-            Log.d("SPEED","흠흠");
+            Log.d("GPS","test4");
             location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             lat = getLatitude();
             lon = getLongitude();
+            Log.d("GPS","test5");
             if(lat==0 || lon ==0)
             {
                 location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                 lat = getLatitude();
                 lon = getLongitude();
             }
+            Log.d("GPS","test5");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -118,6 +123,20 @@ public class GpsInfo extends Service implements LocationListener {
         if(locationManager != null){
             locationManager.removeUpdates(GpsInfo.this);
         }
+    }
+
+    public boolean GpsEnabled()
+    {
+        // GPS 정보 가져오기
+        isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        // 현재 네트워크 상태 값 알아오기
+        return isGPSEnabled;
+
+    }
+    public boolean NetworkEnabled()
+    {
+        isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        return isNetworkEnabled;
     }
 
     /**

@@ -10,6 +10,7 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ListView;
 import android.content.SharedPreferences;
@@ -62,6 +63,8 @@ public class BluetoothScan {
     boolean mScanning;
     private HashMap<String, BleDeviceInfo> mItemMap;
     private HashMap<String, BleDeviceInfo> mScannedMap;
+
+    SharedPreferences pref;
 
     /*
         Widgets
@@ -162,6 +165,11 @@ public class BluetoothScan {
                     // Next Step
                 } else {
                     // 취소 눌렀을 때
+                    SharedPreferences pref = mActivity.getSharedPreferences("pref", AppCompatActivity.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = pref.edit();
+
+                    editor.putBoolean("UseScan", false);
+
                     Log.d(TAG, "Bluetooth is not enabled");
                 }
                 break;

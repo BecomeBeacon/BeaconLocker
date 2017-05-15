@@ -11,7 +11,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -29,12 +32,18 @@ import java.util.ArrayList;
 public class BleService extends Service {
 
 
+    private String TAG="BLESERVICE";
     BluetoothScan mBleScan;
+    Location loc;
     private ArrayList<BleDeviceInfo> mAssignedItem;
+    private LocationManager mLocationManager = null;
+    private static final int LOCATION_INTERVAL = 1000;
+    private static final float LOCATION_DISTANCE = 10f;
     boolean mScan;
     private GpsInfo gps;
 //    NotificationManager Notifi_M;
 //    Notification Notifi ;
+
 
 
 
@@ -56,7 +65,11 @@ public class BleService extends Service {
         mAssignedItem = BeaconList.mAssignedItem;
         mScan=false;
         mHandler.sendEmptyMessage(0);
+
+
+
     }
+
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -79,6 +92,8 @@ public class BleService extends Service {
         super.onDestroy();
 
 
+
+
     }
 
 
@@ -86,20 +101,12 @@ public class BleService extends Service {
     {
         public void handleMessage(Message msg)
         {
-            Log.d("SERVICE",this.toString()+" in handler");
+            Log.d("SERVICE"," in handler");
             if(mBleScan.getMod()== Values.USE_TRACK) {
+                Log.d("SERVICE"," in track");
 
                 if(mScan) {
-                    if(Values.useGPS)
-                    {
-                        //여기서 Values.latitude, Values.longitude에 현재 좌표 저장
-                        gps = new GpsInfo();
-                        gps.getLocation();
 
-                         Values.latitude = Double.toString(gps.lat);
-                         Values.longitude = Double.toString(gps.lon);
-
-                    }
                     if(Values.useBLE) {
                         Log.d("SERVICE", "scan stop "+Values.scanBreakTime);
                         mBleScan.getBtAdapter().stopLeScan(mBleScan.mLeScanCallback);
@@ -112,6 +119,24 @@ public class BleService extends Service {
                 }
                 else
                 {
+                    Log.d(TAG,"gps : "+Values.useGPS);
+                    if(Values.useGPS)
+                    {
+
+                        Log.d("SERVICE"," in gps");
+
+
+
+                        //여기서 Values.latitude, Values.longitude에 현재 좌표 저장
+                        gps = new GpsInfo(GetMainActivity.getMainActity(),GetMainActivity.getMainActity());
+                        gps.getLocation();
+
+                        Values.latitude = Double.toString(gps.lat);
+                        Values.longitude = Double.toString(gps.lon);
+
+                        Log.d(TAG,"lat : "+gps.lat+ " long : "+gps.lon);
+
+                    }
                     if(Values.useBLE) {
                         Log.d("SERVICE", "scan start "+Values.scanTime );
                         mBleScan.getBtAdapter().startLeScan(mBleScan.mLeScanCallback);
@@ -126,6 +151,8 @@ public class BleService extends Service {
 
         }
     };
+
+
 
     public void pushNotification(String name)
     {
@@ -262,6 +289,7 @@ public class BleService extends Service {
         }
         return false;
     }
+
 
 
 }

@@ -19,13 +19,13 @@
 
     <TextView
         android:id="@+id/textView11"
-        android:layout_width="70dp"
+        android:layout_width="180dp"
         android:layout_height="30dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="14dp"
         android:layout_marginTop="23dp"
-        android:text="추적"
+        android:text="분실물 방지 사용여부"
         android:textSize="20dp" />
 
     <TextView
@@ -58,23 +58,23 @@
         android:layout_alignEnd="@+id/scan_on_off"
         android:layout_marginEnd="11dp"
         android:layout_alignTop="@+id/textView13" />
-    <Button
+
+    <Switch
         android:id="@+id/GpsBotton"
         android:layout_width="70dp"
         android:layout_height="wrap_content"
-        android:text="GPS"
-        android:layout_marginTop="19dp"
+        android:layout_alignStart="@+id/scan_on_off"
         android:layout_below="@+id/scan_period"
-        android:layout_alignStart="@+id/scan_on_off" />
+        android:layout_marginTop="19dp" />
 
     <TextView
         android:id="@+id/textView15"
         android:layout_width="120dp"
         android:layout_height="30dp"
-        android:text="GPS ON OFF"
-        android:textSize="20dp"
         android:layout_alignBaseline="@+id/GpsBotton"
         android:layout_alignBottom="@+id/GpsBotton"
-        android:layout_alignStart="@+id/textView13" />
+        android:layout_alignStart="@+id/textView13"
+        android:text="GPS 사용여부"
+        android:textSize="20dp" />
 
 </RelativeLayout>

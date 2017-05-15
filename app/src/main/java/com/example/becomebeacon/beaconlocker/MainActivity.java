@@ -249,10 +249,13 @@ public class MainActivity extends AppCompatActivity
         // 저장된 값들을 불러옵니다.
         int scanTime = pref.getInt("ScanPeriod", Values.scanBreakTime);
         Boolean useScan = pref.getBoolean("UseScan", true);
+        Boolean useGps = pref.getBoolean("UseGPS",false);
+
+
 
         Values.scanBreakTime=scanTime;
         Values.useBLE=useScan;
-        Values.useGPS=true;
+        Values.useGPS=useGps;
 
 
 
@@ -362,12 +365,12 @@ public class MainActivity extends AppCompatActivity
 
 
 
-        if (mEmail != null) {
+        if (mEmail != null&&mUser!=null) {
 
             mEmail.setText(mUser.getEmail());
         }
 
-        if (mName != null) {
+        if (mName != null&&mUser!=null) {
 
             mName.setText(mUser.getDisplayName());
         }
