@@ -31,6 +31,7 @@ public class MapActivity extends FragmentActivity
     double lon;
     double inlat;
     double inlon;
+
     //맵 개체 생성
     @Override
     protected void onCreate(Bundle savedInstanceState) {
