@@ -353,7 +353,8 @@ public class MainActivity extends AppCompatActivity
 //            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 //            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
 //        }
-        mBleScan.checkBluetooth();
+        if(Values.useBLE)
+            mBleScan.checkBluetooth();
 
         View headerLayout = navigationView.getHeaderView(0);
         mEmail=(TextView)headerLayout.findViewById(R.id.slide_user_email);
