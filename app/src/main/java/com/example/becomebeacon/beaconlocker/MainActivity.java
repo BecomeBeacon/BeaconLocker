@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -147,7 +148,12 @@ public class MainActivity extends AppCompatActivity
                 }
                 if(BeaconDetailsActivity.getBDA()!=null)
                 {
+                    Log.d("Main","bda exist");
                     BeaconDetailsActivity.getBDA().refreshDistance();
+                }
+                else
+                {
+                    Log.d("Main","bda is null");
                 }
 
                 mHandler.sendEmptyMessageDelayed(0, CEHCK_PERIOD);
@@ -320,7 +326,7 @@ public class MainActivity extends AppCompatActivity
         fab_test.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                stopService(bleService);
+                stopBleService();
             }
         });
 
@@ -378,6 +384,10 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    public void stopBleService()
+    {
+        stopService(bleService);
+    }
 
 
     @Override
@@ -496,7 +506,10 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_machine) {
 
         } else if (id == R.id.nav_laf) {
-            Intent intent = new Intent(getApplicationContext(), LafActivity.class);
+            double lat = 35.8854755;
+            double lng = 128.6090822;
+
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse( "https://beaconlocker-51c69.firebaseapp.com/?lat=" + lat + "&lng=" + lng  ));
             startActivity(intent);
         } else if (id == R.id.nav_map) {
             Intent intent = new Intent(getApplicationContext(), MapActivity.class);

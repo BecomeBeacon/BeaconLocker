@@ -84,11 +84,11 @@ public class SettingActivity extends AppCompatActivity {
 
         SharedPreferences.Editor editor = pref.edit(); // Editor를 불러옵니다.
 
-        Values.scanBreakTime=Integer.valueOf(scanPeriod.getText().toString());
+        Values.scanBreakTime=Integer.valueOf(scanPeriod.getText().toString())*1000;
 
 
         // 저장할 값들을 입력합니다.
-        editor.putInt("ScanPeriod", Integer.valueOf(scanPeriod.getText().toString())*1000);
+        editor.putInt("ScanPeriod", (Integer.valueOf(scanPeriod.getText().toString()))*1000);
         editor.putBoolean("UseScan", scanOnOff.isChecked());
 
         editor.commit();

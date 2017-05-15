@@ -304,7 +304,7 @@ public class BleDeviceInfo {
         return pictureUri;
     }
 
-    public void setPicture(String picture) {
+    public void setPictureUri(String picture) {
         this.pictureUri = picture;
     }
 
@@ -356,12 +356,6 @@ public class BleDeviceInfo {
             return true;
         else
             return false;
-    }
-
-    public BeaconOnDB toDB() {
-        BeaconOnDB beaconOnDB = new BeaconOnDB(getNickname());
-
-        return beaconOnDB;
     }
 
     public void setCoordinate(String lati,String longi)

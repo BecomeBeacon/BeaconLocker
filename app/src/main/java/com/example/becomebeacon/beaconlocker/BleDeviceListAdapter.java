@@ -115,8 +115,8 @@ public class BleDeviceListAdapter extends BaseAdapter {
         }
 
 
-        TextView txtUuid = (TextView)convertView.findViewById(R.id.text_uuid);
-        txtUuid.setText("UUID: " + mBleDeviceInfoArrayList.get(position).proximityUuid);
+        //TextView txtUuid = (TextView)convertView.findViewById(R.id.text_uuid);
+        //txtUuid.setText("UUID: " + mBleDeviceInfoArrayList.get(position).proximityUuid);
 
         TextView txtBdName = (TextView)convertView.findViewById(R.id.text_bd_name);
         txtBdName.setText("Device Name: " + mBleDeviceInfoArrayList.get(position).devName);
@@ -124,25 +124,25 @@ public class BleDeviceListAdapter extends BaseAdapter {
         TextView txtBdAddress = (TextView)convertView.findViewById(R.id.text_bd_address);
         txtBdAddress.setText("Dev Address: " + mBleDeviceInfoArrayList.get(position).devAddress);
 
-        TextView txtMajor = (TextView)convertView.findViewById(R.id.text_major);
-        txtMajor.setText("Major: " + String.valueOf(mBleDeviceInfoArrayList.get(position).major));
+        //TextView txtMajor = (TextView)convertView.findViewById(R.id.text_major);
+        //txtMajor.setText("Major: " + String.valueOf(mBleDeviceInfoArrayList.get(position).major));
 
-        TextView txtMinor = (TextView)convertView.findViewById(R.id.text_minor);
-        txtMinor.setText("Minor: " + String.valueOf(mBleDeviceInfoArrayList.get(position).minor));
+        //TextView txtMinor = (TextView)convertView.findViewById(R.id.text_minor);
+        //txtMinor.setText("Minor: " + String.valueOf(mBleDeviceInfoArrayList.get(position).minor));
 
-        TextView txtRssi = (TextView)convertView.findViewById(R.id.text_rssi);
-        txtRssi.setText("RSSI: " + String.valueOf(mBleDeviceInfoArrayList.get(position).rssi) + " dbm");
+        //TextView txtRssi = (TextView)convertView.findViewById(R.id.text_rssi);
+        //txtRssi.setText("RSSI: " + String.valueOf(mBleDeviceInfoArrayList.get(position).rssi) + " dbm");
 
-        TextView txtTxPower = (TextView)convertView.findViewById(R.id.text_txpower);
+        //TextView txtTxPower = (TextView)convertView.findViewById(R.id.text_txpower);
         //txtTxPower.setText("Tx Power: " + String.valueOf(mBleDeviceInfoArrayList.get(position).measuredPower) + " dbm");
-        txtTxPower.setText("Tx Power: " + String.valueOf(mBleDeviceInfoArrayList.get(position).txPower) + " dbm");      // changsu
+        //txtTxPower.setText("Tx Power: " + String.valueOf(mBleDeviceInfoArrayList.get(position).txPower) + " dbm");      // changsu
 
         TextView txtDistance = (TextView)convertView.findViewById(R.id.text_distance);
         txtDistance.setText("Distance: " //+ String.format("%.2f",String.valueOf(mBleDeviceInfoArrayList.get(position).distance))+ " m ("
                  + String.format("%.2f", mBleDeviceInfoArrayList.get(position).distance2) +"m");
 
-        TextView txtTimeout = (TextView)convertView.findViewById(R.id.text_timeout);
-        txtTimeout.setText("Timeout: " + String.valueOf(mBleDeviceInfoArrayList.get(position).timeout));
+        //TextView txtTimeout = (TextView)convertView.findViewById(R.id.text_timeout);
+        //txtTimeout.setText("Timeout: " + String.valueOf(mBleDeviceInfoArrayList.get(position).timeout));
 
         Button btnConnect = (Button)convertView.findViewById(R.id.button_connect);
         btnConnect.setOnClickListener(new Button.OnClickListener() {
