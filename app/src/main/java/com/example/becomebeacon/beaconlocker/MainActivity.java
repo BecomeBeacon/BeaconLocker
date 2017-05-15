@@ -509,8 +509,13 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_machine) {
 
         } else if (id == R.id.nav_laf) {
-            double lat = 35.8854755;
-            double lng = 128.6090822;
+            double lat, lng;
+
+            GpsInfo gpsCoordi =  new GpsInfo();
+            gpsCoordi.getLocation();
+
+            lat = gpsCoordi.getLatitude();
+            lng = gpsCoordi.getLongitude();
 
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse( "https://beaconlocker-51c69.firebaseapp.com/?lat=" + lat + "&lng=" + lng  ));
             startActivity(intent);

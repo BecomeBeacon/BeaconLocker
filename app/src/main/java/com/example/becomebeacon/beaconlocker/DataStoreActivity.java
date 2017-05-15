@@ -331,13 +331,15 @@ public class DataStoreActivity extends AppCompatActivity {
         if (resultCode == MainActivity.RESULT_OK) {
             switch (requestCode) {
                 case TAKE_PICTURE:
-                    cutImage(tempUri); // 사진 마름질하다.
+                    //cutImage(tempUri); // 사진 마름질하다.
                     filePath = tempUri;
+                    imageToView(filePath);
                     Log.v("Test", "filepath = " + filePath);
                     break;
                 case CHOOSE_PICTURE:
-                    cutImage(data.getData());
+                    //cutImage(data.getData());
                     filePath = data.getData();
+                    imageToView(filePath);
                     Log.v("Test", "filepath = " + filePath);
                     break;
                 case CROP_SMALL_PICTURE:
@@ -378,6 +380,16 @@ public class DataStoreActivity extends AppCompatActivity {
             mBitmap = extras.getParcelable("data");
             //사진은 사각형
             ivPreview.setImageBitmap(mBitmap);//미리보기...
+        }
+    }
+
+    private void imageToView(Uri uri) {
+        try {
+            //Uri 파일을 Bitmap으로 만들어서 ImageView에 집어 넣는다.
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+            ivPreview.setImageBitmap(bitmap);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
