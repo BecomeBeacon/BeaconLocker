@@ -38,7 +38,7 @@ import static com.example.becomebeacon.beaconlocker.R.id.imageView;
 public class BeaconDetailsActivity extends AppCompatActivity {
 
     private BleDeviceInfo item;
-    private EditText nickName;
+    private TextView nickName;
     private TextView address;
     private TextView meter;
     private Button showMap;
@@ -82,7 +82,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
 
     private void initUI() {
         mImage= (ImageView) findViewById(imageView);
-        nickName=(EditText)findViewById(R.id.et_NICKNAME);
+        nickName=(TextView)findViewById(R.id.et_NICKNAME);
         address=(TextView)findViewById(R.id.et_Address);
         meter=(TextView)findViewById(R.id.meter);
         disconnect=(Button)findViewById(R.id.disconnect);
@@ -131,8 +131,10 @@ public class BeaconDetailsActivity extends AppCompatActivity {
         showMap.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v)
             {
-                 //좌표는 item에 있다
-                //Map 보여주기
+                Intent intent = new Intent(getApplicationContext(), MapActivity.class);
+                intent.putExtra("LAT",item.latitude);
+                intent.putExtra("LON",item.longitude);
+                startActivity(intent);
             }
         });
     }

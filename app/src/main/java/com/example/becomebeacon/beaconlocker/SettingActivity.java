@@ -1,10 +1,14 @@
 package com.example.becomebeacon.beaconlocker;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -19,7 +23,9 @@ public class SettingActivity extends AppCompatActivity {
 
     private BluetoothScan bs;
     private Switch scanOnOff;
+    private Button GpsBotton;
     private TextView scanPeriod;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +33,7 @@ public class SettingActivity extends AppCompatActivity {
 
         scanOnOff=(Switch)findViewById(R.id.scan_on_off);
         scanPeriod=(TextView)findViewById(R.id.scan_period);
+        GpsBotton=(Button) findViewById(R.id.GpsBotton);
 
         bs=new BluetoothScan(null);
 
@@ -46,6 +53,17 @@ public class SettingActivity extends AppCompatActivity {
                 }
             }
         });
+
+        GpsBotton.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+            }
+        }
+        ) ;
+
+
 
         SharedPreferences pref = getSharedPreferences("pref", AppCompatActivity.MODE_PRIVATE); // Shared Preference를 불러옵니다.
         // 저장된 값들을 불러옵니다.

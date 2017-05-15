@@ -32,6 +32,7 @@ public class BleService extends Service {
     BluetoothScan mBleScan;
     private ArrayList<BleDeviceInfo> mAssignedItem;
     boolean mScan;
+    private GpsInfo gps;
 //    NotificationManager Notifi_M;
 //    Notification Notifi ;
 
@@ -42,7 +43,6 @@ public class BleService extends Service {
     public void onCreate()
     {
         super.onCreate();
-
 
         if(isServiceRunningCheck()) {
             Log.d("BLESERVICE","already exist");
@@ -93,6 +93,12 @@ public class BleService extends Service {
                     if(Values.useGPS)
                     {
                         //여기서 Values.latitude, Values.longitude에 현재 좌표 저장
+                        gps = new GpsInfo();
+                        gps.getLocation();
+
+                         Values.latitude = Double.toString(gps.lat);
+                         Values.longitude = Double.toString(gps.lon);
+
                     }
                     if(Values.useBLE) {
                         Log.d("SERVICE", "scan stop "+Values.scanBreakTime);
