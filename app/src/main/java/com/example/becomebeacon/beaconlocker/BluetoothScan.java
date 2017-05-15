@@ -95,9 +95,9 @@ public class BluetoothScan {
 
         //saveRSSI = setting.getBoolean("saveRSSI", true);
 
-        if(mActivity!=null) {
-            mItemMap = BeaconList.mItemMap;
-        }
+        mItemMap = BeaconList.mItemMap;
+        mAssignedItem=BeaconList.mAssignedItem;
+
 
         mBleUtils=new BleUtils();
         mod = Values.USE_TRACK;
@@ -376,13 +376,13 @@ public class BluetoothScan {
                 Log.d("SCAN","Tracking.. contain2");
 
                 //if(item.limitDistance<item.distance2) {
-                if(0.2<item.distance2) {
+                if(0.2<tItem.distance2) {
                     //멀다 팝업 띄운다
                     Log.d("SCAN","too far");
-                    mBleService.pushNotification();
+                    mBleService.pushNotification(tItem.nickname);
 
                     //Log.d("SCAN","too far");
-                    mItemMap.get(item.devAddress).isFar=true;
+                    mItemMap.get(tItem.devAddress).isFar=true;
                     //팝업 내용에따라 isLost 갱신
                 }
             }

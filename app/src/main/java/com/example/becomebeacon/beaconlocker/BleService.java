@@ -121,7 +121,7 @@ public class BleService extends Service {
         }
     };
 
-    public void pushNotification()
+    public void pushNotification(String name)
     {
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         Intent intent = new Intent(this, MainActivity.class);
@@ -130,7 +130,7 @@ public class BleService extends Service {
         builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.main_logo));
         builder.setSmallIcon(R.drawable.main_logo);
         builder.setTicker("멀어짐");
-        builder.setContentTitle("비컨이 멀어졌습니다");
+        builder.setContentTitle(name+"이 멀어졌습니다");
         builder.setContentText("알고계신가요?");
         builder.setWhen(System.currentTimeMillis());
         builder.setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE);

@@ -215,12 +215,12 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        BeaconList.refresh();
 
         mBleUtils=new BleUtils();
         mBluetoothAdapter= BluetoothAdapter.getDefaultAdapter();
 
-        BeaconList.refresh();
+
 
         GetMainActivity.setMA(this);
 
@@ -518,6 +518,7 @@ public class MainActivity extends AppCompatActivity
             signOut();
             mHandler.removeMessages(0);
             mTimeOut.removeMessages(0);
+            stopBleService();
             finish();
 
         }
