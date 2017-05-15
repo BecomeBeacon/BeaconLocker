@@ -66,15 +66,14 @@ public class DataFetch {
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        BeaconOnDB beaconOnDB = dataSnapshot.getValue(BeaconOnDB.class);
+                        BleDeviceInfo bleDeviceInfo = dataSnapshot.getValue(BleDeviceInfo.class);
 
-                        if(beaconOnDB!=null) {
-                            BleDeviceInfo bleDeviceInfo = new BleDeviceInfo(myAddress, beaconOnDB.nickname);
+                        if(bleDeviceInfo!=null) {
 
                             if(!myItemMap.containsKey(myAddress)) {
                                 myBleInfo.add(bleDeviceInfo);
                                 myItemMap.put(myAddress, bleDeviceInfo);
-                                Log.v("Test_Print_nick", beaconOnDB.nickname);
+                                Log.v("Test_Print_nick", bleDeviceInfo.nickname);
                             }
 
                         }

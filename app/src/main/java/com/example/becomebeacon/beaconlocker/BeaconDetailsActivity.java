@@ -3,6 +3,7 @@ package com.example.becomebeacon.beaconlocker;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -13,15 +14,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
+import java.io.IOException;
+
+import static android.view.View.VISIBLE;
+import static com.example.becomebeacon.beaconlocker.R.id.imageView;
 
 /**
  * Created by 함상혁입니다 on 2017-05-14.
@@ -55,27 +63,32 @@ public class BeaconDetailsActivity extends AppCompatActivity {
         initListeners();
 
 
-        Log.d("BDA","item: "+item.nickname+", "+item.devAddress);
+        Log.d("BDA","item: "+item.nickname+", "+item.devAddress+", "+item.pictureUri);
         nickName.setText(item.nickname);
         address.setText(item.devAddress);
 
         meter.setText(String.format("%.2f",item.distance2));
 
-
+        if(item.getPictureUri() != null) {
+            fetchPicture();
+        }
+        else {
+            //사진 없는 경우
+        }
 
 
     }
 
 
     private void initUI() {
-        mImage= (ImageView) findViewById(R.id.imageView);
+        mImage= (ImageView) findViewById(imageView);
         nickName=(TextView)findViewById(R.id.et_NICKNAME);
         address=(TextView)findViewById(R.id.et_Address);
         meter=(TextView)findViewById(R.id.meter);
         disconnect=(Button)findViewById(R.id.disconnect);
         main=(Button)findViewById(R.id.toMain);
         changeImage=(Button)findViewById(R.id.changeImage);
-        showMap=(Button)findViewById(R.id.disconnect);
+        showMap=(Button)findViewById(R.id.showMap);
     }
     private void initListeners() {
         disconnect.setOnClickListener(new Button.OnClickListener() {
@@ -88,18 +101,21 @@ public class BeaconDetailsActivity extends AppCompatActivity {
                     if(BeaconList.mAssignedItem.get(i).devAddress==item.devAddress) {
                         BeaconList.mAssignedItem.remove(i);
                         Log.d("BDA","removed");
-                        finish();
+                        break;
 
                     }
                 }
 
+
                 //서버에서도 없애줘야한다 무조건
+                finish();
             }
         });
 
         main.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v)
             {
+                item.nickname=nickName.getText().toString();
                 finish();
             }
         });
@@ -224,21 +240,39 @@ public class BeaconDetailsActivity extends AppCompatActivity {
 
     public void fetchPicture() {
         FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReferenceFromUrl("gs://beaconlocker-51c69.appspot.com/").child(item.pictureUri);
+        StorageReference storageRef = storage.getReferenceFromUrl("gs://beaconlocker-51c69.appspot.com/");
+        Log.v("Test_Uri1", "URI = " + item.pictureUri);
+        Toast.makeText(BeaconDetailsActivity.this,item.pictureUri,Toast.LENGTH_SHORT).show();
+        try {
+            storageRef = storage.getReferenceFromUrl("gs://beaconlocker-51c69.appspot.com/").child(item.pictureUri);
+        }
+        catch (Exception e) {
+            Toast.makeText(BeaconDetailsActivity.this,item.pictureUri,Toast.LENGTH_SHORT).show();
+            Log.v("Test_Uri2", "URI = " + item.pictureUri);
+        }
 
-        final long ONE_MEGABYTE = 1024 * 1024;
-        storageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                // Data for "images/island.jpg" is returns, use this as needed
-                //b = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle any errors
-            }
-        });
+        try {
+            // Storage 에서 다운받아 저장시킬 임시파일
+            final File imageFile = File.createTempFile("images", "jpg");
+            storageRef.getFile(imageFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    // Success Case
+                    Bitmap bitmapImage = BitmapFactory.decodeFile(imageFile.getPath());
+                    mImage.setImageBitmap(bitmapImage);
+                    Toast.makeText(getApplicationContext(), "Success !!", Toast.LENGTH_LONG).show();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    // Fail Case
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "Fail !!", Toast.LENGTH_LONG).show();
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 

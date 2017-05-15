@@ -1,8 +1,5 @@
 package com.example.becomebeacon.beaconlocker;
 
-
-import com.example.becomebeacon.beaconlocker.BeaconOnDB;
-
 /**
  * Created by gwmail on 2017-04-26.
  */
