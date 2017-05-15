@@ -107,7 +107,6 @@ public class MainActivity extends AppCompatActivity
     {
         public void handleMessage(Message msg)
         {
-            Log.d("main","in main handler : ");
             if(mBleScan.getMod()== Values.USE_SCAN) {
 
                 if(mScan) {
@@ -151,10 +150,7 @@ public class MainActivity extends AppCompatActivity
                     Log.d("Main","bda exist");
                     BeaconDetailsActivity.getBDA().refreshDistance();
                 }
-                else
-                {
-                    Log.d("Main","bda is null");
-                }
+
 
                 mHandler.sendEmptyMessageDelayed(0, CEHCK_PERIOD);
             }

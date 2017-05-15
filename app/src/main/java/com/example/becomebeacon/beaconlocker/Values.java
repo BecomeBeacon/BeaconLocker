@@ -5,6 +5,7 @@ package com.example.becomebeacon.beaconlocker;
  */
 
 public class Values {
+    public static final int CHECK_GPS=111;
     public static final int USE_SCAN=22;
     public static final int USE_TRACK=33;
     public static final int USE_NOTHING=55;

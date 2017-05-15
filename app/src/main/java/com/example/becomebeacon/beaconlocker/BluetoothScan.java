@@ -80,8 +80,8 @@ public class BluetoothScan {
     private int mod;
     private String TAG="BluetoothScan";
     private MainActivity mActivity;
-    private static final int REQUEST_CONNECT_DEVICE = 1;
-    private static final int REQUEST_ENABLE_BT = 2;
+    public static final int REQUEST_CONNECT_DEVICE = 1;
+    public static final int REQUEST_ENABLE_BT = 2;
     private BleUtils mBleUtils;
 
 
@@ -153,29 +153,10 @@ public class BluetoothScan {
             return true;
         }
     }
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
+
+    public boolean isBleOn()
     {
-        switch (requestCode)
-        {
-            case REQUEST_ENABLE_BT:
-                // When the request to enable Bluetooth returns
-                if (resultCode == Activity.RESULT_OK)
-                {
-                    // 확인 눌렀을 때
-                    // Next Step
-                } else {
-                    // 취소 눌렀을 때
-                    SharedPreferences pref = mActivity.getSharedPreferences("pref", AppCompatActivity.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = pref.edit();
-
-                    editor.putBoolean("UseScan", false);
-
-                    Log.d(TAG, "Bluetooth is not enabled");
-                }
-                break;
-        }
-
-
+        return mBluetoothAdapter.isEnabled();
     }
 
     public void enableBluetooth()
@@ -383,10 +364,10 @@ public class BluetoothScan {
 
                 Log.d("SCAN","Tracking.. contain2");
 
-                //if(item.limitDistance<item.distance2) {
-                if(0.2<tItem.distance2) {
+                if(tItem.limitDistance<tItem.distance2) {
+                //if(0.2<tItem.distance2) {
                     //멀다 팝업 띄운다
-                    Log.d("SCAN","too far");
+                    Log.d("SCAN","too far : distance :"+tItem.distance2+" limit : "+tItem.limitDistance);
                     mBleService.pushNotification(tItem.nickname);
 
                     //Log.d("SCAN","too far");

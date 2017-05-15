@@ -88,10 +88,10 @@ public class GpsInfo extends Service implements LocationListener {
 
                 }
             }
-            if(!isGPSEnabled)
-            {
-                showSettingsAlert();
-            }
+//            if(!isGPSEnabled)
+//            {
+//                showSettingsAlert();
+//            }
             isGetLocation = true;
             Log.d("GPS","test3");
 
@@ -181,13 +181,17 @@ public class GpsInfo extends Service implements LocationListener {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog,int which) {
                         Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        mContext.startActivity(intent);
+                        mActivity.startActivityForResult(intent,Values.CHECK_GPS);
                     }
                 });
         // Cancle 하면 종료 합니다.
         alertDialog.setNegativeButton("Cancel",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+                        if(mActivity==SettingActivity.mContext)
+                        {
+                            SettingActivity.mContext.changeGPS(false);
+                        }
                         dialog.cancel();
                     }
                 });

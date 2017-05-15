@@ -107,10 +107,11 @@ public class BleService extends Service {
 
                 if(mScan) {
 
-                    if(Values.useBLE) {
-                        Log.d("SERVICE", "scan stop "+Values.scanBreakTime);
-                        mBleScan.getBtAdapter().stopLeScan(mBleScan.mLeScanCallback);
-                    }
+                    Log.d("SERVICE","useBLE is "+Values.useBLE);
+
+                    Log.d("SERVICE", "scan stop "+Values.scanBreakTime);
+                    mBleScan.getBtAdapter().stopLeScan(mBleScan.mLeScanCallback);
+
                     mScan = false;
 
                     mHandler.sendEmptyMessageDelayed(0, Values.scanBreakTime);
@@ -166,7 +167,8 @@ public class BleService extends Service {
         builder.setContentTitle(name+"이 멀어졌습니다");
         builder.setContentText("알고계신가요?");
         builder.setWhen(System.currentTimeMillis());
-        builder.setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE);
+        //builder.setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE);
+        builder.setVibrate(null);
         builder.setContentIntent(pendingIntent);
         builder.setAutoCancel(true);
 
@@ -177,17 +179,17 @@ public class BleService extends Service {
         Notification noti=builder.build();
         notificationManager.notify(0, noti);
 
-        ////        //소리추가
-        noti.defaults = Notification.DEFAULT_SOUND;
-
-        //알림 소리를 한번만 내도록
-        noti.flags = Notification.FLAG_ONLY_ALERT_ONCE;
-
-        //확인하면 자동으로 알림이 제거 되도록
-        noti.flags = Notification.FLAG_AUTO_CANCEL;
-
-        //토스트 띄우기
-       Toast.makeText(BleService.this, "비컨 멀어짐", Toast.LENGTH_LONG).show();
+//        ////        //소리추가
+//        noti.defaults = Notification.DEFAULT_SOUND;
+//
+//        //알림 소리를 한번만 내도록
+//        noti.flags = Notification.FLAG_ONLY_ALERT_ONCE;
+//
+//        //확인하면 자동으로 알림이 제거 되도록
+//        noti.flags = Notification.FLAG_AUTO_CANCEL;
+//
+//        //토스트 띄우기
+//       Toast.makeText(BleService.this, "비컨 멀어짐", Toast.LENGTH_LONG).show();
 
 
     }

@@ -1,5 +1,6 @@
 package com.example.becomebeacon.beaconlocker;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.LocationManager;
@@ -25,6 +26,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 
 public class SettingActivity extends AppCompatActivity {
 
+    public static SettingActivity mContext;
     private final int CHECK_GPS = 3232;
     private BluetoothScan bs;
     private Switch scanOnOff;
@@ -33,59 +35,36 @@ public class SettingActivity extends AppCompatActivity {
     private GpsInfo Gps;
     SharedPreferences pref;
 
+    SharedPreferences.Editor editor;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         Gps = new GpsInfo(this,this);
+        mContext=this;
 
+        pref = getSharedPreferences("pref", AppCompatActivity.MODE_PRIVATE);
 
-
-        bs=new BluetoothScan(null);
+        editor = pref.edit(); // Editor를 불러옵니다.
 
         scanOnOff=(Switch)findViewById(R.id.scan_on_off);
         scanPeriod=(TextView)findViewById(R.id.scan_period);
         gpsSwitch=(Switch) findViewById(R.id.GpsBotton);
 
+        bs=new BluetoothScan(null);
 
-        scanOnOff.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked)
-                {
-                    bs.checkBluetooth();
-                    Values.useBLE=true;
-                }
-                else
-                {
-                    Values.useBLE=false;
-                }
-            }
-        });
 
-        gpsSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked)
-                {
-                    if(Gps.GpsEnabled() || Gps.NetworkEnabled()) {
-                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        startActivityForResult(intent, CHECK_GPS);
-                    }
 
-                }
-                else
-                {
-                    Values.useGPS=false;
-                }
-            }
-        });
+        scanOnOff.setOnCheckedChangeListener(new myListener());
+        gpsSwitch.setOnCheckedChangeListener(new myListener());
 
 
 
 
-        pref = getSharedPreferences("pref", AppCompatActivity.MODE_PRIVATE); // Shared Preference를 불러옵니다.
-        // 저장된 값들을 불러옵니다.
+
+
+
+
 
 
 
@@ -93,26 +72,42 @@ public class SettingActivity extends AppCompatActivity {
 
     public void onResume()
     {
+        Log.d("SETTING","on resume");
         super.onResume();
         int scanTime = pref.getInt("ScanPeriod", Values.scanBreakTime);
         Boolean useScan = pref.getBoolean("UseScan", true);
         Boolean useGPS = pref.getBoolean("UseGPS",true);
 
+        if(!bs.isBleOn())
+        {
+            useScan=false;
+        }
 
-        scanOnOff.setChecked(useScan);
+        if(!Gps.GpsEnabled())
+        {
+            Log.d("SETTING","gps isn't able");
+            useGPS=false;
+        }
+        else
+        {
+            Log.d("SETTING","gps is able");
+        }
+
         scanPeriod.setText(""+scanTime/1000);
-        gpsSwitch.setChecked(useGPS);
+        changeScan(useScan);
+        changeGPS(useGPS);
+        //gpsSwitch.setChecked(useGPS);
+
+
+
     }
 
     public void onStop()
     {
         super.onStop();
-        SharedPreferences pref = getSharedPreferences("pref", AppCompatActivity.MODE_PRIVATE);
 
-        SharedPreferences.Editor editor = pref.edit(); // Editor를 불러옵니다.
 
         Values.scanBreakTime=Integer.valueOf(scanPeriod.getText().toString())*1000;
-
 
         // 저장할 값들을 입력합니다.
         editor.putInt("ScanPeriod", (Integer.valueOf(scanPeriod.getText().toString()))*1000);
@@ -125,27 +120,113 @@ public class SettingActivity extends AppCompatActivity {
 
     }
 
+    public void onDestroy()
+    {
+        super.onDestroy();
+
+        Values.scanBreakTime=Integer.valueOf(scanPeriod.getText().toString())*1000;
+
+        // 저장할 값들을 입력합니다.
+        editor.putInt("ScanPeriod", (Integer.valueOf(scanPeriod.getText().toString()))*1000);
+        editor.putBoolean("UseScan", scanOnOff.isChecked());
+        editor.putBoolean("UseGPS",gpsSwitch.isChecked());
+
+        editor.commit();
+
+        mContext=null;
+    }
+
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == CHECK_GPS) {
+        if (requestCode == Values.CHECK_GPS) {
+            Log.d("SETTING","in onActivityResult");
             if(Gps.locationManager==null)
             {
                 Gps.locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
             }
-            if(!Gps.locationManager.isProviderEnabled(Gps.locationManager.GPS_PROVIDER))
+            if(!Gps.GpsEnabled())
             {
+                Log.d("SETTING","1gps is "+Gps.isGPSEnabled);
                 Values.useGPS=false;
-                gpsSwitch.setChecked(false);
+                changeGPS(false);
+                //gpsSwitch.setChecked(false);
             }
             else
             {
+                Log.d("SETTING","2gps is "+Gps.isGPSEnabled);
                 Values.useGPS=true;
-                gpsSwitch.setChecked(true);
+                changeGPS(true);
+                //.setChecked(true);
             }
 
         }
+
+
+    }
+    class myListener implements CompoundButton.OnCheckedChangeListener {
+
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+            if(buttonView==gpsSwitch) {
+                if (isChecked) {
+                    Log.d("SETTING", "in gpsSwitchListener");
+//                if(!Gps.GpsEnabled()) {
+//                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+//                    startActivityForResult(intent, CHECK_GPS);
+//                }
+                    if (!Gps.GpsEnabled()) {
+                        Gps.showSettingsAlert();
+                    }
+
+                } else {
+                    Values.useGPS = false;
+                    changeGPS(false);
+                }
+            }
+            else if(buttonView==scanOnOff)
+            {
+                if(isChecked)
+                {
+                    Values.useBLE=true;
+                    editor.putBoolean("UseScan",true);
+                    bs.checkBluetooth();
+                }
+                else
+                {
+                    Values.useBLE=false;
+                    editor.putBoolean("UseScan",false);
+                }
+                editor.commit();
+            }
+        }
+    }
+
+    public void changeGPS(boolean op)
+    {
+        gpsSwitch.setOnCheckedChangeListener(null);
+        gpsSwitch.setChecked(op);
+        gpsSwitch.setOnCheckedChangeListener(new myListener());
+
+
+
+        editor.putBoolean("UseGPS",op);
+        editor.commit();
+
+    }
+
+    public void changeScan(boolean op)
+    {
+        scanOnOff.setOnCheckedChangeListener(null);
+        scanOnOff.setChecked(op);
+        scanOnOff.setOnCheckedChangeListener(new myListener());
+
+
+
+        editor.putBoolean("UseScan",op);
+        editor.commit();
 
     }
 
