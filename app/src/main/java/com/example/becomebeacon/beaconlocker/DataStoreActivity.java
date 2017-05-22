@@ -48,6 +48,8 @@ import java.util.Date;
  * Created by gwmail on 2017-04-26.
  */
 
+/* 등록할 때 몇미터 이상 할건지 같이등록 */
+
 public class DataStoreActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
