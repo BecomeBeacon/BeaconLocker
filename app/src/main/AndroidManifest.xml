@@ -53,8 +53,7 @@
         <activity
             android:name=".DataStoreActivity"
             android:label="Beacon Locker" />
-        <activity android:name=".LafActivity" />
-        <activity android:name=".RegLostData"></activity>
+        <activity android:name=".RegLostDataActivity"></activity>
     </application>
 
 </manifest>
