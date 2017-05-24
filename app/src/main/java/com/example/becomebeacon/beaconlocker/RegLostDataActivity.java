@@ -7,15 +7,17 @@ package com.example.becomebeacon.beaconlocker;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.example.becomebeacon.beaconlocker.R;
+import com.google.android.gms.maps.MapFragment;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class RegLostData extends AppCompatActivity {
+public class RegLostDataActivity extends AppCompatActivity {
     private FirebaseDatabase dbSession;
     private LostDevInfo devInfo;
     @Override
@@ -51,7 +53,10 @@ public class RegLostData extends AppCompatActivity {
 
         // 분실물 등록이 완료되었습니다 메세지
         // map fragment 추가
-
+        MapFragment mMapFragment = MapFragment.newInstance();
+        android.app.FragmentTransaction fragmentTransaction =
+                getFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.miniMap, mMapFragment);
+        fragmentTransaction.commit();
     }
-
 }
