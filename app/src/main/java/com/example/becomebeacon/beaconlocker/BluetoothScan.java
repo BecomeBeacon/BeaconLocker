@@ -251,6 +251,7 @@ public class BluetoothScan {
 
 
                 updateBleDeviceList(item);
+                Log.d("SCAN","Scanned item LD is "+item.limitDistance);
 
 
             } catch (Exception ex) {
@@ -365,15 +366,16 @@ public class BluetoothScan {
 
                 Log.d("SCAN","Tracking.. contain2");
 
-                if(tItem.limitDistance<tItem.distance2) {
+                if(tItem.limitDistance<tItem.distance2&&tItem.isFar!=true) {
                 //if(0.2<tItem.distance2) {
                     //멀다 팝업 띄운다
-                    Log.d("SCAN","too far : distance :"+tItem.distance2+" limit : "+tItem.limitDistance);
-                    mBleService.pushNotification(tItem.nickname);
 
-                    //Log.d("SCAN","too far");
-                    mItemMap.get(tItem.devAddress).isFar=true;
-                    //팝업 내용에따라 isLost 갱신
+                    Log.d("SCAN","too far : distance :"+tItem.distance2+" limit : "+tItem.limitDistance);
+                    if(Notifications.notifications.containsKey(tItem.devAddress)==false) {
+                        mBleService.pushNotification(tItem.nickname, tItem.devAddress);
+                        mItemMap.get(tItem.devAddress).isFar = true;
+                        //팝업 내용에따라 isLost 갱신
+                    }
                 }
             }
         }

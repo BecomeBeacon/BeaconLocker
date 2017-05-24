@@ -24,6 +24,10 @@ import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Vector;
 
 /**
  * Created by 함상혁입니다 on 2017-05-09.
@@ -35,6 +39,8 @@ public class BleService extends Service {
     private String TAG="BLESERVICE";
     BluetoothScan mBleScan;
     Location loc;
+    int cntNoti;
+
     private ArrayList<BleDeviceInfo> mAssignedItem;
     private LocationManager mLocationManager = null;
     private static final int LOCATION_INTERVAL = 1000;
@@ -53,6 +59,7 @@ public class BleService extends Service {
     {
         super.onCreate();
 
+        Notifications.notifications=new HashMap<String,Integer>();
         if(isServiceRunningCheck()) {
             Log.d("BLESERVICE","already exist");
             stopSelf();
@@ -61,6 +68,7 @@ public class BleService extends Service {
 
         //Notifi_M = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         mBleScan =new BluetoothScan(this);
+        cntNoti=0;
 
         mAssignedItem = BeaconList.mAssignedItem;
         mScan=false;
@@ -155,8 +163,9 @@ public class BleService extends Service {
 
 
 
-    public void pushNotification(String name)
+    public void pushNotification(String name,String devAddress)
     {
+
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         Intent intent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -164,7 +173,7 @@ public class BleService extends Service {
         builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.main_logo));
         builder.setSmallIcon(R.drawable.main_logo);
         builder.setTicker("멀어짐");
-        builder.setContentTitle(name+"이 멀어졌습니다");
+        builder.setContentTitle(name + "이 멀어졌습니다"+cntNoti);
         builder.setContentText("알고계신가요?");
         builder.setWhen(System.currentTimeMillis());
         //builder.setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE);
@@ -173,11 +182,13 @@ public class BleService extends Service {
         builder.setAutoCancel(true);
 
 
-
         builder.addAction(R.drawable.yes, "네", pendingIntent);
         builder.addAction(R.drawable.no, "아니오", pendingIntent);
-        Notification noti=builder.build();
-        notificationManager.notify(0, noti);
+        Notification noti = builder.build();
+
+        Notifications.notifications.put(devAddress,cntNoti);
+        notificationManager.notify(cntNoti++, noti);
+
 
 //        ////        //소리추가
 //        noti.defaults = Notification.DEFAULT_SOUND;
