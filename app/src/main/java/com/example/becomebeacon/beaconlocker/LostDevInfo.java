@@ -5,10 +5,10 @@ package com.example.becomebeacon.beaconlocker;
  */
 
 public class LostDevInfo {
-    public double longitude;
-    public double latitude;
-    public int lostDate;
-    public String devAddr;
+    private double longitude;
+    private double latitude;
+    private String lostDate;
+    private String devAddr;
 
     public void setLongetude(double lngTemp){
         longitude = lngTemp;
@@ -18,11 +18,19 @@ public class LostDevInfo {
         latitude = latTemp;
     }
 
-    public void setLostDate(int dateTemp) {
+    public void setLostDate(String dateTemp) {
         lostDate = dateTemp;
     }
 
     public void setDevAddr(String devTemp) {
         devAddr = devTemp;
     }
+
+    public double getLongitude(){return longitude;}
+
+    public double getLatitude(){return latitude;}
+
+    public String getDevAddr(){return devAddr;}
+
+    public String getlostDate(){return lostDate;}
 }
