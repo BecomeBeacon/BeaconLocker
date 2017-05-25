@@ -16,16 +16,18 @@
         android:gravity="center_horizontal"
         android:text="testNICKNAME"
         android:layout_below="@+id/imageView"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp" />
 
     <TextView
         android:id="@+id/et_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/et_NICKNAME"
         android:gravity="center_horizontal"
-        android:text="TestAddr" />
+        android:text="TestAddr"
+        android:layout_marginTop="14dp"
+        android:layout_below="@+id/et_NICKNAME"
+        android:layout_alignParentStart="true" />
 
     <EditText
         android:id="@+id/limit_distance"
@@ -33,9 +35,10 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:text="TestAddr"
-        android:layout_marginEnd="12dp"
+        android:layout_marginStart="23dp"
         android:layout_below="@+id/et_address"
-        android:layout_alignParentEnd="true" />
+        android:layout_toEndOf="@+id/textView6"
+        android:layout_marginTop="10dp" />
 
     <TextView
         android:id="@+id/editText2"
@@ -44,8 +47,9 @@
         android:ems="10"
         android:gravity="center_horizontal"
         android:text="거리(m 단위)"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/limit_distance" />
+        android:layout_marginTop="22dp"
+        android:layout_below="@+id/limit_distance"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:id="@+id/meter"
@@ -56,41 +60,51 @@
         android:text="40"
         android:textSize="42sp"
         android:layout_below="@+id/editText2"
-        android:layout_alignParentStart="true" />
-
-    <Button
-        android:id="@+id/toMain"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="26dp"
-        android:text="메인으로" />
+        android:layout_marginTop="11dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true">
+
+        <Button
+            android:id="@+id/showMap"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1.94"
+            android:backgroundTint="@color/common_google_signin_btn_text_dark_default"
+            android:drawableTop="@drawable/ic_place"
+            android:text="지도 보기" />
+
+        <Button
+            android:id="@+id/disconnect"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="2"
+            android:backgroundTint="@color/common_google_signin_btn_text_dark_default"
+            android:drawableTop="@drawable/ic_bluetooth_disabled"
+            android:text="연결 해제" />
+
+        <Button
+            android:id="@+id/toMain"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1.90"
+            android:backgroundTint="@color/common_google_signin_btn_text_dark_default"
+            android:drawableTop="@drawable/ic_undo"
+            android:text="메인으로" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/changeImage"
-        android:layout_width="70dp"
+        android:layout_width="50dp"
         android:layout_height="wrap_content"
+        android:background="@drawable/ic_camera"
         android:layout_alignBottom="@+id/imageView"
-        android:layout_alignParentEnd="true"
-        android:text="사진 바꾸기" />
-
-    <Button
-        android:id="@+id/disconnect"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="70dp"
-        android:text="연결 해제" />
-
-    <Button
-        android:id="@+id/showMap"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/disconnect"
-        android:layout_alignParentStart="true"
-        android:text="지도 보기" />
+        android:layout_alignEnd="@+id/limit_distance" />
 
     <TextView
         android:id="@+id/textView6"
@@ -99,7 +113,6 @@
         android:text="한계 거리 :"
         android:layout_alignBaseline="@+id/limit_distance"
         android:layout_alignBottom="@+id/limit_distance"
-        android:layout_toStartOf="@+id/limit_distance"
-        android:layout_marginEnd="21dp" />
+        android:layout_toStartOf="@+id/et_NICKNAME" />
 
 </RelativeLayout>
