@@ -1,16 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.becomebeacon.beaconlocker.RegLostDataActivity">
 
+    <!--
+    <fragment
+        android:id="@+id/RegConfrimMessage"
+        android:layout_width="match_parent"
+        android:layout_height="320dp"/>-->
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.3"
+        android:text = "분실물 등록을 완료하였습니다."
+        android:textColor = "#0084ff"
+        android:textSize = "30sp"
+        android:gravity = "center"
+        />
     <fragment
         android:id="@+id/miniMap"
         android:name="com.google.android.gms.maps.MapFragment"
-        android:layout_width="367dp"
+        android:layout_width="match_parent"
         android:layout_height="340dp"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="217dp" />
-</android.support.constraint.ConstraintLayout>
+        tools:layout_editor_absoluteX="22dp"
+        tools:layout_editor_absoluteY="272dp" />
+</LinearLayout>

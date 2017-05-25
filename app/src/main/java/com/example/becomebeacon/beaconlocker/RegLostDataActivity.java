@@ -18,29 +18,23 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class RegLostDataActivity extends AppCompatActivity {
-    private FirebaseDatabase dbSession;
+    private FirebaseDatabase mDatabase;
+    private DatabaseReference mDatabaseRef;
     private LostDevInfo devInfo;
     @Override
     protected void onCreate(Bundle savedInstanceState)      {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reg_lost_data);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        dbSession
-                .getReference("beacon/")
-                .child("tempDevAddr")
-                .child("islost")
-                .setValue("true"); // isLost 속성값 변경
+        mDatabase = FirebaseDatabase.getInstance();
+        mDatabaseRef = mDatabase.getReference();
 
+
+        mDatabase
+                .getReference("beacon/" + "D5:0A:B9:FA:D0:E9/")
+                .child("isLost")
+                .setValue(true); // isLost 속성값 변경
+        /*
         dbSession
                 .getReference("beacon/")
                 .child("tempDevAddr")
@@ -50,13 +44,13 @@ public class RegLostDataActivity extends AppCompatActivity {
         dbSession.getReference("lost_items/")
                 .child("tempDevAddr")
                 .setValue(devInfo); // lost_items에 분실물 라벨 추가
-
+        */
         // 분실물 등록이 완료되었습니다 메세지
         // map fragment 추가
         MapFragment mMapFragment = MapFragment.newInstance();
         android.app.FragmentTransaction fragmentTransaction =
                 getFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.miniMap, mMapFragment);
+        fragmentTransaction.replace(R.id.miniMap, mMapFragment);
         fragmentTransaction.commit();
     }
 }
