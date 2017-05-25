@@ -146,6 +146,7 @@ public class BleDeviceInfo {
         this.minor = minor;
         //this.measuredPower = mPower;
         this.txPower = txPower;
+        this.limitDistance=Values.basicLimitDistance;
 
         this.rssi = rssi;
         this.distance = distance;
@@ -173,6 +174,7 @@ public class BleDeviceInfo {
         this.minor = minor;
         //this.measuredPower = mPower;
         this.txPower = txPower;
+        this.limitDistance=Values.basicLimitDistance;
 
         this.rssi = rssi;
         this.distance = distance;

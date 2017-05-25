@@ -14,8 +14,6 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
-
-
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -33,15 +31,11 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name"></activity>
-
+            android:label="@string/app_name" />
 
         <service
             android:name=".BleService"
             android:label="BleService" />
-
-
-
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -49,17 +43,17 @@
 
         <activity
             android:name=".MapActivity"
-            android:label="Beacon Locker"></activity>
+            android:label="Beacon Locker" />
         <activity
             android:name=".SettingActivity"
-            android:label="Beacon Locker"></activity>
+            android:label="Beacon Locker" />
         <activity
             android:name=".BeaconDetailsActivity"
-            android:label="Beacon Locker"></activity>
+            android:label="Beacon Locker" />
         <activity
             android:name=".DataStoreActivity"
-            android:label="Beacon Locker"></activity>
-        <activity android:name=".LafActivity"></activity>
+            android:label="Beacon Locker" />
+        <activity android:name=".RegLostDataActivity"></activity>
     </application>
 
 </manifest>

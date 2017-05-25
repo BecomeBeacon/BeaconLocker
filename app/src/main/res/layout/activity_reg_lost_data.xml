@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.becomebeacon.beaconlocker.LafActivity">
+    tools:context="com.example.becomebeacon.beaconlocker.RegLostDataActivity">
 
-    <WebView
-        android:layout_width="368dp"
-        android:layout_height="551dp"
-        android:id="@+id/webViewLaf"
-        android:elevation="1dp"
+    <fragment
+        android:id="@+id/miniMap"
+        android:name="com.google.android.gms.maps.MapFragment"
+        android:layout_width="367dp"
+        android:layout_height="340dp"
         tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="8dp" />
+        tools:layout_editor_absoluteY="217dp" />
 </android.support.constraint.ConstraintLayout>

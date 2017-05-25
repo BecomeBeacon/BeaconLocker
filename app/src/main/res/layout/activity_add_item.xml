@@ -24,86 +24,83 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="208dp"
-        android:layout_weight="0.51"
+        android:layout_weight="0.77"
         android:columnCount="2"
         android:orientation="horizontal"
         android:rowCount="4">
-
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="96dp"
-            android:layout_height="49dp"
-            android:layout_alignBaseline="@+id/et_address"
-            android:layout_alignBottom="@+id/et_address"
-            android:layout_alignParentStart="true"
-            android:layout_column="0"
-            android:layout_row="0"
-            android:ems="10"
-            android:text="Addr"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/et_address"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_column="1"
-            android:layout_marginTop="14dp"
-            android:layout_row="0"
-            android:layout_toEndOf="@+id/textView2"
-            android:textSize="12sp" />
-
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="94dp"
-            android:layout_height="40dp"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/textView2"
-            android:layout_column="0"
-            android:layout_row="1"
-            android:text="별칭"
-            android:textSize="20sp" />
-
-        <EditText
-            android:id="@+id/et_NICKNAME"
-            android:layout_width="258dp"
-            android:layout_height="49dp"
-            android:layout_above="@+id/textView4"
-            android:layout_column="1"
-            android:layout_row="1"
-            android:layout_toEndOf="@+id/textView2"
-            android:inputType="textPersonName"
-            android:text=""
-            android:textSize="15sp" />
-
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="94dp"
-            android:layout_height="43dp"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/textView3"
-            android:layout_column="0"
-            android:layout_marginTop="14dp"
-            android:layout_row="2"
-            android:text="사진"
-            android:textSize="20sp" />
 
 
         <ImageView
             android:id="@+id/iv_image"
             android:layout_width="250dp"
             android:layout_height="175dp"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/textView4"
-            android:background="@mipmap/ic_launcher_round" />
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:background="@mipmap/ic_launcher_round"
+            android:clickable="false" />
 
         <Button
             android:id="@+id/btn_add_image"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignBottom="@+id/iv_image"
+            android:layout_alignEnd="@+id/iv_image"
+            android:layout_toEndOf="@+id/et_NICKNAME"
+            android:background="@drawable/ic_camera" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="96dp"
+            android:layout_height="49dp"
+            android:layout_alignStart="@+id/textView3"
+            android:layout_below="@+id/iv_image"
+            android:layout_column="0"
+            android:layout_marginTop="28dp"
+            android:layout_row="0"
+            android:ems="10"
+            android:text="Addr"
+            android:textStyle="bold"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/et_address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/iv_image"
-            android:layout_toEndOf="@+id/iv_image"
-            android:text="사진선택" />
+            android:layout_alignStart="@+id/textView2"
+            android:layout_below="@+id/textView2"
+            android:layout_column="1"
+            android:layout_marginTop="14dp"
+            android:layout_row="0"
+            android:layout_toEndOf="@+id/textView2"
+            android:textSize="12sp" />
+
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="94dp"
+            android:layout_height="40dp"
+            android:layout_column="0"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="32dp"
+            android:layout_row="1"
+            android:text="별칭"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:layout_below="@+id/et_address"
+            android:layout_alignParentStart="true" />
+
+        <EditText
+            android:id="@+id/et_NICKNAME"
+            android:layout_width="258dp"
+            android:layout_height="49dp"
+            android:layout_column="1"
+            android:layout_row="1"
+            android:inputType="textPersonName"
+            android:text=""
+            android:drawableLeft="@drawable/ic_create"
+            android:textSize="15sp"
+            android:layout_below="@+id/textView3"
+            android:layout_toEndOf="@+id/et_address" />
 
     </RelativeLayout>
 
