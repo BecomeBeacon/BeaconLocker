@@ -5,14 +5,21 @@ package com.example.becomebeacon.beaconlocker;
  */
 
 public class GetLatLong {
-    double latitude;
-    double longtitude;
-    String lastdate;
+    public double latitude;
+    public double longitude;
+    public String lastdate;
     //Constructor
     public GetLatLong()
     {
         this.lastdate = "";
-        this.longtitude = 0;
+        this.longitude = 0;
         this.latitude = 0;
+    }
+
+    public GetLatLong(String lastdate, double longitude, double latitude)
+    {
+        this.lastdate = lastdate;
+        this.longitude = longitude;
+        this.latitude = latitude;
     }
 }

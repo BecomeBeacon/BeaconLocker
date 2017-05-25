@@ -45,6 +45,9 @@
             android:name=".MapActivity"
             android:label="Beacon Locker" />
         <activity
+            android:name=".MultiMapActivity"
+            android:label="Beacon Locker" />
+        <activity
             android:name=".SettingActivity"
             android:label="Beacon Locker" />
         <activity

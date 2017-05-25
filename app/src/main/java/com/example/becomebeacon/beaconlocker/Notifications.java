@@ -9,7 +9,7 @@ import java.util.HashSet;
 
 public class Notifications {
     static int cntNoti=0;
-    static public HashMap<String,Integer> notifications;
+    static public HashMap<String,Integer> notifications=new HashMap();
 
     static public void clear()
     {
