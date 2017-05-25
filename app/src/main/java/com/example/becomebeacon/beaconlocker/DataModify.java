@@ -1,5 +1,6 @@
 package com.example.becomebeacon.beaconlocker;
 
+import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -11,6 +12,8 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.estimote.sdk.EstimoteSDK.getApplicationContext;
 
 /**
  * Created by gwmail on 2017-05-24.
@@ -62,8 +65,8 @@ public class DataModify {
             mStorageRef.child(bleDeviceInfo.getPictureUri()).delete();
         }
         catch (Exception e) {
-           // Toast.makeText(BleService.this, "비컨 멀어짐", Toast.LENGTH_LONG).show();
+
         }
-        mDatabaseRef.child(bleDeviceInfo.devAddress).removeValue();
+        mDatabaseRef.child("beacon/").child(bleDeviceInfo.devAddress).removeValue();
     }
 }
