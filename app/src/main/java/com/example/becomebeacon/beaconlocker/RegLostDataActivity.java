@@ -51,7 +51,7 @@ public class RegLostDataActivity extends AppCompatActivity {
                 .getReference("beacon/" + tempDevAddr + "/")
                 .child("isFar")
                 .setValue(true); // isFar 속성값 변경
-        
+
         mDatabase
                 .getReference("lost_items/" + tempDevAddr + "/")
                 .child("lastdate")
