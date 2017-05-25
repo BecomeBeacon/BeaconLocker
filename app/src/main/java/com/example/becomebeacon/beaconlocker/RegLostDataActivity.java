@@ -21,6 +21,7 @@ public class RegLostDataActivity extends AppCompatActivity {
     private FirebaseDatabase mDatabase;
     private DatabaseReference mDatabaseRef;
     private LostDevInfo devInfo;
+    String tempDevAddr;
     @Override
     protected void onCreate(Bundle savedInstanceState)      {
         super.onCreate(savedInstanceState);
@@ -29,22 +30,41 @@ public class RegLostDataActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance();
         mDatabaseRef = mDatabase.getReference();
 
+        //BleDeviceInfo bleDeviceInfo = new BleDeviceInfo();
+
+        devInfo = new LostDevInfo();
+        tempDevAddr = "D5:0A:B9:FA:D0:E9";
+        //tempDevAddr = bleDeviceInfo.getDevAddress();
+
+
+        devInfo.setDevAddr(tempDevAddr);
+        devInfo.setLatitude(35.886270);
+        devInfo.setLongetude(128.610052);
+        devInfo.setLostDate("20170520");
 
         mDatabase
-                .getReference("beacon/" + "D5:0A:B9:FA:D0:E9/")
+                .getReference("beacon/" + tempDevAddr + "/")
                 .child("isLost")
                 .setValue(true); // isLost 속성값 변경
-        /*
-        dbSession
-                .getReference("beacon/")
-                .child("tempDevAddr")
-                .child("ifFar")
-                .setValue("true"); // isFar 속성값 변경!
 
-        dbSession.getReference("lost_items/")
-                .child("tempDevAddr")
-                .setValue(devInfo); // lost_items에 분실물 라벨 추가
-        */
+        mDatabase
+                .getReference("beacon/" + tempDevAddr + "/")
+                .child("isFar")
+                .setValue(true); // isFar 속성값 변경
+        
+        mDatabase
+                .getReference("lost_items/" + tempDevAddr + "/")
+                .child("lastdate")
+                .setValue(devInfo.getlostDate());
+        mDatabase
+                .getReference("lost_items/" + tempDevAddr + "/")
+                .child("latitude")
+                .setValue(devInfo.getLatitude());
+        mDatabase
+                .getReference("lost_items/" + tempDevAddr + "/")
+                .child("longitude")
+                .setValue(devInfo.getLongitude());
+
         // 분실물 등록이 완료되었습니다 메세지
         // map fragment 추가
         MapFragment mMapFragment = MapFragment.newInstance();
