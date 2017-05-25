@@ -52,6 +52,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
     protected static final int TAKE_PICTURE = 1;
     protected static Uri tempUri;
     private static final int CROP_SMALL_PICTURE = 2;
+    private DataModify dataModify;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,12 +63,10 @@ public class BeaconDetailsActivity extends AppCompatActivity {
         initUI();
         initListeners();
 
-
         Log.d("BDA","item: "+item.nickname+", "+item.devAddress+", "+item.pictureUri);
         nickName.setText(item.nickname);
         limitDist.setText(item.limitDistance+"");
         address.setText(item.devAddress);
-
 
         meter.setText(String.format("%.2f",item.distance2));
 
@@ -77,10 +76,8 @@ public class BeaconDetailsActivity extends AppCompatActivity {
         else {
             //사진 없는 경우
         }
-
-
+        dataModify = new DataModify();
     }
-
 
     private void initUI() {
         mImage= (ImageView) findViewById(imageView);
@@ -92,8 +89,8 @@ public class BeaconDetailsActivity extends AppCompatActivity {
         changeImage=(Button)findViewById(R.id.changeImage);
         showMap=(Button)findViewById(R.id.showMap);
         limitDist=(EditText) findViewById(R.id.limit_distance);
-
     }
+
     private void initListeners() {
         disconnect.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v)
@@ -106,12 +103,10 @@ public class BeaconDetailsActivity extends AppCompatActivity {
                         BeaconList.mAssignedItem.remove(i);
                         Log.d("BDA","removed");
                         break;
-
                     }
                 }
+                dataModify.deleteBeacon(item);
 
-
-                //서버에서도 없애줘야한다 무조건
                 finish();
             }
         });
@@ -122,7 +117,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
                 item.nickname=nickName.getText().toString();
                 item.limitDistance = Double.valueOf(limitDist.getText().toString());
 
-                //서버에서도 바꿔줘야한다 무조건
+                dataModify.changeBeacon(item);
 
                 finish();
             }
