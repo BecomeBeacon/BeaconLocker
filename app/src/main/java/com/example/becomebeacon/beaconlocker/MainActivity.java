@@ -431,6 +431,7 @@ public class MainActivity extends AppCompatActivity
         super.onResume();
 
 
+        Notifications.clear();
 
         //BEACON_UUID = getBeaconUuid(setting);
 

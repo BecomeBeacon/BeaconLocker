@@ -27,29 +27,21 @@ public class RegLostDataActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        dbSession
-                .getReference("beacon/")
-                .child("tempDevAddr")
-                .child("islost")
-                .setValue("true"); // isLost 속성값 변경
-
-        dbSession
-                .getReference("beacon/")
-                .child("tempDevAddr")
-                .child("ifFar")
-                .setValue("true"); // isFar 속성값 변경!
-
-        dbSession.getReference("lost_items/")
-                .child("tempDevAddr")
-                .setValue(devInfo); // lost_items에 분실물 라벨 추가
+//        dbSession
+//                .getReference("beacon/")
+//                .child("tempDevAddr")
+//                .child("islost")
+//                .setValue("true"); // isLost 속성값 변경
+//
+//        dbSession
+//                .getReference("beacon/")
+//                .child("tempDevAddr")
+//                .child("ifFar")
+//                .setValue("true"); // isFar 속성값 변경!
+//
+//        dbSession.getReference("lost_items/")
+//                .child("tempDevAddr")
+//                .setValue(devInfo); // lost_items에 분실물 라벨 추가
 
         // 분실물 등록이 완료되었습니다 메세지
         // map fragment 추가

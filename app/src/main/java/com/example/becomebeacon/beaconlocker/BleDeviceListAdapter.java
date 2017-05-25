@@ -33,6 +33,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.content.Intent;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
@@ -149,8 +150,13 @@ public class BleDeviceListAdapter extends BaseAdapter {
             public void onClick(View v)
             {
 
+                if(BeaconList.mItemMap.containsKey(mBleDeviceInfoArrayList.get(pos).devAddress))
+                {
+                    Toast.makeText(GetMainActivity.getMainActity(), "이미 등록된 비컨", Toast.LENGTH_LONG).show();
 
-                if(!mAssignedBleMap.containsKey(mBleDeviceInfoArrayList.get(pos).devAddress)) {
+                }
+                else {
+                    if (!mAssignedBleMap.containsKey(mBleDeviceInfoArrayList.get(pos).devAddress)) {
 //                    mAssignedArrayList.add(mBleDeviceInfoArrayList.get(pos));
 //                    mAssignedBleMap.put(mBleDeviceInfoArrayList.get(pos).getDevAddress(), mBleDeviceInfoArrayList.get(pos));
 //                    //mHashBleMap.get(mBleDeviceInfoArrayList.get(pos).devAddress).setTimeout(1);
@@ -159,13 +165,14 @@ public class BleDeviceListAdapter extends BaseAdapter {
 //
 
 
-                    DeviceInfoStore.setBleInfo(mBleDeviceInfoArrayList.get(pos));
-                   // Log.d("BLELISTADAPTER","DeviceStore has "+DeviceInfoStore.getBleInfo().toString());
-                    Activity mActi=GetMainActivity.getMainActity();
-                    Intent intent = new Intent(mActi, DataStoreActivity.class);
-                    mActi.startActivity(intent);
+                        DeviceInfoStore.setBleInfo(mBleDeviceInfoArrayList.get(pos));
+                        // Log.d("BLELISTADAPTER","DeviceStore has "+DeviceInfoStore.getBleInfo().toString());
+                        Activity mActi = GetMainActivity.getMainActity();
+                        Intent intent = new Intent(mActi, DataStoreActivity.class);
+                        mActi.startActivity(intent);
 
-                    notifyDataSetChanged();
+                        notifyDataSetChanged();
+                    }
                 }
 
             }

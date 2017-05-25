@@ -7,6 +7,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -16,6 +17,8 @@ import android.widget.ListView;
 import android.content.SharedPreferences;
 import android.widget.Toast;
 
+
+import com.estimote.sdk.connection.internal.protocols.Operation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -349,6 +352,20 @@ public class BluetoothScan {
             Log.d("SCAN","mItem : "+mItemMap.toString());
             if(mItemMap.containsKey(item.devAddress))
             {
+                if(BeaconList.scannedMap.containsKey(item.devAddress))
+                {
+                    Log.d("SCAN","scanned map has my item");
+                    BeaconList.scannedMap.remove(item.devAddress);
+
+                    for(int i=0;i<BeaconList.mArrayListBleDevice.size();i++)
+                    {
+                        if(BeaconList.mArrayListBleDevice.get(i).devAddress==item.devAddress) {
+                            BeaconList.mArrayListBleDevice.remove(i);
+                            Log.d("SCAN","removed");
+
+                        }
+                    }
+                }
                 Log.d("SCAN","Tracking.. contain1");
                 BleDeviceInfo tItem=mItemMap.get(item.devAddress);
 
@@ -365,16 +382,27 @@ public class BluetoothScan {
                 }
 
                 Log.d("SCAN","Tracking.. contain2");
+                Log.d("SCAN",tItem.devAddress+" isfar? "+tItem.isFar);
 
                 if(tItem.limitDistance<tItem.distance2&&tItem.isFar!=true) {
                 //if(0.2<tItem.distance2) {
                     //멀다 팝업 띄운다
 
                     Log.d("SCAN","too far : distance :"+tItem.distance2+" limit : "+tItem.limitDistance);
-                    if(Notifications.notifications.containsKey(tItem.devAddress)==false) {
-                        mBleService.pushNotification(tItem.nickname, tItem.devAddress);
-                        mItemMap.get(tItem.devAddress).isFar = true;
+
+                    mBleService.pushNotification(tItem.nickname, tItem.devAddress);
+                    Log.d("SCAN","NotiNum : "+Notifications.notifications.get(tItem.devAddress));
+                    mItemMap.get(tItem.devAddress).isFar = true;
                         //팝업 내용에따라 isLost 갱신
+
+                }
+                else if(tItem.limitDistance>tItem.distance2)
+                {
+                    if(Notifications.notifications.containsKey(tItem.devAddress))
+                    {
+                        NotificationManager notificationManager = (NotificationManager)BleService.mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+                        notificationManager.cancel(Notifications.notifications.get(tItem.devAddress));
+                        mItemMap.get(tItem.devAddress).isFar = false;
                     }
                 }
             }

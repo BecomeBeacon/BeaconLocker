@@ -8,5 +8,11 @@ import java.util.HashSet;
  */
 
 public class Notifications {
+    static int cntNoti=0;
     static public HashMap<String,Integer> notifications;
+
+    static public void clear()
+    {
+        notifications.clear();
+    }
 }

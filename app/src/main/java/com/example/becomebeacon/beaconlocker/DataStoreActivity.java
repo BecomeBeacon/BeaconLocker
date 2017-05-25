@@ -84,6 +84,8 @@ public class DataStoreActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_item);
         mBleDeviceInfo=DeviceInfoStore.getBleInfo();
 
+
+
         //툴바 세팅
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_additem);
         setSupportActionBar(toolbar);
