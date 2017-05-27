@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.LatLng;
@@ -87,11 +88,10 @@ public class RegLostDataActivity extends AppCompatActivity {
 
         // map fragment 추가
 
-        MapFragment mMapFragment = MapFragment.newInstance();
         android.app.FragmentTransaction fragmentTransaction =
                 getFragmentManager().beginTransaction();
 
-        fragmentTransaction.replace(R.id.miniMap, mMapFragment);
+
         fragmentTransaction.commit();
 
 
