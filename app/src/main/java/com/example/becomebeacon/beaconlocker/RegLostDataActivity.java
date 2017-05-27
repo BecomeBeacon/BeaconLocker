@@ -80,7 +80,7 @@ public class RegLostDataActivity extends AppCompatActivity {
     private void exit_button_init() {
         findViewById(R.id.rld_ExitBtn).setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
-                System.exit(0);
+                finish();
             }                                                          }
         );
     };
