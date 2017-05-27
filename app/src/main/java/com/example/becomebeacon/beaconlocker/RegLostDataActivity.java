@@ -31,7 +31,7 @@ public class RegLostDataActivity extends AppCompatActivity implements OnMapReady
     String tempDevAddr;
     LatLng lostPos;
     CameraPosition cp;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
 
