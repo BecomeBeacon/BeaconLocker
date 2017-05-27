@@ -4,9 +4,12 @@ package com.example.becomebeacon.beaconlocker;
  * Created by heeseung on 2017-05-23.
  */
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -24,28 +27,43 @@ public class RegLostDataActivity extends AppCompatActivity {
     private FirebaseDatabase mDatabase;
     private DatabaseReference mDatabaseRef;
     private LostDevInfo devInfo;
-    MapView mapView;
-    GoogleMap googleMap;
-
+    String tempDevAddr;
+    private GoogleMap googleMap;
+    private MapView mapView;
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reg_lost_data);
 
+        Intent notiIntent=getIntent();
+        int noti=notiIntent.getIntExtra("NOTI",-1);
+
+        if(noti!=-1) {
+            NotificationManager notificationManager = (NotificationManager) BleService.mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel(noti);
+        }
+
         mDatabase = FirebaseDatabase.getInstance();
         mDatabaseRef = mDatabase.getReference();
 
+
+
         Intent intent=getIntent();
-        String mac = intent.getStringExtra("MAC");
+        String mac=intent.getStringExtra("MAC");
         BleDeviceInfo bleDeviceInfo = BeaconList.mItemMap.get(mac);
 
         devInfo = new LostDevInfo();
+        //테스트 tempDevAddr = "D5:0A:B9:FA:D0:E9";
+        tempDevAddr = bleDeviceInfo.getDevAddress();
 
-        devInfo.setDevAddr(bleDeviceInfo.getDevAddress());
+
+        devInfo.setDevAddr(tempDevAddr);
         devInfo.setLatitude(Double.valueOf(bleDeviceInfo.latitude));
         devInfo.setLongetude(Double.valueOf(bleDeviceInfo.longitude));
         devInfo.setLostDate("20170520");
+
+        Log.d("RLDA","devInfo : "+devInfo.getDevAddr()+" "+devInfo.getLatitude()+" "+devInfo.getLongitude());
 
         mDatabase
                 .getReference("beacon/" + devInfo.getDevAddr() + "/")
