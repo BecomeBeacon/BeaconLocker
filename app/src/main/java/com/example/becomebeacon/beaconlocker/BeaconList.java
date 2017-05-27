@@ -12,6 +12,8 @@ public class BeaconList {
     //myItem
     static public HashMap<String, BleDeviceInfo> mItemMap=new HashMap<String,BleDeviceInfo>();
 
+
+
     static public ArrayList<BleDeviceInfo> mArrayListBleDevice=new ArrayList<BleDeviceInfo>();    ;
     static public ArrayList<BleDeviceInfo> mAssignedItem=new ArrayList<BleDeviceInfo>();
 
