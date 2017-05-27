@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
 
 import com.example.becomebeacon.beaconlocker.R;
 import com.google.android.gms.maps.MapFragment;
@@ -72,5 +73,15 @@ public class RegLostDataActivity extends AppCompatActivity {
                 getFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.miniMap, mMapFragment);
         fragmentTransaction.commit();
+
+        exit_button_init();
     }
+    //!!
+    private void exit_button_init() {
+        findViewById(R.id.rld_ExitBtn).setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+                System.exit(0);
+            }                                                          }
+        );
+    };
 }
