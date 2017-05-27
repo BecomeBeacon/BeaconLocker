@@ -19,7 +19,7 @@ public class NoActivity extends AppCompatActivity{
 
         Intent intent=getIntent();
         int noti=intent.getIntExtra("NOTI",-1);
-        Log.d("NO","noti get "+noti);
+
         NotificationManager notificationManager = (NotificationManager)BleService.mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(noti);
         finish();
