@@ -4,17 +4,16 @@ package com.example.becomebeacon.beaconlocker;
  * Created by heeseung on 2017-05-23.
  */
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Button;
 
-import com.example.becomebeacon.beaconlocker.R;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -23,19 +22,26 @@ public class RegLostDataActivity extends AppCompatActivity {
     private DatabaseReference mDatabaseRef;
     private LostDevInfo devInfo;
     String tempDevAddr;
+    private GoogleMap googleMap;
+    private MapView mapView;
     @Override
-    protected void onCreate(Bundle savedInstanceState)      {
+    protected void onCreate(Bundle savedInstanceState)  {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reg_lost_data);
 
         mDatabase = FirebaseDatabase.getInstance();
         mDatabaseRef = mDatabase.getReference();
 
-        //BleDeviceInfo bleDeviceInfo = new BleDeviceInfo();
+
+
+        Intent intent=getIntent();
+        String mac=intent.getStringExtra("MAC");
+        BleDeviceInfo bleDeviceInfo = BeaconList.mItemMap.get("mac");
 
         devInfo = new LostDevInfo();
-        tempDevAddr = "D5:0A:B9:FA:D0:E9";
-        //tempDevAddr = bleDeviceInfo.getDevAddress();
+        //테스트 tempDevAddr = "D5:0A:B9:FA:D0:E9";
+        tempDevAddr = bleDeviceInfo.getDevAddress();
 
 
         devInfo.setDevAddr(tempDevAddr);
@@ -66,13 +72,24 @@ public class RegLostDataActivity extends AppCompatActivity {
                 .child("longitude")
                 .setValue(devInfo.getLongitude());
 
-        // 분실물 등록이 완료되었습니다 메세지
         // map fragment 추가
+
         MapFragment mMapFragment = MapFragment.newInstance();
         android.app.FragmentTransaction fragmentTransaction =
                 getFragmentManager().beginTransaction();
+
         fragmentTransaction.replace(R.id.miniMap, mMapFragment);
         fragmentTransaction.commit();
+
+
+
+        LatLng lostPos = new LatLng(devInfo.getLatitude(),devInfo.getLongitude());
+
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(lostPos);
+        markerOptions.title("분실 발생 위치");
+        markerOptions.snippet("등록 완료");
+
 
         exit_button_init();
     }
