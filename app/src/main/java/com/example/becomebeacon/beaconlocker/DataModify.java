@@ -68,5 +68,6 @@ public class DataModify {
 
         }
         mDatabaseRef.child("beacon/").child(bleDeviceInfo.devAddress).removeValue();
+        mDatabaseRef.child("users/").child(bleDeviceInfo.devAddress).removeValue();
     }
 }
