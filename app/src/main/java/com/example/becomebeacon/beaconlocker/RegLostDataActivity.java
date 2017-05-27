@@ -97,6 +97,9 @@ public class RegLostDataActivity extends AppCompatActivity {
         markerOptions.title("분실 발생 위치");
         markerOptions.snippet("등록 완료");
 
+        GoogleMapOptions temp = new GoogleMapOptions();
+        temp.camera(cp);
+
         MapFragment mMapFragment = MapFragment.newInstance(new GoogleMapOptions().camera(cp));
         android.app.FragmentTransaction fragmentTransaction =
                 getFragmentManager().beginTransaction();
