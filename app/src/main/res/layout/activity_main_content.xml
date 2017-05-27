@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#d1d1d1"
+    android:background="#E0E0E0"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.becomebeacon.beaconlocker.MainActivity"
     tools:showIn="@layout/activity_main_slide">
@@ -19,7 +19,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:dividerHeight="10dp"
-        android:divider="#d1d1d1">
+        android:divider="#E0E0E0">
 
     </ListView>
 
@@ -32,7 +32,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:dividerHeight="10dp"
-        android:divider="#d1d1d1">
+        android:divider="#E0E0E0">
 
 
     </ListView>
