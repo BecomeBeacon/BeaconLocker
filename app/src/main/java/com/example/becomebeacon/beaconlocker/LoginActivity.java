@@ -119,6 +119,7 @@ public class LoginActivity extends AppCompatActivity implements
             } else {
                 // Google Sign In failed, update UI appropriately
                 // [START_EXCLUDE]
+                Toast.makeText(this, "로그인 실패", Toast.LENGTH_LONG).show();
                 updateUI(null);
                 // [END_EXCLUDE]
             }
