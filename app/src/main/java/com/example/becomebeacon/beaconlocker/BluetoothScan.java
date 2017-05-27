@@ -381,17 +381,16 @@ public class BluetoothScan {
                     Log.d(TAG,"in useGps : lat : "+tItem.latitude+" long : "+tItem.longitude);
                 }
 
-                Log.d("SCAN","Tracking.. contain2");
-                Log.d("SCAN",tItem.devAddress+" isfar? "+tItem.isFar);
+                Log.d("SCAN",tItem.devAddress+"dist : "+tItem.distance2+" isfar? "+tItem.isFar);
 
                 if(tItem.limitDistance<tItem.distance2&&tItem.isFar!=true) {
                 //if(0.2<tItem.distance2) {
                     //멀다 팝업 띄운다
 
-                    Log.d("SCAN","too far : distance :"+tItem.distance2+" limit : "+tItem.limitDistance);
+                    Log.d("Notic","Key"+tItem.devAddress+" too far : distance :"+tItem.distance2+" limit : "+tItem.limitDistance);
 
                     mBleService.pushNotification(tItem.nickname, tItem.devAddress);
-                    Log.d("SCAN","NotiNum : "+Notifications.notifications.get(tItem.devAddress));
+                    Log.d("Notic","NotiNum : "+Notifications.notifications.get(tItem.devAddress));
                     mItemMap.get(tItem.devAddress).isFar = true;
                         //팝업 내용에따라 isLost 갱신
 
@@ -400,10 +399,22 @@ public class BluetoothScan {
                 {
                     if(Notifications.notifications.containsKey(tItem.devAddress))
                     {
+
                         NotificationManager notificationManager = (NotificationManager)BleService.mContext.getSystemService(Context.NOTIFICATION_SERVICE);
                         notificationManager.cancel(Notifications.notifications.get(tItem.devAddress));
-                        mItemMap.get(tItem.devAddress).isFar = false;
+                        Log.d("Notic","NotiNum is "+Notifications.notifications.get(tItem.devAddress)+" there is key "+Notifications.notifications.toString());
+                        //Notifications.notifications.remove(tItem.devAddress);
+
+
                     }
+                    else
+                    {
+                        Log.d("Notic","Key "+tItem.devAddress+"is not in noti "+Notifications.notifications.toString());
+                    }
+                    mItemMap.get(tItem.devAddress).isFar = false;
+                }
+                else{
+                    Log.d("Notic","Key : "+tItem.devAddress+" is already far");
                 }
             }
         }

@@ -80,7 +80,7 @@ public class BleDeviceInfo {
         this.devName = "";
         this.devAddress = devAddress;
         this.limitDistance=Values.basicLimitDistance;
-
+        this.isFar=false;
         this.major = 0;
         this.minor = 0;
         this.measuredPower = 0;
@@ -139,6 +139,7 @@ public class BleDeviceInfo {
                          String devAddress, int major, int minor, int txPower, int rssi, double distance)
     {
         isCheckLocation=false;
+        this.isFar=false;
         this.proximityUuid = proximityUuid;
         this.devName = devName;
         this.devAddress = devAddress;
@@ -165,7 +166,7 @@ public class BleDeviceInfo {
     public BleDeviceInfo(String proximityUuid, String devName,
                          String devAddress, int major, int minor, int txPower, int rssi, double distance, double distance2)
     {
-
+        this.isFar=false;
         isCheckLocation=false;
         this.proximityUuid = proximityUuid;
         this.devName = devName;
