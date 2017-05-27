@@ -103,7 +103,7 @@ public class DataStoreActivity extends AppCompatActivity {
         mAuth= LoginActivity.getAuth();
         mUser= LoginActivity.getUser();
         mDatabase = DataFetch.getDatabase();
-//        mUserAddressRef = mDatabase.getReference("users/"+mUser.getUid()+"/beacons");
+        mUserAddressRef = mDatabase.getReference("users/"+mUser.getUid()+"/beacons");
 
         et_Address = (TextView) findViewById(R.id.et_address);
         et_Nickname = (EditText) findViewById(R.id.et_NICKNAME);
@@ -111,8 +111,7 @@ public class DataStoreActivity extends AppCompatActivity {
         //et_LATITUDE = (EditText) findViewById(R.id.et_LATITUDE);
         //et_LONGITUDE = (EditText) findViewById(R.id.et_LONGITUDE);
 
-        mUserAddressRef = mDatabase.getReference("users/"+mUser.getUid()+"/beacons");
-
+        //mUserAddressRef = mDatabase.getReference("users/"+mUser.getUid()+"/beacons");
         //TODO :: 인증 실패시 조치
         //if(mFirebaseUser == null) {
         //startActivity(new Intent(MainActivity.this, LoginActivity.class));
@@ -120,12 +119,10 @@ public class DataStoreActivity extends AppCompatActivity {
         //return;
         //}
         if(et_Address!=null&&mBleDeviceInfo!=null) {
-            et_Address.setText(mBleDeviceInfo.devAddress);
+            Log.d("DSA","check 2");
+            //et_Address.setText(mBleDeviceInfo.devAddress);
         }
-        else if(mBleDeviceInfo==null)
-        {
-            Log.d("DSA","mble is null");
-        }
+
 
         //사진 선택
         btChoose = (Button) findViewById(R.id.btn_add_image);
@@ -142,7 +139,7 @@ public class DataStoreActivity extends AppCompatActivity {
 //                startActivityForResult(Intent.createChooser(intent, "이미지를 선택하세요."), 0);
             }
         });
-        Log.v("Test","Filepath first = " + String.valueOf(filePath));
+        Log.v("DSA","Filepath first = " + String.valueOf(filePath));
 
     }
     @Override
