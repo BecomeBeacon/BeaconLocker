@@ -179,7 +179,7 @@ public class BleService extends Service {
 
 
         Notification.Builder builder = new Notification.Builder(this);
-        builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.main_logo));
+        builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.small_main_logo));
         builder.setSmallIcon(R.drawable.main_logo);
         builder.setTicker("멀어짐");
         builder.setContentTitle(name + "이 멀어졌습니다");
