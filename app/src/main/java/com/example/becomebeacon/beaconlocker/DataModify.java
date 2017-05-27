@@ -71,32 +71,6 @@ public class DataModify {
 
         }
         mDatabaseRef.child("beacon/").child(bleDeviceInfo.devAddress).removeValue();
-/*
-        mDatabaseRef.child("users/").child(mUser.getUid()).child("beacons").child(bleDeviceInfo.devAddress)
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        BleDeviceInfo bleDeviceInfo = dataSnapshot.getValue(BleDeviceInfo.class);
-
-                        if(bleDeviceInfo!=null) {
-
-                            if(!myItemMap.containsKey(myAddress)) {
-                                myBleInfo.add(bleDeviceInfo);
-                                myItemMap.put(myAddress, bleDeviceInfo);
-                                Log.v("Test_Print_nick", bleDeviceInfo.nickname);
-                            }
-
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-    }
-*/
-
-        mDatabaseRef.child("users/").child(mUser.getUid()).child("beacons").child(bleDeviceInfo.devAddress).removeValue();
+        mDatabaseRef.child("users").child(mUser.getUid()).child("beacons").child(bleDeviceInfo.devAddress).removeValue();
     }
 }
