@@ -430,9 +430,6 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
 
-
-        Notifications.clear();
-
         //BEACON_UUID = getBeaconUuid(setting);
 
         if(mItemMap.isEmpty())

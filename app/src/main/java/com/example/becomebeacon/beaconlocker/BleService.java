@@ -166,13 +166,24 @@ public class BleService extends Service {
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         Intent intent = new Intent(this, RegLostDataActivity.class);
+        Intent intent2 = new Intent();
+
+        intent.putExtra("NOTI",Notifications.cntNoti);
+        intent2.putExtra("NOTI",Notifications.cntNoti);
+
+        intent.putExtra("MAC",devAddress);
+
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent nothingIntent = PendingIntent.getActivity(this, 0, intent2, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+
         Notification.Builder builder = new Notification.Builder(this);
         builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.main_logo));
         builder.setSmallIcon(R.drawable.main_logo);
         builder.setTicker("멀어짐");
         builder.setContentTitle(name + "이 멀어졌습니다");
-        builder.setContentText("알고계신가요?");
+        builder.setContentText("분실물로 등록할까요?");
         builder.setWhen(System.currentTimeMillis());
         //builder.setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE);
         builder.setVibrate(null);
@@ -181,11 +192,13 @@ public class BleService extends Service {
 
 
         builder.addAction(R.drawable.yes, "네", pendingIntent);
-        builder.addAction(R.drawable.no, "아니오", pendingIntent);
+        builder.addAction(R.drawable.no, "아니오",nothingIntent);
         Notification noti = builder.build();
 
 
         Notifications.notifications.put(devAddress,Notifications.cntNoti);
+        Log.d("service","NotiNum is "+Notifications.cntNoti+" there is key "+Notifications.notifications.toString());
+
         notificationManager.notify(Notifications.cntNoti++, noti);
 
 
