@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/xml_border"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginLeft="30dp"
+    android:layout_marginRight="30dp"
+    android:layout_marginTop="30dp"
+    android:layout_marginBottom="30dp"
+    android:keepScreenOn="true"
     tools:context="com.example.becomebeacon.beaconlocker.RegLostDataActivity">
 
     <!--
@@ -15,18 +20,26 @@
         android:layout_height="320dp"/>-->
     <TextView
         android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.3"
+        android:layout_height="30dp"
         android:text = "분실물 등록을 완료하였습니다."
         android:textColor = "#0084ff"
         android:textSize = "30sp"
         android:gravity = "center"
-        />
+        android:id="@+id/textView5"
+        android:layout_marginTop="140dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
     <fragment
         android:id="@+id/miniMap"
         android:name="com.google.android.gms.maps.MapFragment"
         android:layout_width="match_parent"
-        android:layout_height="340dp"
+        android:layout_height="300dp"
         tools:layout_editor_absoluteX="22dp"
-        tools:layout_editor_absoluteY="272dp" />
-</LinearLayout>
+        tools:layout_editor_absoluteY="2dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentBottom="true" />
+
+</RelativeLayout>
