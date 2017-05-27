@@ -37,9 +37,8 @@ public class MultiMapActivity extends FragmentActivity
     private GpsInfo gps;
     double lat;
     double lon;
-
     public  FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
-    private DatabaseReference mUserAddressRef;
+    private DatabaseReference mUserAddressRef = mDatabase.getReference("/lost_items/");
     private FirebaseUser mUser;
 
     //맵 개체 생성
@@ -48,14 +47,16 @@ public class MultiMapActivity extends FragmentActivity
         Intent intent = getIntent();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+        pushSomething();
+        mUserAddressRef = mDatabase.getReference("/lost_items/");
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
     }
 
     public void getCurrentLocation() {
         gps = new GpsInfo(MultiMapActivity.this, MultiMapActivity.this);
+        gps.getLocation();
         if (gps.isGetLocation()) {
             lat = gps.lat;
             lon = gps.lon;
@@ -67,13 +68,16 @@ public class MultiMapActivity extends FragmentActivity
         this.googleMap = googleMap;
         LatLng LOST;
         getCurrentLocation();
+        Log.d("TAAG","lat : "+lat);
+        Log.d("TAAG","lon : "+lon);
         LOST = new LatLng(lat, lon);
 
         //좌표값 세팅
 
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(LOST)); // 지정 좌표로 카메라 무브
-        googleMap.animateCamera(CameraUpdateFactory.zoomTo(13)); // 0~20(1:세계,5:대륙,10:도시,15:거리)
+        googleMap.animateCamera(CameraUpdateFactory.zoomTo(16)); // 0~20(1:세계,5:대륙,10:도시,15:거리)
         FindLostItem();
+        onAddMarker(lat,lon,"on");
     }
 
     public void onAddMarker(double latt, double lont,String date) {
@@ -126,7 +130,7 @@ public class MultiMapActivity extends FragmentActivity
         distance = distance + Math.cos(radLat1) * Math.cos(radLat2) * Math.cos(radDist);
         ret = EARTH_R * Math.acos(distance);
         double rslt = Math.round(Math.round(ret) / 1000);
-
+        Log.d("Calcdis","Result ? : "+rslt);
         if(rslt < 1000)
         {
             return true;
@@ -151,11 +155,9 @@ public class MultiMapActivity extends FragmentActivity
 
     public void FindLostItem() {
             int cnt1=0,cnt2=0;
-            getCurrentLocation();
             // users/$Uid/beacons/"Address"
             mUser= LoginActivity.getUser();
 
-            mUserAddressRef = mDatabase.getReference("/lost_items");
 
             Log.v("Test_Print_Uid", mUser.getUid());
 
@@ -165,10 +167,13 @@ public class MultiMapActivity extends FragmentActivity
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             for(DataSnapshot addressSnapshot : dataSnapshot.getChildren()) {
                                 GetLatLong getLatLong = addressSnapshot.getValue(GetLatLong.class);
-                                if(calcDistance(getLatLong.latitude,getLatLong.longtitude,lat,lon))
+                                Log.d("FUCK","lat : "+getLatLong.latitude);
+                                Log.d("FUCK","lon : "+getLatLong.longitude);
+                                if(calcDistance(getLatLong.latitude,getLatLong.longitude,lat,lon))
                                 {
-                                    onAddMarker(getLatLong.latitude,getLatLong.longtitude,getLatLong.lastdate);
-                                    addCircle(10,getLatLong.latitude,getLatLong.longtitude);
+                                    Log.d("TTT","is in?");
+                                    onAddMarker(getLatLong.latitude,getLatLong.longitude,getLatLong.lastdate);
+                                    addCircle(10,getLatLong.latitude,getLatLong.longitude);
                                 }
                                 //Log.v("Test_Print_ADDR", myBeaconOnUser.address);
 
@@ -183,6 +188,11 @@ public class MultiMapActivity extends FragmentActivity
 
 
 
+    }
+
+    public void pushSomething(){
+        GetLatLong getLatLong = new GetLatLong("20170525", 128.611354, 35.886764);
+        mUserAddressRef.push().setValue(getLatLong);
     }
 }
 

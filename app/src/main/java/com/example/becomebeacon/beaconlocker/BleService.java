@@ -36,10 +36,10 @@ import java.util.Vector;
 public class BleService extends Service {
 
 
+    public static BleService mContext;
     private String TAG="BLESERVICE";
     BluetoothScan mBleScan;
     Location loc;
-    int cntNoti;
 
     private ArrayList<BleDeviceInfo> mAssignedItem;
     private LocationManager mLocationManager = null;
@@ -59,6 +59,7 @@ public class BleService extends Service {
     {
         super.onCreate();
 
+        mContext=this;
         Notifications.notifications=new HashMap<String,Integer>();
         if(isServiceRunningCheck()) {
             Log.d("BLESERVICE","already exist");
@@ -68,7 +69,7 @@ public class BleService extends Service {
 
         //Notifi_M = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         mBleScan =new BluetoothScan(this);
-        cntNoti=0;
+        Notifications.cntNoti=0;
 
         mAssignedItem = BeaconList.mAssignedItem;
         mScan=false;
@@ -131,10 +132,7 @@ public class BleService extends Service {
                     Log.d(TAG,"gps : "+Values.useGPS);
                     if(Values.useGPS)
                     {
-
                         Log.d("SERVICE"," in gps");
-
-
 
                         //여기서 Values.latitude, Values.longitude에 현재 좌표 저장
                         gps = new GpsInfo(GetMainActivity.getMainActity(),GetMainActivity.getMainActity());
@@ -167,13 +165,13 @@ public class BleService extends Service {
     {
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, RegLostDataActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         Notification.Builder builder = new Notification.Builder(this);
         builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.main_logo));
         builder.setSmallIcon(R.drawable.main_logo);
         builder.setTicker("멀어짐");
-        builder.setContentTitle(name + "이 멀어졌습니다"+cntNoti);
+        builder.setContentTitle(name + "이 멀어졌습니다");
         builder.setContentText("알고계신가요?");
         builder.setWhen(System.currentTimeMillis());
         //builder.setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE);
@@ -186,8 +184,9 @@ public class BleService extends Service {
         builder.addAction(R.drawable.no, "아니오", pendingIntent);
         Notification noti = builder.build();
 
-        Notifications.notifications.put(devAddress,cntNoti);
-        notificationManager.notify(cntNoti++, noti);
+
+        Notifications.notifications.put(devAddress,Notifications.cntNoti);
+        notificationManager.notify(Notifications.cntNoti++, noti);
 
 
 //        ////        //소리추가

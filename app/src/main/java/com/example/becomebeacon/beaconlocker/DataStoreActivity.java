@@ -84,21 +84,22 @@ public class DataStoreActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_item);
         mBleDeviceInfo=DeviceInfoStore.getBleInfo();
 
-        Log.d("DSA", "111");
+
+
         //툴바 세팅
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_additem);
         setSupportActionBar(toolbar);
 
         toolbar.setTitle(R.string.app_name);
         toolbar.setSubtitle("BLE 등록");
-        Log.d("DSA", "222");
+
         toolbar.setTitleTextColor(Color.WHITE);
         toolbar.setSubtitleTextColor(Color.GRAY);
 
         if(getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        Log.d("DSA", "333");
+
         mAuth= LoginActivity.getAuth();
         mUser= LoginActivity.getUser();
         mDatabase = DataFetch.getDatabase();
@@ -111,7 +112,7 @@ public class DataStoreActivity extends AppCompatActivity {
         //et_LONGITUDE = (EditText) findViewById(R.id.et_LONGITUDE);
 
         mUserAddressRef = mDatabase.getReference("users/"+mUser.getUid()+"/beacons");
-        Log.d("DSA", "444");
+
         //TODO :: 인증 실패시 조치
         //if(mFirebaseUser == null) {
         //startActivity(new Intent(MainActivity.this, LoginActivity.class));
@@ -129,7 +130,7 @@ public class DataStoreActivity extends AppCompatActivity {
         //사진 선택
         btChoose = (Button) findViewById(R.id.btn_add_image);
         ivPreview = (ImageView) findViewById(R.id.iv_image);
-        Log.d("DSA", "555");
+
         btChoose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -142,7 +143,7 @@ public class DataStoreActivity extends AppCompatActivity {
             }
         });
         Log.v("Test","Filepath first = " + String.valueOf(filePath));
-        Log.d("DSA", "666");
+
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

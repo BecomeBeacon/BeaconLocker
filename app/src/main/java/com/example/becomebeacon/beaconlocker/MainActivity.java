@@ -431,6 +431,7 @@ public class MainActivity extends AppCompatActivity
         super.onResume();
 
 
+        Notifications.clear();
 
         //BEACON_UUID = getBeaconUuid(setting);
 
@@ -513,10 +514,11 @@ public class MainActivity extends AppCompatActivity
             lat = gpsCoordi.getLatitude();
             lng = gpsCoordi.getLongitude();
 
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse( "https://beaconlocker-51c69.firebaseapp.com/?lat=" + lat + "&lng=" + lng  ));
+            //Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse( "https://beaconlocker-51c69.firebaseapp.com/?lat=" + lat + "&lng=" + lng  ));
+            Intent intent = new Intent(getApplicationContext(), RegLostDataActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_map) {
-            Intent intent = new Intent(getApplicationContext(), MultiMapActivity.class);
+            Intent intent = new Intent(this, MultiMapActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_setting) {
             Intent intent = new Intent(this, SettingActivity.class);

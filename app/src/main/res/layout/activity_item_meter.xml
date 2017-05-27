@@ -15,6 +15,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:text="testNICKNAME"
+        android:drawableLeft="@drawable/ic_create"
         android:layout_below="@+id/imageView"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp" />
@@ -35,6 +36,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:text="TestAddr"
+        android:drawableLeft="@drawable/ic_create"
         android:layout_marginStart="23dp"
         android:layout_below="@+id/et_address"
         android:layout_toEndOf="@+id/textView6"
@@ -104,7 +106,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/ic_camera"
         android:layout_alignBottom="@+id/imageView"
-        android:layout_alignEnd="@+id/limit_distance" />
+        android:layout_alignParentEnd="true" />
 
     <TextView
         android:id="@+id/textView6"
