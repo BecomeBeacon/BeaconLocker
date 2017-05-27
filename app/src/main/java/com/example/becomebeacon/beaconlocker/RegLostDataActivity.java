@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -40,16 +41,10 @@ public class RegLostDataActivity extends AppCompatActivity {
         BleDeviceInfo bleDeviceInfo = BeaconList.mItemMap.get(mac);
 
         devInfo = new LostDevInfo();
-/*
+
         devInfo.setDevAddr(bleDeviceInfo.getDevAddress());
         devInfo.setLatitude(Double.valueOf(bleDeviceInfo.latitude));
         devInfo.setLongetude(Double.valueOf(bleDeviceInfo.longitude));
-        devInfo.setLostDate("20170520");
-*/
-
-        devInfo.setDevAddr("ed:ed:ed:ed:ed:ed");
-        devInfo.setLatitude(35.394821);
-        devInfo.setLongetude(127.349383);
         devInfo.setLostDate("20170520");
 
         mDatabase
@@ -84,13 +79,9 @@ public class RegLostDataActivity extends AppCompatActivity {
         markerOptions.title("분실 발생 위치");
         markerOptions.snippet("등록 완료");
 
-        MapFragment mMapFragment = MapFragment.newInstance();
+        MapFragment mMapFragment = MapFragment.newInstance(new GoogleMapOptions().camera(cp));
         android.app.FragmentTransaction fragmentTransaction =
                 getFragmentManager().beginTransaction();
-
-        MapActivity temp = new MapActivity();
-        temp.lat = devInfo.getLatitude();
-        temp.lon = devInfo.getLongitude();
 
         fragmentTransaction.replace(R.id.miniMap, mMapFragment);
         fragmentTransaction.commit();
