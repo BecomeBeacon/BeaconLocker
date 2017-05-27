@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-
     <RelativeLayout
         android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
@@ -102,5 +101,10 @@
             android:text="GPS 사용여부"
             android:textSize="20dp" />
     </RelativeLayout>
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/common_google_signin_btn_text_dark_disabled" />
 
 </LinearLayout>
