@@ -120,8 +120,9 @@ public class DataStoreActivity extends AppCompatActivity {
         //}
         if(et_Address!=null&&mBleDeviceInfo!=null) {
             Log.d("DSA","check 2");
-            //et_Address.setText(mBleDeviceInfo.devAddress);
+            et_Address.setText(mBleDeviceInfo.devAddress);
         }
+
 
 
         //사진 선택
@@ -185,7 +186,7 @@ public class DataStoreActivity extends AppCompatActivity {
         BleDeviceInfo bleDeviceInfo = DeviceInfoStore.getBleInfo();
         BeaconOnUser beaconOnUser = new BeaconOnUser(bleDeviceInfo.getDevAddress());
 
-        mUserAddressRef.child(bleDeviceInfo.getDevAddress() + "/").setValue(beaconOnUser);
+        mUserAddressRef.child(bleDeviceInfo.getDevAddress()).setValue(beaconOnUser);
 
         //store beacon info to 'Beacon' DB in Uid order
         bleDeviceInfo.setNickname(et_Nickname.getText().toString());

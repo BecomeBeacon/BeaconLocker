@@ -4,13 +4,33 @@ import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -24,10 +44,16 @@ public class MyBeaconsListAdapter extends BaseAdapter {
     int mLayout;
     private boolean isScanning = false;
     private ArrayList<BleDeviceInfo> mBleDeviceInfoArrayList;
-
+    private Bitmap mBitmap;
+    public FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+    private DatabaseReference mUserAddressRef;
+    private FirebaseUser mUser;
+    private ImageView mImage;
+    Bitmap bitmapImage;
     // 검색된 BLE 장치가 중복 추가되는 부분을 방지하기 위해 HashMap을 사용
     // String: Device Address(key값)
     private HashMap<String, BleDeviceInfo> mHashBleMap = new HashMap<String, BleDeviceInfo>();
+
 
     public MyBeaconsListAdapter(Context context, int layout, ArrayList<BleDeviceInfo> arBleList,
                                 HashMap<String, BleDeviceInfo> hashBleMap)
@@ -79,15 +105,44 @@ public class MyBeaconsListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final int pos = position;
+        FirebaseStorage storage = FirebaseStorage.getInstance();
 
         if(convertView == null)
         {
             convertView = mInflater.inflate(mLayout, parent, false);
         }
 
+        if(mBleDeviceInfoArrayList.get(position).pictureUri != null)
+        {
+            try {
+                Log.d("MBLA", "child = " + mBleDeviceInfoArrayList.get(position).pictureUri);
+                StorageReference storageRef = storage.getReferenceFromUrl("gs://beaconlocker-51c69.appspot.com/").child(mBleDeviceInfoArrayList.get(position).pictureUri);
+                // Storage 에서 다운받아 저장시킬 임시파일
+                final File imageFile = File.createTempFile("images", "jpg");
+                storageRef.getFile(imageFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        // Success Case
+                        bitmapImage = BitmapFactory.decodeFile(imageFile.getPath());
+                        //   mImage.setImageBitmap(bitmapImage);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Fail Case
+                        e.printStackTrace();
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
 
         //TextView txtUuid = (TextView)convertView.findViewById(R.id.text_uuid);
         //txtUuid.setText("UUID: " + mBleDeviceInfoArrayList.get(position).proximityUuid);
+        ImageView image = (ImageView)convertView.findViewById(R.id.device_image);
+        image.setImageBitmap(bitmapImage);
 
         TextView txtBdName = (TextView)convertView.findViewById(R.id.text_bd_name);
         txtBdName.setText("Device Name: " + mBleDeviceInfoArrayList.get(position).nickname);
@@ -125,11 +180,11 @@ public class MyBeaconsListAdapter extends BaseAdapter {
 //
 
 
-            DeviceInfoStore.setBleInfo(mBleDeviceInfoArrayList.get(pos));
+                DeviceInfoStore.setBleInfo(mBleDeviceInfoArrayList.get(pos));
 
-            Activity mActi=GetMainActivity.getMainActity();
-            Intent intent = new Intent(mActi, BeaconDetailsActivity.class);
-            mActi.startActivity(intent);
+                Activity mActi=GetMainActivity.getMainActity();
+                Intent intent = new Intent(mActi, BeaconDetailsActivity.class);
+                mActi.startActivity(intent);
 
 
 
@@ -137,7 +192,7 @@ public class MyBeaconsListAdapter extends BaseAdapter {
         });
 //
 //
-       return convertView;
+        return convertView;
     }
 
 
