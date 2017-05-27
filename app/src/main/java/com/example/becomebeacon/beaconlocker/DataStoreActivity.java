@@ -120,8 +120,9 @@ public class DataStoreActivity extends AppCompatActivity {
         //}
         if(et_Address!=null&&mBleDeviceInfo!=null) {
             Log.d("DSA","check 2");
-            //et_Address.setText(mBleDeviceInfo.devAddress);
+            et_Address.setText(mBleDeviceInfo.devAddress);
         }
+
 
 
         //사진 선택
