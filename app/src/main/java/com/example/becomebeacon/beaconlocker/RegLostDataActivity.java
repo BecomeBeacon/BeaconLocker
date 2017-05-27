@@ -54,8 +54,12 @@ public class RegLostDataActivity extends AppCompatActivity implements OnMapReady
         BleDeviceInfo bleDeviceInfo = BeaconList.mItemMap.get(mac);
 
         devInfo = new LostDevInfo();
-        devInfo.setLatitude(Double.valueOf(bleDeviceInfo.latitude));
-        devInfo.setLongetude(Double.valueOf(bleDeviceInfo.longitude));
+        //devInfo.setDevAddr(bleDeviceInfo.getDevAddress());
+        //devInfo.setLatitude(Double.valueOf(bleDeviceInfo.latitude));
+        //devInfo.setLongetude(Double.valueOf(bleDeviceInfo.longitude));
+        devInfo.setDevAddr("EE:EE:EE:EE:EE:EE");
+        devInfo.setLatitude(35.885661);
+        devInfo.setLongetude(128.609486);
         devInfo.setLostDate("20170520");
 
         Log.d("RLDA","devInfo : "+devInfo.getDevAddr()+" "+devInfo.getLatitude()+" "+devInfo.getLongitude());
