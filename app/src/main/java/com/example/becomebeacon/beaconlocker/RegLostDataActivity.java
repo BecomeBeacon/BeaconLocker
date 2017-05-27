@@ -16,6 +16,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -23,13 +24,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class RegLostDataActivity extends AppCompatActivity {
+public class RegLostDataActivity extends AppCompatActivity implements OnMapReadyCallback {
     private FirebaseDatabase mDatabase;
     private DatabaseReference mDatabaseRef;
     private LostDevInfo devInfo;
     String tempDevAddr;
-    private GoogleMap googleMap;
-    private MapView mapView;
+    LatLng lostPos;
+    CameraPosition cp;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
 
@@ -54,13 +56,17 @@ public class RegLostDataActivity extends AppCompatActivity {
         BleDeviceInfo bleDeviceInfo = BeaconList.mItemMap.get(mac);
 
         devInfo = new LostDevInfo();
-        //테스트 tempDevAddr = "D5:0A:B9:FA:D0:E9";
-        tempDevAddr = bleDeviceInfo.getDevAddress();
+        tempDevAddr = "D5:0A:B9:FA:D0:E9";
+//        tempDevAddr = bleDeviceInfo.getDevAddress();
 
 
         devInfo.setDevAddr(tempDevAddr);
+        devInfo.setLatitude(35.886379);
+        devInfo.setLongetude(128.610187);
+        /*
         devInfo.setLatitude(Double.valueOf(bleDeviceInfo.latitude));
         devInfo.setLongetude(Double.valueOf(bleDeviceInfo.longitude));
+        */
         devInfo.setLostDate("20170520");
 
         Log.d("RLDA","devInfo : "+devInfo.getDevAddr()+" "+devInfo.getLatitude()+" "+devInfo.getLongitude());
@@ -88,17 +94,8 @@ public class RegLostDataActivity extends AppCompatActivity {
                 .child("longitude")
                 .setValue(devInfo.getLongitude());
 
-        // map fragment 추가
-
-        LatLng lostPos = new LatLng(devInfo.getLatitude(),devInfo.getLongitude());
-        CameraPosition cp = new CameraPosition.Builder().target((lostPos)).zoom(16).build();
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(lostPos);
-        markerOptions.title("분실 발생 위치");
-        markerOptions.snippet("등록 완료");
-
-        GoogleMapOptions temp = new GoogleMapOptions();
-        temp.camera(cp);
+        lostPos = new LatLng(devInfo.getLatitude(),devInfo.getLongitude());
+        cp = new CameraPosition.Builder().target((lostPos)).zoom(16).build();
 
         MapFragment mMapFragment = MapFragment.newInstance(new GoogleMapOptions().camera(cp));
         android.app.FragmentTransaction fragmentTransaction =
@@ -106,6 +103,7 @@ public class RegLostDataActivity extends AppCompatActivity {
 
         fragmentTransaction.replace(R.id.miniMap, mMapFragment);
         fragmentTransaction.commit();
+        mMapFragment.getMapAsync(this);
 
         exit_button_init();
     }
@@ -117,4 +115,13 @@ public class RegLostDataActivity extends AppCompatActivity {
             }                                                          }
         );
     };
+
+    @Override
+    public void onMapReady(GoogleMap map) {
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(lostPos);
+        markerOptions.title("분실 발생 위치");
+        markerOptions.snippet("등록 완료");
+        map.addMarker(markerOptions);
+    }
 }
