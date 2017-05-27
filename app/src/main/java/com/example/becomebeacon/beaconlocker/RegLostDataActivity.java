@@ -15,9 +15,8 @@ import android.view.View;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -28,7 +27,6 @@ public class RegLostDataActivity extends AppCompatActivity implements OnMapReady
     private FirebaseDatabase mDatabase;
     private DatabaseReference mDatabaseRef;
     private LostDevInfo devInfo;
-    String tempDevAddr;
     LatLng lostPos;
     CameraPosition cp;
 
@@ -56,17 +54,8 @@ public class RegLostDataActivity extends AppCompatActivity implements OnMapReady
         BleDeviceInfo bleDeviceInfo = BeaconList.mItemMap.get(mac);
 
         devInfo = new LostDevInfo();
-        tempDevAddr = "D5:0A:B9:FA:D0:E9";
-//        tempDevAddr = bleDeviceInfo.getDevAddress();
-
-
-        devInfo.setDevAddr(tempDevAddr);
-        devInfo.setLatitude(35.886379);
-        devInfo.setLongetude(128.610187);
-        /*
         devInfo.setLatitude(Double.valueOf(bleDeviceInfo.latitude));
         devInfo.setLongetude(Double.valueOf(bleDeviceInfo.longitude));
-        */
         devInfo.setLostDate("20170520");
 
         Log.d("RLDA","devInfo : "+devInfo.getDevAddr()+" "+devInfo.getLatitude()+" "+devInfo.getLongitude());
@@ -95,7 +84,7 @@ public class RegLostDataActivity extends AppCompatActivity implements OnMapReady
                 .setValue(devInfo.getLongitude());
 
         lostPos = new LatLng(devInfo.getLatitude(),devInfo.getLongitude());
-        cp = new CameraPosition.Builder().target((lostPos)).zoom(16).build();
+        cp = new CameraPosition.Builder().target((lostPos)).zoom(17).build();
 
         MapFragment mMapFragment = MapFragment.newInstance(new GoogleMapOptions().camera(cp));
         android.app.FragmentTransaction fragmentTransaction =
@@ -120,8 +109,10 @@ public class RegLostDataActivity extends AppCompatActivity implements OnMapReady
     public void onMapReady(GoogleMap map) {
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(lostPos);
-        markerOptions.title("분실 발생 위치");
-        markerOptions.snippet("등록 완료");
+        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker));
         map.addMarker(markerOptions);
+        map.getUiSettings().setScrollGesturesEnabled(false);
+        map.getUiSettings().setZoomControlsEnabled(false);
+        map.getUiSettings().setZoomGesturesEnabled(false);
     }
 }
