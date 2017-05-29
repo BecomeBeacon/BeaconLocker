@@ -22,6 +22,8 @@ import com.google.android.gms.maps.model.CircleOptions;
 import android.graphics.Color;
 import android.util.Log;
 
+import java.util.ArrayList;
+
 public class MapActivity extends FragmentActivity
         implements OnMapReadyCallback {
 
@@ -31,7 +33,7 @@ public class MapActivity extends FragmentActivity
     double lon;
     double inlat;
     double inlon;
-
+    private ArrayList<BleDeviceInfo> mBleDeviceInfoArrayList;
     //맵 개체 생성
     @Override
     protected void onCreate(Bundle savedInstanceState) {
