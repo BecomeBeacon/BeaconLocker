@@ -90,7 +90,7 @@ public class BleService extends Service {
         mHandler.sendEmptyMessage(0);
 
         mDatabase = FirebaseDatabase.getInstance();
-        mDatabaseRef = mDatabase.getReference();
+        mDatabaseRef = mDatabase.getReference("lost_items/");
 
         dbOpenHelper = new DbOpenHelper(getApplicationContext());
         dbOpenHelper.open();
@@ -334,8 +334,32 @@ public class BleService extends Service {
         return false;
     }
 
-    public void pullLostDevices(){
+    public void pullLostDevices() {
+        mDatabaseRef
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for(DataSnapshot tempSnapshot : dataSnapshot.getChildren()) {
+                            LostDevInfo temp = new LostDevInfo();
+                            temp.setDevAddr(tempSnapshot.getKey());
+                            temp.setLatitude(Double.valueOf(tempSnapshot.child("latitude").getKey()));
+                            temp.setLatitude(Double.valueOf(tempSnapshot.child("longitude").getKey()));
+                            temp.setLostDate(tempSnapshot.child("lastdate").getKey());
 
+                            Log.d("dbTest",temp.getDevAddr());
+
+                            dbOpenHelper.insert(temp.getDevAddr(),
+                                    temp.getLatitude(),
+                                    temp.getLongitude(),
+                                    temp.getlostDate());
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
 //        mDatabaseRef.addValueEventListener(new ValueEventListener() {
 //            @Override
 //            public void onDataChange(DataSnapshot dataSnapshot) {
