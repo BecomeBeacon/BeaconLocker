@@ -47,7 +47,7 @@ public class MultiMapActivity extends FragmentActivity
         Intent intent = getIntent();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-        pushSomething();
+
         mUserAddressRef = mDatabase.getReference("/lost_items/");
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -190,10 +190,6 @@ public class MultiMapActivity extends FragmentActivity
 
     }
 
-    public void pushSomething(){
-        GetLatLong getLatLong = new GetLatLong("20170525", 128.611354, 35.886764);
-        mUserAddressRef.push().setValue(getLatLong);
-    }
 }
 
 

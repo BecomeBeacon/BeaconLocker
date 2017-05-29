@@ -120,13 +120,15 @@ public class DataStoreActivity extends AppCompatActivity {
         //}
         if(et_Address!=null&&mBleDeviceInfo!=null) {
             Log.d("DSA","check 2");
-            //et_Address.setText(mBleDeviceInfo.devAddress);
+            et_Address.setText(mBleDeviceInfo.devAddress);
         }
 
 
         //사진 선택
         btChoose = (Button) findViewById(R.id.btn_add_image);
         ivPreview = (ImageView) findViewById(R.id.iv_image);
+
+
 
         btChoose.setOnClickListener(new View.OnClickListener() {
             @Override

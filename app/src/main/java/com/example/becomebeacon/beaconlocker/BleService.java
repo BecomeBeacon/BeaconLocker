@@ -74,6 +74,7 @@ public class BleService extends Service {
         mAssignedItem = BeaconList.mAssignedItem;
         mScan=false;
         mHandler.sendEmptyMessage(0);
+        mTimeOut.sendEmptyMessage(0);
 
 
 
@@ -98,6 +99,7 @@ public class BleService extends Service {
         Log.d("Service","service destory");
         mBleScan.end();
         mHandler.removeMessages(0);
+        mTimeOut.removeMessages(0);
         super.onDestroy();
 
 
@@ -155,6 +157,31 @@ public class BleService extends Service {
 
                 }
             }
+
+        }
+    };
+
+    private Handler mTimeOut= new Handler()
+    {
+        public void handleMessage(Message msg)
+        {
+            Log.d("SERVICE"," in Timeout");
+            if(Values.useBLE) {
+
+                for(int i=0;i<BeaconList.mAssignedItem.size();i++)
+                {
+                    BleDeviceInfo dbi=BeaconList.mAssignedItem.get(i);
+                    dbi.timeout--;
+                    if(dbi.timeout==0)
+                    {
+                        dbi.isFar=true;
+                        pushNotification(dbi.nickname,dbi.devAddress);
+                    }
+                }
+            }
+            mTimeOut.sendEmptyMessageDelayed(0, 1000);
+
+
 
         }
     };
