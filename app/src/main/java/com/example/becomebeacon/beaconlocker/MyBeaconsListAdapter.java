@@ -141,8 +141,10 @@ public class MyBeaconsListAdapter extends BaseAdapter {
 
         //TextView txtUuid = (TextView)convertView.findViewById(R.id.text_uuid);
         //txtUuid.setText("UUID: " + mBleDeviceInfoArrayList.get(position).proximityUuid);
-        ImageView image = (ImageView)convertView.findViewById(R.id.device_image);
-        image.setImageBitmap(bitmapImage);
+        if(PictureList.pictures.containsKey(mBleDeviceInfoArrayList.get(position).devAddress)) {
+            ImageView image = (ImageView) convertView.findViewById(R.id.device_image);
+            image.setImageBitmap(PictureList.pictures.get(mBleDeviceInfoArrayList.get(position).devAddress));
+        }
 
         TextView txtBdName = (TextView)convertView.findViewById(R.id.text_bd_name);
         txtBdName.setText("Device Name: " + mBleDeviceInfoArrayList.get(position).nickname);
