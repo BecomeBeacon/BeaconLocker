@@ -95,7 +95,7 @@ public class BleService extends Service {
         dbOpenHelper = new DbOpenHelper(getApplicationContext());
         dbOpenHelper.open();
 
-        pullLostDevices();
+        //pullLostDevices();
     }
 
 
