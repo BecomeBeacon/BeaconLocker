@@ -11,7 +11,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DbOpenHelper {
 
-    private static final String DATABASE_NAME = "devices.db";
+    private static final String DATABASE_NAME = "lostDevices.db";
     private static final int DATABASE_VERSION = 1;
     public static SQLiteDatabase mDB;
     private DatabaseHelper mDBHelper;
@@ -54,4 +54,11 @@ public class DbOpenHelper {
         mDB.close();
     }
 
+    public void insert(String devAddr, double latitude, double longitude, String lostDate) {
+        // 읽고 쓰기가 가능하게 DB 열기
+        SQLiteDatabase db = mDBHelper.getWritableDatabase();
+        // DB에 입력한 값으로 행 추가
+        db.execSQL("INSERT INTO lostDevices VALUES(null, '" + devAddr + "', " + latitude + ", '" + longitude + ", '" + lostDate + "');");
+        db.close();
+    }
 }
