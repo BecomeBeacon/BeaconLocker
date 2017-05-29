@@ -112,31 +112,6 @@ public class MyBeaconsListAdapter extends BaseAdapter {
             convertView = mInflater.inflate(mLayout, parent, false);
         }
 
-        if(mBleDeviceInfoArrayList.get(position).pictureUri != null)
-        {
-            try {
-                Log.d("MBLA", "child = " + mBleDeviceInfoArrayList.get(position).pictureUri);
-                StorageReference storageRef = storage.getReferenceFromUrl("gs://beaconlocker-51c69.appspot.com/").child(mBleDeviceInfoArrayList.get(position).pictureUri);
-                // Storage 에서 다운받아 저장시킬 임시파일
-                final File imageFile = File.createTempFile("images", "jpg");
-                storageRef.getFile(imageFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        // Success Case
-                        bitmapImage = BitmapFactory.decodeFile(imageFile.getPath());
-                        //   mImage.setImageBitmap(bitmapImage);
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        // Fail Case
-                        e.printStackTrace();
-                    }
-                });
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
 
 
         //TextView txtUuid = (TextView)convertView.findViewById(R.id.text_uuid);
