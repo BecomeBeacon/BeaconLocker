@@ -72,6 +72,7 @@
         app:srcCompat="@mipmap/ic_launcher_round"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
+        android:layout_margin="5dp"
         android:layout_alignBottom="@+id/linearLayout"
         android:layout_toStartOf="@+id/linearLayout" />
 </RelativeLayout>

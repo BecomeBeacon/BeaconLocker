@@ -112,37 +112,14 @@ public class MyBeaconsListAdapter extends BaseAdapter {
             convertView = mInflater.inflate(mLayout, parent, false);
         }
 
-        if(mBleDeviceInfoArrayList.get(position).pictureUri != null)
-        {
-            try {
-                Log.d("MBLA", "child = " + mBleDeviceInfoArrayList.get(position).pictureUri);
-                StorageReference storageRef = storage.getReferenceFromUrl("gs://beaconlocker-51c69.appspot.com/").child(mBleDeviceInfoArrayList.get(position).pictureUri);
-                // Storage 에서 다운받아 저장시킬 임시파일
-                final File imageFile = File.createTempFile("images", "jpg");
-                storageRef.getFile(imageFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        // Success Case
-                        bitmapImage = BitmapFactory.decodeFile(imageFile.getPath());
-                        //   mImage.setImageBitmap(bitmapImage);
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        // Fail Case
-                        e.printStackTrace();
-                    }
-                });
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
 
 
         //TextView txtUuid = (TextView)convertView.findViewById(R.id.text_uuid);
         //txtUuid.setText("UUID: " + mBleDeviceInfoArrayList.get(position).proximityUuid);
-        ImageView image = (ImageView)convertView.findViewById(R.id.device_image);
-        image.setImageBitmap(bitmapImage);
+        if(PictureList.pictures.containsKey(mBleDeviceInfoArrayList.get(position).devAddress)) {
+            ImageView image = (ImageView) convertView.findViewById(R.id.device_image);
+            image.setImageBitmap(PictureList.pictures.get(mBleDeviceInfoArrayList.get(position).devAddress));
+        }
 
         TextView txtBdName = (TextView)convertView.findViewById(R.id.text_bd_name);
         txtBdName.setText("Device Name: " + mBleDeviceInfoArrayList.get(position).nickname);

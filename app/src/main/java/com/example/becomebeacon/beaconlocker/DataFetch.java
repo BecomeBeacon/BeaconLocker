@@ -1,14 +1,23 @@
 package com.example.becomebeacon.beaconlocker;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -24,6 +33,8 @@ public class DataFetch {
     private ArrayList<BleDeviceInfo> myBleInfo;
     private HashMap<String, BleDeviceInfo> myItemMap;
 
+    public Bitmap bitmapImage;
+    public FirebaseStorage storage = FirebaseStorage.getInstance();
     public DataFetch(ArrayList<BleDeviceInfo> mAssignedItem, HashMap<String, BleDeviceInfo> mItemMap) {
         myBleInfo = mAssignedItem;
         myItemMap = mItemMap;
@@ -62,6 +73,7 @@ public class DataFetch {
 
         final String myAddress = address;
 
+
         beaconInfoRef.child(address)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -71,6 +83,36 @@ public class DataFetch {
                         if(bleDeviceInfo!=null) {
 
                             if(!myItemMap.containsKey(myAddress)) {
+
+                                ////////
+                                if(bleDeviceInfo.getPictureUri() != null)
+                                {
+                                    try {
+                                        Log.d("MBLA", "child = " + bleDeviceInfo.getPictureUri());
+                                        StorageReference storageRef = storage.getReferenceFromUrl("gs://beaconlocker-51c69.appspot.com/").child(bleDeviceInfo.getPictureUri());
+                                        // Storage 에서 다운받아 저장시킬 임시파일
+                                        final File imageFile = File.createTempFile("images", "jpg");
+                                        storageRef.getFile(imageFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                            @Override
+                                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                                // Success Case
+                                                bitmapImage = BitmapFactory.decodeFile(imageFile.getPath());
+                                                //   mImage.setImageBitmap(bitmapImage);
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                // Fail Case
+                                                e.printStackTrace();
+                                            }
+                                        });
+                                        PictureList.pictures.put(bleDeviceInfo.devAddress,bitmapImage);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                                ////////
                                 myBleInfo.add(bleDeviceInfo);
                                 myItemMap.put(myAddress, bleDeviceInfo);
                                 Log.v("Test_Print_nick", bleDeviceInfo.nickname);
