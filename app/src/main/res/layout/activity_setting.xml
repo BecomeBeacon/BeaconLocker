@@ -59,6 +59,7 @@
             android:layout_centerVertical="true"
             android:layout_toStartOf="@+id/textView14"
             android:ems="10"
+            android:drawableLeft="@drawable/ic_create"
             android:inputType="time" />
 
         <TextView

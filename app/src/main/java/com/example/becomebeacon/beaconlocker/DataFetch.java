@@ -106,12 +106,18 @@ public class DataFetch {
                                                 e.printStackTrace();
                                             }
                                         });
+
                                         PictureList.pictures.put(bleDeviceInfo.devAddress,bitmapImage);
+                                        Log.d("MBLA","put complete pictues : "+PictureList.pictures.toString());
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
                                 }
 
+                                else
+                                {
+                                    Log.d("MBLA","nulllllllllllllll");
+                                }
                                 ////////
                                 myBleInfo.add(bleDeviceInfo);
                                 myItemMap.put(myAddress, bleDeviceInfo);
