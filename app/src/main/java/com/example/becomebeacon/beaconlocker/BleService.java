@@ -23,11 +23,20 @@ import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
+import com.example.becomebeacon.beaconlocker.database.DbOpenHelper;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Vector;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by 함상혁입니다 on 2017-05-09.
@@ -47,6 +56,11 @@ public class BleService extends Service {
     private static final float LOCATION_DISTANCE = 10f;
     boolean mScan;
     private GpsInfo gps;
+
+    private FirebaseDatabase mDatabase;
+    private DatabaseReference mDatabaseRef;
+    private DbOpenHelper dbOpenHelper;
+
 //    NotificationManager Notifi_M;
 //    Notification Notifi ;
 
@@ -75,8 +89,13 @@ public class BleService extends Service {
         mScan=false;
         mHandler.sendEmptyMessage(0);
 
+        mDatabase = FirebaseDatabase.getInstance();
+        mDatabaseRef = mDatabase.getReference();
 
+        dbOpenHelper = new DbOpenHelper(getApplicationContext());
+        dbOpenHelper.open();
 
+        pullLostDevices();
     }
 
 
@@ -313,6 +332,28 @@ public class BleService extends Service {
             }
         }
         return false;
+    }
+
+    public void pullLostDevices(){
+
+//        mDatabaseRef.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                for(DataSnapshot temp:dataSnapshot.getChildren()) {
+//                    dbOpenHelper.insert(temp.getKey(), Double.valueOf(temp.child("longitude").getKey()),
+//                            Double.valueOf(temp.child("latitude").getKey()), temp.child("lastdate").getKey());
+//
+//                    Log.d("LDPS", "temp.getKey = " + temp.getKey());
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError error) {
+//                // Failed to read value
+//                Log.w(TAG, "Failed to read value.", error.toException());
+//
+//            }
+//        });
     }
 
 

@@ -245,40 +245,43 @@ public class BeaconDetailsActivity extends AppCompatActivity {
     }
 
     public void fetchPicture() {
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReferenceFromUrl("gs://beaconlocker-51c69.appspot.com/");
-        Log.v("Test_Uri1", "URI = " + item.pictureUri);
-        Toast.makeText(BeaconDetailsActivity.this,item.pictureUri,Toast.LENGTH_SHORT).show();
-        try {
-            storageRef = storage.getReferenceFromUrl("gs://beaconlocker-51c69.appspot.com/").child(item.pictureUri);
-        }
-        catch (Exception e) {
-            Toast.makeText(BeaconDetailsActivity.this,item.pictureUri,Toast.LENGTH_SHORT).show();
-            Log.v("Test_Uri2", "URI = " + item.pictureUri);
-        }
+        Bitmap bitmapImage=PictureList.pictures.get(item.devAddress);
 
-        try {
-            // Storage 에서 다운받아 저장시킬 임시파일
-            final File imageFile = File.createTempFile("images", "jpg");
-            storageRef.getFile(imageFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                    // Success Case
-                    Bitmap bitmapImage = BitmapFactory.decodeFile(imageFile.getPath());
-                    mImage.setImageBitmap(bitmapImage);
-                    Toast.makeText(getApplicationContext(), "Success !!", Toast.LENGTH_LONG).show();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    // Fail Case
-                    e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), "Fail !!", Toast.LENGTH_LONG).show();
-                }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        mImage.setImageBitmap(bitmapImage);
+//        FirebaseStorage storage = FirebaseStorage.getInstance();
+//        StorageReference storageRef = storage.getReferenceFromUrl("gs://beaconlocker-51c69.appspot.com/");
+//        Log.v("Test_Uri1", "URI = " + item.pictureUri);
+//        Toast.makeText(BeaconDetailsActivity.this,item.pictureUri,Toast.LENGTH_SHORT).show();
+//        try {
+//            storageRef = storage.getReferenceFromUrl("gs://beaconlocker-51c69.appspot.com/").child(item.pictureUri);
+//        }
+//        catch (Exception e) {
+//            Toast.makeText(BeaconDetailsActivity.this,item.pictureUri,Toast.LENGTH_SHORT).show();
+//            Log.v("Test_Uri2", "URI = " + item.pictureUri);
+//        }
+//
+//        try {
+//            // Storage 에서 다운받아 저장시킬 임시파일
+//            final File imageFile = File.createTempFile("images", "jpg");
+//            storageRef.getFile(imageFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+//                @Override
+//                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+//                    // Success Case
+//                    Bitmap bitmapImage = BitmapFactory.decodeFile(imageFile.getPath());
+//                    mImage.setImageBitmap(bitmapImage);
+//                    Toast.makeText(getApplicationContext(), "Success !!", Toast.LENGTH_LONG).show();
+//                }
+//            }).addOnFailureListener(new OnFailureListener() {
+//                @Override
+//                public void onFailure(@NonNull Exception e) {
+//                    // Fail Case
+//                    e.printStackTrace();
+//                    Toast.makeText(getApplicationContext(), "Fail !!", Toast.LENGTH_LONG).show();
+//                }
+//            });
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
 
