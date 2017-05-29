@@ -124,6 +124,7 @@ public class DataStoreActivity extends AppCompatActivity {
         }
 
 
+
         //사진 선택
         btChoose = (Button) findViewById(R.id.btn_add_image);
         ivPreview = (ImageView) findViewById(R.id.iv_image);
@@ -187,7 +188,7 @@ public class DataStoreActivity extends AppCompatActivity {
         BleDeviceInfo bleDeviceInfo = DeviceInfoStore.getBleInfo();
         BeaconOnUser beaconOnUser = new BeaconOnUser(bleDeviceInfo.getDevAddress());
 
-        mUserAddressRef.child(bleDeviceInfo.getDevAddress() + "/").setValue(beaconOnUser);
+        mUserAddressRef.child(bleDeviceInfo.getDevAddress()).setValue(beaconOnUser);
 
         //store beacon info to 'Beacon' DB in Uid order
         bleDeviceInfo.setNickname(et_Nickname.getText().toString());

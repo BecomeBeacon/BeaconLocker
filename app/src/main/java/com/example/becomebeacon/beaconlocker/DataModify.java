@@ -5,8 +5,11 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -68,6 +71,6 @@ public class DataModify {
 
         }
         mDatabaseRef.child("beacon/").child(bleDeviceInfo.devAddress).removeValue();
-        mDatabaseRef.child("users/").child(bleDeviceInfo.devAddress).removeValue();
+        mDatabaseRef.child("users").child(mUser.getUid()).child("beacons").child(bleDeviceInfo.devAddress).removeValue();
     }
 }

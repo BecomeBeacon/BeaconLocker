@@ -8,22 +8,35 @@
     android:layout_margin="10dp"
     tools:context="com.example.becomebeacon.beaconlocker.RegLostDataActivity">
 
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="150dp"
+        android:text = "분실물 등록 완료"
+        android:textColor = "#ffffff"
+        android:textSize = "60sp"
+        android:gravity = "center"
+        android:id="@+id/textView3"
+        android:paddingTop="60dp"
+        android:layout_alignParentStart="true"
+        android:background="@color/colorPrimary"/>
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/rld_ExitBtn"
         android:background="@drawable/exit_button"
         android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"/>
     <TextView
         android:layout_width="fill_parent"
-        android:layout_height="100dp"
-        android:text = "분실물이 등록되었습니다!"
-        android:textColor = "#0084ff"
-        android:textSize = "30sp"
+        android:layout_height="50dp"
+        android:text = "현재 위치에 분실물이 기록되었습니다."
+        android:textSize = "20sp"
         android:gravity = "center"
+        android:textColor = "#ffffff"
         android:id="@+id/textView4"
-        android:layout_above="@+id/miniMap" />
+        android:layout_above="@+id/miniMap"
+        android:layout_below="@+id/textView3"
+        android:background="@color/colorPrimary"/>
     <fragment
         android:id="@+id/miniMap"
         android:name="com.google.android.gms.maps.MapFragment"
