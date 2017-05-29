@@ -16,6 +16,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DatabaseReference;
@@ -64,45 +66,43 @@ public class RegLostDataActivity extends AppCompatActivity {
         Log.d("RLDA","devInfo : "+devInfo.getDevAddr()+" "+devInfo.getLatitude()+" "+devInfo.getLongitude());
 
         mDatabase
-                .getReference("beacon/" + tempDevAddr + "/")
+                .getReference("beacon/" + devInfo.getDevAddr() + "/")
                 .child("isLost")
                 .setValue(true); // isLost 속성값 변경
 
         mDatabase
-                .getReference("beacon/" + tempDevAddr + "/")
+                .getReference("beacon/" + devInfo.getDevAddr() + "/")
                 .child("isFar")
                 .setValue(true); // isFar 속성값 변경
 
         mDatabase
-                .getReference("lost_items/" + tempDevAddr + "/")
+                .getReference("lost_items/" + devInfo.getDevAddr() + "/")
                 .child("lastdate")
                 .setValue(devInfo.getlostDate());
         mDatabase
-                .getReference("lost_items/" + tempDevAddr + "/")
+                .getReference("lost_items/" + devInfo.getDevAddr() + "/")
                 .child("latitude")
                 .setValue(devInfo.getLatitude());
         mDatabase
-                .getReference("lost_items/" + tempDevAddr + "/")
+                .getReference("lost_items/" + devInfo.getDevAddr() + "/")
                 .child("longitude")
                 .setValue(devInfo.getLongitude());
 
         // map fragment 추가
 
-        android.app.FragmentTransaction fragmentTransaction =
-                getFragmentManager().beginTransaction();
-
-
-        fragmentTransaction.commit();
-
-
-
         LatLng lostPos = new LatLng(devInfo.getLatitude(),devInfo.getLongitude());
-
+        CameraPosition cp = new CameraPosition.Builder().target((lostPos)).zoom(16).build();
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(lostPos);
         markerOptions.title("분실 발생 위치");
         markerOptions.snippet("등록 완료");
 
+        MapFragment mMapFragment = MapFragment.newInstance(new GoogleMapOptions().camera(cp));
+        android.app.FragmentTransaction fragmentTransaction =
+                getFragmentManager().beginTransaction();
+
+        fragmentTransaction.replace(R.id.miniMap, mMapFragment);
+        fragmentTransaction.commit();
 
         exit_button_init();
     }
