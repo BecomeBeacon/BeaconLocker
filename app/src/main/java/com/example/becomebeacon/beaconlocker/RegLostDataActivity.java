@@ -77,7 +77,7 @@ public class RegLostDataActivity extends AppCompatActivity implements OnMapReady
         mDatabase
                 .getReference("lost_items/" + devInfo.getDevAddr() + "/")
                 .child("lastdate")
-                .setValue(devInfo.getlostDate());
+                .setValue(devInfo.getLostDate());
         mDatabase
                 .getReference("lost_items/" + devInfo.getDevAddr() + "/")
                 .child("latitude")
