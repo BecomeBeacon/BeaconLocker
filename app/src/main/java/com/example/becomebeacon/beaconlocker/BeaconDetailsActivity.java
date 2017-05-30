@@ -25,6 +25,13 @@ import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -41,6 +48,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
     private TextView address;
     private TextView meter;
     private Button showMap;
+    private Button findStuff;
     private EditText limitDist;
     private Button disconnect;
     private Button main;
@@ -54,10 +62,17 @@ public class BeaconDetailsActivity extends AppCompatActivity {
     private static final int CROP_SMALL_PICTURE = 2;
     private DataModify dataModify;
 
+    public  FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+    private FirebaseUser mUser;
+
+
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_meter);
         mContext=this;
+
+
 
         item=DeviceInfoStore.getBleInfo();
         initUI();
@@ -89,6 +104,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
         changeImage=(Button)findViewById(R.id.changeImage);
         showMap=(Button)findViewById(R.id.showMap);
         limitDist=(EditText) findViewById(R.id.limit_distance);
+        findStuff=(Button)findViewById(R.id.find);
     }
 
     private void initListeners() {
@@ -139,6 +155,26 @@ public class BeaconDetailsActivity extends AppCompatActivity {
                 intent.putExtra("LAT",item.latitude);
                 intent.putExtra("LON",item.longitude);
                 startActivity(intent);
+            }
+        });
+        findStuff.setOnClickListener(new Button.OnClickListener()
+        {
+            public void onClick(View v)
+            {
+                if(item.isLost == true)
+                {
+                    mDatabase.getReference("beacon/"+ item.devAddress + "/")
+                            .child("isLost")
+                            .setValue(false);
+
+                    mDatabase.getReference("lost_items/").child(item.devAddress).removeValue();
+
+                    item.isLost = false;
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(), "잃어버린 물건이 아닙니다!!", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
