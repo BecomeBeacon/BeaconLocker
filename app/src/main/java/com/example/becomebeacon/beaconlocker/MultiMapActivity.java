@@ -1,6 +1,8 @@
 package com.example.becomebeacon.beaconlocker;
 
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
@@ -29,18 +31,22 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 
 public class MultiMapActivity extends FragmentActivity
         implements OnMapReadyCallback {
 
-    GoogleMap googleMap;
+    public GoogleMap googleMap;
     private GpsInfo gps;
     double lat;
     double lon;
     public  FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference mUserAddressRef = mDatabase.getReference("/lost_items/");
     private FirebaseUser mUser;
+    MarkerOptions myPlace = new MarkerOptions();
+    MarkerOptions markerOptions = new MarkerOptions();
 
     //맵 개체 생성
     @Override
@@ -48,11 +54,11 @@ public class MultiMapActivity extends FragmentActivity
         Intent intent = getIntent();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-        pushSomething();
         mUserAddressRef = mDatabase.getReference("/lost_items/");
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
     }
 
     public void getCurrentLocation() {
@@ -65,22 +71,67 @@ public class MultiMapActivity extends FragmentActivity
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(final GoogleMap googleMap) {
         this.googleMap = googleMap;
         LatLng LOST;
         getCurrentLocation();
-        Log.d("TAAG","lat : "+lat);
-        Log.d("TAAG","lon : "+lon);
         LOST = new LatLng(lat, lon);
-
+        onAddMyMarker(lat,lon);
+        mHandler.sendEmptyMessage(0);
         //좌표값 세팅
-
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(LOST)); // 지정 좌표로 카메라 무브
         googleMap.animateCamera(CameraUpdateFactory.zoomTo(16)); // 0~20(1:세계,5:대륙,10:도시,15:거리)
         FindLostItem();
-        onAddMarker(lat,lon,"on");
     }
 
+    @Override
+    public void onDestroy() {
+        // TODO Auto-generated method stub
+        Log.d("Service","service destory");
+        mHandler.removeMessages(0);
+        super.onDestroy();
+    }
+
+    private Handler mHandler= new Handler()
+    {
+        public void handleMessage(Message msg)
+        {
+                onMoveMarker();
+                mHandler.sendEmptyMessageDelayed(0, 2000);
+        }
+    };
+
+    public void onMoveMarker()
+    {
+        LatLng myLocation;
+        getCurrentLocation();
+        myLocation = new LatLng(lat,lon);
+        myPlace.position(myLocation);
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(myLocation)); // 지정 좌표로 카메라 무브
+        googleMap.animateCamera(CameraUpdateFactory.zoomTo(16)); // 0~20(1:세계,5:대륙,10:도시,15:거리)
+        this.googleMap.addMarker(myPlace);
+    }
+    public void onAddMyMarker(double latt,double lont)
+    {
+        LatLng LOST;
+
+        LOST = new LatLng(latt, lont);
+
+        //마커 옵션(분실물 정보, 분실 시각) 왜안되냐 도대체가
+
+        myPlace.position(LOST);
+        myPlace.icon(BitmapDescriptorFactory.defaultMarker(200f));
+        myPlace.title("현재 위치");
+
+        //마커추가
+        this.googleMap.addMarker(myPlace);
+        //정보창 클릭 리스너
+        googleMap.setOnInfoWindowClickListener(infoWindowClickListener);
+        /*
+        //마커 클릭 리스너
+        this.googleMap.setOnMarkerClickListener(markerClickListener);
+        */
+    }
     public void onAddMarker(double latt, double lont,String date) {
         LatLng LOST;
 
@@ -89,29 +140,19 @@ public class MultiMapActivity extends FragmentActivity
         //마커 옵션(분실물 정보, 분실 시각) 왜안되냐 도대체가
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(LOST);
+        markerOptions.title("분실물");
+        markerOptions.snippet(date);
 
-        if(date == "on")
-        {
-            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(200f));
-            markerOptions.title("현재 위치");
-        }
-        else
-        {
-            markerOptions.title("분실물");
-            markerOptions.snippet(date);
-        }
 
 
         //마커추가
         this.googleMap.addMarker(markerOptions);
-
         //정보창 클릭 리스너
         googleMap.setOnInfoWindowClickListener(infoWindowClickListener);
         /*
         //마커 클릭 리스너
         this.googleMap.setOnMarkerClickListener(markerClickListener);
         */
-
     }
 
 
@@ -165,7 +206,6 @@ public class MultiMapActivity extends FragmentActivity
 
 
     public void FindLostItem() {
-        int cnt1=0,cnt2=0;
         // users/$Uid/beacons/"Address"
         mUser= LoginActivity.getUser();
 
@@ -178,11 +218,8 @@ public class MultiMapActivity extends FragmentActivity
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for(DataSnapshot addressSnapshot : dataSnapshot.getChildren()) {
                             GetLatLong getLatLong = addressSnapshot.getValue(GetLatLong.class);
-                            Log.d("FUCK","lat : "+getLatLong.latitude);
-                            Log.d("FUCK","lon : "+getLatLong.longitude);
                             if(calcDistance(getLatLong.latitude,getLatLong.longitude,lat,lon))
                             {
-                                Log.d("TTT","is in?");
                                 onAddMarker(getLatLong.latitude,getLatLong.longitude,getLatLong.lastdate);
                                 addCircle(10,getLatLong.latitude,getLatLong.longitude);
                             }
@@ -201,8 +238,8 @@ public class MultiMapActivity extends FragmentActivity
 
     }
 
-    public void pushSomething(){
-        GetLatLong getLatLong = new GetLatLong("20170525", 128.611354, 35.886764);
-        mUserAddressRef.push().setValue(getLatLong);
-    }
 }
+
+
+
+

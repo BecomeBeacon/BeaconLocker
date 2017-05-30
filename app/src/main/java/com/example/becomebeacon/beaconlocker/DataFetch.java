@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.ImageView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -21,6 +22,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static com.example.becomebeacon.beaconlocker.R.id.imageView;
+
 /**
  * Created by GW on 2017-05-02.
  */
@@ -29,6 +32,8 @@ public class DataFetch {
     public static FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference mUserAddressRef;
     private FirebaseUser mUser;
+
+
 
     private ArrayList<BleDeviceInfo> myBleInfo;
     private HashMap<String, BleDeviceInfo> myItemMap;
@@ -44,7 +49,10 @@ public class DataFetch {
     // users/$Uid/beacons/"Address"
         mUser= LoginActivity.getUser();
 
-        mUserAddressRef = mDatabase.getReference("users/"+mUser.getUid()+"/beacons");
+        if(mUser!=null)
+            mUserAddressRef = mDatabase.getReference("users/" + mUser.getUid() + "/beacons");
+
+
 
         Log.v("Test_Print_Uid", mUser.getUid());
 
@@ -78,9 +86,12 @@ public class DataFetch {
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        BleDeviceInfo bleDeviceInfo = dataSnapshot.getValue(BleDeviceInfo.class);
+                        final BleDeviceInfo bleDeviceInfo;
+                        bleDeviceInfo = dataSnapshot.getValue(BleDeviceInfo.class);
+
 
                         if(bleDeviceInfo!=null) {
+                            Log.d("DF", "datasnapshot bleinfo" + bleDeviceInfo.getDevAddress());
 
                             if(!myItemMap.containsKey(myAddress)) {
 
@@ -88,8 +99,8 @@ public class DataFetch {
                                 if(bleDeviceInfo.getPictureUri() != null)
                                 {
                                     try {
-                                        Log.d("MBLA", "child = " + bleDeviceInfo.getPictureUri());
-                                        StorageReference storageRef = storage.getReferenceFromUrl("gs://beaconlocker-51c69.appspot.com/").child(bleDeviceInfo.getPictureUri());
+                                        Log.d("DF", "child = " + bleDeviceInfo.getPictureUri());
+                                        StorageReference storageRef = storage.getReference().child(bleDeviceInfo.getPictureUri());
                                         // Storage 에서 다운받아 저장시킬 임시파일
                                         final File imageFile = File.createTempFile("images", "jpg");
                                         storageRef.getFile(imageFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
@@ -97,7 +108,11 @@ public class DataFetch {
                                             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                                                 // Success Case
                                                 bitmapImage = BitmapFactory.decodeFile(imageFile.getPath());
-                                                //   mImage.setImageBitmap(bitmapImage);
+                                                Log.d("DF", "bitmapImage.toString();" + bitmapImage.toString());
+
+                                                PictureList.pictures.put(bleDeviceInfo.devAddress,bitmapImage);
+                                                Log.d("DF","put complete pictues : "+PictureList.pictures.toString());
+                                                //mImage.setImageBitmap(bitmapImage);
                                             }
                                         }).addOnFailureListener(new OnFailureListener() {
                                             @Override
@@ -106,9 +121,6 @@ public class DataFetch {
                                                 e.printStackTrace();
                                             }
                                         });
-
-                                        PictureList.pictures.put(bleDeviceInfo.devAddress,bitmapImage);
-                                        Log.d("MBLA","put complete pictues : "+PictureList.pictures.toString());
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
@@ -116,7 +128,7 @@ public class DataFetch {
 
                                 else
                                 {
-                                    Log.d("MBLA","nulllllllllllllll");
+                                    Log.d("DF","null");
                                 }
                                 ////////
                                 myBleInfo.add(bleDeviceInfo);

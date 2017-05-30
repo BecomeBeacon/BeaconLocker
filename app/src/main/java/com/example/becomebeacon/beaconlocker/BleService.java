@@ -140,6 +140,7 @@ public class BleService extends Service {
         public void handleMessage(Message msg)
         {
             Log.d("SERVICE"," in handler");
+            Log.d("PICTURES", "Picture = " + PictureList.pictures.toString());
             if(mBleScan.getMod()== Values.USE_TRACK) {
                 Log.d("SERVICE"," in track");
 

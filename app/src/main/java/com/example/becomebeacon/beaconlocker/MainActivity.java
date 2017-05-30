@@ -529,9 +529,16 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_logout) {
             signOut();
+
+            //Memory 비우기
             mHandler.removeMessages(0);
             mTimeOut.removeMessages(0);
             stopBleService();
+            PictureList.clear();
+
+            //새 인텐트 불러오기
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
             finish();
 
         }
