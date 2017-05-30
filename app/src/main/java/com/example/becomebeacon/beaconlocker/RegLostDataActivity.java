@@ -7,6 +7,7 @@ package com.example.becomebeacon.beaconlocker;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -22,6 +23,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.text.SimpleDateFormat;
 
 public class RegLostDataActivity extends AppCompatActivity implements OnMapReadyCallback {
     private FirebaseDatabase mDatabase;
@@ -54,13 +57,15 @@ public class RegLostDataActivity extends AppCompatActivity implements OnMapReady
         BleDeviceInfo bleDeviceInfo = BeaconList.mItemMap.get(mac);
 
         devInfo = new LostDevInfo();
-        //devInfo.setDevAddr(bleDeviceInfo.getDevAddress());
-        //devInfo.setLatitude(Double.valueOf(bleDeviceInfo.latitude));
-        //devInfo.setLongetude(Double.valueOf(bleDeviceInfo.longitude));
-        devInfo.setDevAddr("EE:EE:EE:EE:EE:EE");
-        devInfo.setLatitude(35.885661);
-        devInfo.setLongetude(128.609486);
-        devInfo.setLostDate("20170520");
+        devInfo.setDevAddr(bleDeviceInfo.getDevAddress());
+        devInfo.setLatitude(Double.valueOf(bleDeviceInfo.latitude));
+        devInfo.setLongetude(Double.valueOf(bleDeviceInfo.longitude));
+//        devInfo.setDevAddr("EE:EE:EE:EE:EE:EE");
+//        devInfo.setLatitude(35.885661);
+//        devInfo.setLongetude(128.609486);
+
+        SimpleDateFormat CurDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        devInfo.setLostDate(CurDateFormat.format(bleDeviceInfo.lastDate));
 
         Log.d("RLDA","devInfo : "+devInfo.getDevAddr()+" "+devInfo.getLatitude()+" "+devInfo.getLongitude());
 

@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.estimote.sdk.connection.internal.protocols.Operation;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 
@@ -366,6 +367,8 @@ public class BluetoothScan {
                 Log.d("SCAN", "Tracking.. contain1");
                 BleDeviceInfo tItem = mItemMap.get(item.devAddress);
 
+                long now=System.currentTimeMillis();
+                tItem.lastDate=new Date(now);
                 tItem.rssi = (int) tItem.rssiKalmanFileter.update(item.rssi);
                 KalmanRSSI = tItem.rssi;
                 tItem.distance = mBleUtils.getDistance(KalmanRSSI, item.txPower);
