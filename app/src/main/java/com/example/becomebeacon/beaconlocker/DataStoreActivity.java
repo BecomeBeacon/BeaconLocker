@@ -1,4 +1,5 @@
 package com.example.becomebeacon.beaconlocker;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -76,6 +77,8 @@ public class DataStoreActivity extends AppCompatActivity {
     private static final int CROP_SMALL_PICTURE = 2;
     private static Uri tempUri;
     private Bitmap mBitmap;
+
+    private boolean isReady = false;
 
 
 
@@ -192,38 +195,42 @@ public class DataStoreActivity extends AppCompatActivity {
 
         //store beacon info to 'Beacon' DB in Uid order
         bleDeviceInfo.setNickname(et_Nickname.getText().toString());
-        bleDeviceInfo.setPictureUri(uploadFile());
-
-
-        mDatabase
-                .getReference("beacon/")
-                .child(bleDeviceInfo.getDevAddress())
-                .setValue(bleDeviceInfo)
-                .addOnSuccessListener(DataStoreActivity.this, new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast.makeText(getApplicationContext(), "서버에 저장되었습니다.", Toast.LENGTH_LONG).show();
-                        initData();
-                        finish();
-                    }
-                })
-                .addOnFailureListener(DataStoreActivity.this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getApplicationContext(), "저장에 실패하였습니다.", Toast.LENGTH_LONG).show();
-                    }
-                });
-
-        BeaconList.scannedMap.remove(bleDeviceInfo.devAddress);
-        Log.d("dataStoreActivity","size : "+BeaconList.mArrayListBleDevice.size());
-        for(int i=0;i<BeaconList.mArrayListBleDevice.size();i++)
-        {
-            if(BeaconList.mArrayListBleDevice.get(i).devAddress==bleDeviceInfo.devAddress) {
-                BeaconList.mArrayListBleDevice.remove(i);
-                Log.d("dataStoreActivity","removed");
-
-            }
+        if (filePath != null) {
+            bleDeviceInfo.setPictureUri(uploadFile());
         }
+
+        else {
+            isReady = true;
+        }
+            mDatabase
+                    .getReference("beacon/")
+                    .child(bleDeviceInfo.getDevAddress())
+                    .setValue(bleDeviceInfo)
+                    .addOnSuccessListener(DataStoreActivity.this, new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(getApplicationContext(), "서버에 저장되었습니다.", Toast.LENGTH_LONG).show();
+                            initData();
+                            while(!isReady);
+                            finish();
+                        }
+                    })
+                    .addOnFailureListener(DataStoreActivity.this, new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getApplicationContext(), "저장에 실패하였습니다.", Toast.LENGTH_LONG).show();
+                        }
+                    });
+
+            BeaconList.scannedMap.remove(bleDeviceInfo.devAddress);
+            Log.d("dataStoreActivity", "size : " + BeaconList.mArrayListBleDevice.size());
+            for (int i = 0; i < BeaconList.mArrayListBleDevice.size(); i++) {
+                if (BeaconList.mArrayListBleDevice.get(i).devAddress == bleDeviceInfo.devAddress) {
+                    BeaconList.mArrayListBleDevice.remove(i);
+                    Log.d("dataStoreActivity", "removed");
+
+                }
+            }
     }
 
 //    //결과 처리
@@ -248,53 +255,50 @@ public class DataStoreActivity extends AppCompatActivity {
     private String uploadFile() {
         //업로드할 파일이 있으면 수행
         Log.v("Test","Filepath in uploadFile = " + String.valueOf(filePath));
-        if (filePath != null) {
-            //업로드 진행 Dialog 보이기
-//            final ProgressDialog progressDialog = new ProgressDialog(this);
-//            progressDialog.setTitle("업로드중...");
-//            progressDialog.show();
+        //업로드 진행 Dialog 보이기
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("업로드중...");
+        progressDialog.show();
 
-            //storage
-            FirebaseStorage storage = FirebaseStorage.getInstance();
+        //storage
+        FirebaseStorage storage = FirebaseStorage.getInstance();
 
-            //Unique한 파일명을 만들자.
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMHH_mmss");
-            Date now = new Date();
-            String filename = formatter.format(now) + ".png";
-            //storage 주소와 폴더 파일명을 지정해 준다.
-            StorageReference storageRef = storage.getReferenceFromUrl("gs://beaconlocker-51c69.appspot.com/").child("beacon_images/" + filename);
-            storageRef.putFile(filePath)
-                    //성공시
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                            progressDialog.dismiss(); //업로드 진행 Dialog 상자 닫기
-                            Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    //실패시
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-//                            progressDialog.dismiss();
-                            Toast.makeText(getApplicationContext(), "업로드 실패!", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    //진행중
-                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            @SuppressWarnings("VisibleForTests")
-                            double progress = (100 * taskSnapshot.getBytesTransferred()) /  taskSnapshot.getTotalByteCount();
-                            //dialog에 진행률을 퍼센트로 출력해 준다
-//                            progressDialog.setMessage("Uploaded " + ((int) progress) + "% ...");
-                        }
-                    });
-            return "beacon_images/" + filename;
-        } else {
-            //TODO:: 사진파일 미첨부 시
-            return null;
-        }
+        //Unique한 파일명을 만들자.
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMHH_mmss");
+        Date now = new Date();
+        String filename = formatter.format(now) + ".png";
+        //storage 주소와 폴더 파일명을 지정해 준다.
+        StorageReference storageRef = storage.getReferenceFromUrl("gs://beaconlocker-51c69.appspot.com/").child("beacon_images/" + filename);
+        storageRef.putFile(filePath)
+                //성공시
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        progressDialog.dismiss(); //업로드 진행 Dialog 상자 닫기
+                        Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
+                        isReady = true;
+                    }
+                })
+                //실패시
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        progressDialog.dismiss();
+                        Toast.makeText(getApplicationContext(), "업로드 실패!", Toast.LENGTH_SHORT).show();
+                        isReady = true;
+                    }
+                })
+                //진행중
+                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                        @SuppressWarnings("VisibleForTests")
+                        double progress = (100 * taskSnapshot.getBytesTransferred()) /  taskSnapshot.getTotalByteCount();
+                        //dialog에 진행률을 퍼센트로 출력해 준다
+                        progressDialog.setMessage("Uploaded " + ((int) progress) + "% ...");
+                    }
+                });
+        return "beacon_images/" + filename;
     }
 
     //TODO:: 모듈화 하기
