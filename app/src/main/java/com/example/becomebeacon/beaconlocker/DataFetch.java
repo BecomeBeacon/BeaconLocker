@@ -33,7 +33,7 @@ public class DataFetch {
     private DatabaseReference mUserAddressRef;
     private FirebaseUser mUser;
 
-    public BleDeviceInfo bleDeviceInfo;
+
 
     private ArrayList<BleDeviceInfo> myBleInfo;
     private HashMap<String, BleDeviceInfo> myItemMap;
@@ -83,8 +83,9 @@ public class DataFetch {
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        bleDeviceInfo = dataSnapshot.getValue(BleDeviceInfo.class);
+                        final BleDeviceInfo bleDeviceInfo;bleDeviceInfo = dataSnapshot.getValue(BleDeviceInfo.class);
 
+                        Log.d("DF", "datasnapshot bleinfo" + bleDeviceInfo.getDevAddress());
                         if(bleDeviceInfo!=null) {
 
                             if(!myItemMap.containsKey(myAddress)) {
@@ -93,7 +94,7 @@ public class DataFetch {
                                 if(bleDeviceInfo.getPictureUri() != null)
                                 {
                                     try {
-                                        Log.d("MBLA", "child = " + bleDeviceInfo.getPictureUri());
+                                        Log.d("DF", "child = " + bleDeviceInfo.getPictureUri());
                                         StorageReference storageRef = storage.getReference().child(bleDeviceInfo.getPictureUri());
                                         // Storage 에서 다운받아 저장시킬 임시파일
                                         final File imageFile = File.createTempFile("images", "jpg");
@@ -102,10 +103,10 @@ public class DataFetch {
                                             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                                                 // Success Case
                                                 bitmapImage = BitmapFactory.decodeFile(imageFile.getPath());
-                                                Log.d("MBLA", "bitmapImage.toString();" + bitmapImage.toString());
+                                                Log.d("DF", "bitmapImage.toString();" + bitmapImage.toString());
 
                                                 PictureList.pictures.put(bleDeviceInfo.devAddress,bitmapImage);
-                                                Log.d("MBLA","put complete pictues : "+PictureList.pictures.toString());
+                                                Log.d("DF","put complete pictues : "+PictureList.pictures.toString());
                                                 //mImage.setImageBitmap(bitmapImage);
                                             }
                                         }).addOnFailureListener(new OnFailureListener() {
@@ -122,7 +123,7 @@ public class DataFetch {
 
                                 else
                                 {
-                                    Log.d("MBLA","nulllllllllllllll");
+                                    Log.d("DF","null");
                                 }
                                 ////////
                                 myBleInfo.add(bleDeviceInfo);
