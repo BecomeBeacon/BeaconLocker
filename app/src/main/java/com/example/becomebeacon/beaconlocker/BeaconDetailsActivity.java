@@ -63,7 +63,6 @@ public class BeaconDetailsActivity extends AppCompatActivity {
     private DataModify dataModify;
 
     public  FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
-    private DatabaseReference mUserAddressRef = mDatabase.getReference("/lost_items/");
     private FirebaseUser mUser;
 
 
@@ -73,7 +72,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_item_meter);
         mContext=this;
 
-        mUserAddressRef.removeValue();
+
 
         item=DeviceInfoStore.getBleInfo();
         initUI();
