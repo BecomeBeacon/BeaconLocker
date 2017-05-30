@@ -29,12 +29,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MultiMapActivity extends FragmentActivity
         implements OnMapReadyCallback {
 
-    GoogleMap googleMap;
+    public GoogleMap googleMap;
     private GpsInfo gps;
     double lat;
     double lon;
@@ -48,7 +49,6 @@ public class MultiMapActivity extends FragmentActivity
         Intent intent = getIntent();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-        pushSomething();
         mUserAddressRef = mDatabase.getReference("/lost_items/");
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -65,52 +65,65 @@ public class MultiMapActivity extends FragmentActivity
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(final GoogleMap googleMap) {
         this.googleMap = googleMap;
-        LatLng LOST;
+        final LatLng[] LOST = new LatLng[1];
         getCurrentLocation();
         Log.d("TAAG","lat : "+lat);
         Log.d("TAAG","lon : "+lon);
-        LOST = new LatLng(lat, lon);
+        LOST[0] = new LatLng(lat, lon);
 
         //좌표값 세팅
 
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(LOST)); // 지정 좌표로 카메라 무브
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(LOST[0])); // 지정 좌표로 카메라 무브
         googleMap.animateCamera(CameraUpdateFactory.zoomTo(16)); // 0~20(1:세계,5:대륙,10:도시,15:거리)
         FindLostItem();
-        onAddMarker(lat,lon,"on");
+
+        TimerTask adTast = new TimerTask() {
+
+            public void run() {
+                LOST[0]=onMoveMarker(onAddMarker(lat,lon,"on"));
+                googleMap.moveCamera(CameraUpdateFactory.newLatLng(LOST[0])); // 지정 좌표로 카메라 무브
+                googleMap.animateCamera(CameraUpdateFactory.zoomTo(16)); // 0~20(1:세계,5:대륙,10:도시,15:거리)
+            }
+
+        };
+        Timer timer = new Timer();
+        timer.schedule(adTast,3,3000);
+    }
+    public LatLng onMoveMarker(MarkerOptions mark)
+    {
+        LatLng myLocation;
+        getCurrentLocation();
+        myLocation = new LatLng(lat,lon);
+        mark.position(myLocation);
+        //this.googleMap.addMarker(mark);
+        return myLocation;
     }
 
-    public void onAddMarker(double latt, double lont,String date) {
+    public MarkerOptions onAddMarker(double latt, double lont,String date) {
         LatLng LOST;
 
         LOST = new LatLng(latt, lont);
-        MarkerOptions markerOptions = new MarkerOptions();
-        //마커 옵션(분실물 정보, 분실 시각) 왜안되냐 도대체가
-        markerOptions.position(LOST);
 
-        if(date == "on")
-        {
-//            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(200f));
-            markerOptions.title("현재 위치");
-        }
-        else
-        {
-            markerOptions.title("분실물");
-            markerOptions.snippet(date);
-        }
+        //마커 옵션(분실물 정보, 분실 시각) 왜안되냐 도대체가
+
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(LOST);
+        markerOptions.title("분실물");
+        markerOptions.snippet(date);
+
 
 
         //마커추가
         this.googleMap.addMarker(markerOptions);
-
         //정보창 클릭 리스너
         googleMap.setOnInfoWindowClickListener(infoWindowClickListener);
         /*
         //마커 클릭 리스너
         this.googleMap.setOnMarkerClickListener(markerClickListener);
         */
-
+        return markerOptions;
     }
 
 
@@ -141,7 +154,7 @@ public class MultiMapActivity extends FragmentActivity
         ret = EARTH_R * Math.acos(distance);
         double rslt = Math.round(Math.round(ret) / 1000);
         Log.d("Calcdis","Result ? : "+rslt);
-        if(rslt < 1)
+        if(rslt < 1000)
         {
             return true;
         }
@@ -200,8 +213,8 @@ public class MultiMapActivity extends FragmentActivity
 
     }
 
-    public void pushSomething(){
-        GetLatLong getLatLong = new GetLatLong("20170525", 128.611354, 35.886764);
-        mUserAddressRef.push().setValue(getLatLong);
-    }
 }
+
+
+
+
