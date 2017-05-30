@@ -88,14 +88,15 @@ public class BleService extends Service {
         mAssignedItem = BeaconList.mAssignedItem;
         mScan=false;
         mHandler.sendEmptyMessage(0);
+        mTimeOut.sendEmptyMessage(0);
 
         mDatabase = FirebaseDatabase.getInstance();
-        mDatabaseRef = mDatabase.getReference();
+        mDatabaseRef = mDatabase.getReference("lost_items/");
 
         dbOpenHelper = new DbOpenHelper(getApplicationContext());
         dbOpenHelper.open();
 
-        pullLostDevices();
+        //pullLostDevices();
     }
 
 
@@ -117,6 +118,7 @@ public class BleService extends Service {
         Log.d("Service","service destory");
         mBleScan.end();
         mHandler.removeMessages(0);
+        mTimeOut.removeMessages(0);
         super.onDestroy();
 
 
@@ -178,6 +180,31 @@ public class BleService extends Service {
         }
     };
 
+    private Handler mTimeOut= new Handler()
+    {
+        public void handleMessage(Message msg)
+        {
+            Log.d("SERVICE"," in Timeout");
+            if(Values.useBLE) {
+
+                for(int i=0;i<BeaconList.mAssignedItem.size();i++)
+                {
+                    BleDeviceInfo dbi=BeaconList.mAssignedItem.get(i);
+                    dbi.timeout--;
+                    if(dbi.timeout==0)
+                    {
+                        dbi.isFar=true;
+                        pushNotification(dbi.nickname,dbi.devAddress);
+                    }
+                }
+            }
+            mTimeOut.sendEmptyMessageDelayed(0, 1000);
+
+
+
+        }
+    };
+
 
 
     public void pushNotification(String name,String devAddress)
@@ -203,6 +230,62 @@ public class BleService extends Service {
         builder.setTicker("멀어짐");
         builder.setContentTitle(name + "이 멀어졌습니다");
         builder.setContentText("분실물로 등록할까요?");
+        builder.setWhen(System.currentTimeMillis());
+        //builder.setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE);
+        builder.setVibrate(null);
+        builder.setContentIntent(pendingIntent);
+        builder.setAutoCancel(true);
+
+
+        builder.addAction(R.drawable.yes, "네", pendingIntent);
+        builder.addAction(R.drawable.no, "아니오",nothingIntent);
+        Notification noti = builder.build();
+
+
+        Notifications.notifications.put(devAddress,Notifications.cntNoti);
+        Log.d("service","NotiNum is "+Notifications.cntNoti+" there is key "+Notifications.notifications.toString());
+
+        notificationManager.notify(Notifications.cntNoti++, noti);
+
+
+//        ////        //소리추가
+//        noti.defaults = Notification.DEFAULT_SOUND;
+//
+//        //알림 소리를 한번만 내도록
+//        noti.flags = Notification.FLAG_ONLY_ALERT_ONCE;
+//
+//        //확인하면 자동으로 알림이 제거 되도록
+//        noti.flags = Notification.FLAG_AUTO_CANCEL;
+//
+//        //토스트 띄우기
+//       Toast.makeText(BleService.this, "비컨 멀어짐", Toast.LENGTH_LONG).show();
+
+
+    }
+
+    public void pushFindNotification(String name,String devAddress)
+    {
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        Intent intent = new Intent(this, RegLostDataActivity.class);
+        Intent intent2 = new Intent();
+
+        intent.putExtra("NOTI",Notifications.cntNoti);
+        intent2.putExtra("NOTI",Notifications.cntNoti);
+
+        intent.putExtra("MAC",devAddress);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent nothingIntent = PendingIntent.getActivity(this, 0, intent2, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+
+        Notification.Builder builder = new Notification.Builder(this);
+        builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.small_main_logo));
+        builder.setSmallIcon(R.drawable.main_logo);
+        builder.setTicker("감지됨");
+        builder.setContentTitle(name + "이 감지되었습니다");
+        builder.setContentText("분실물을 습득하셨나요?");
         builder.setWhen(System.currentTimeMillis());
         //builder.setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE);
         builder.setVibrate(null);
@@ -334,8 +417,32 @@ public class BleService extends Service {
         return false;
     }
 
-    public void pullLostDevices(){
+    public void pullLostDevices() {
+        mDatabaseRef
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for(DataSnapshot tempSnapshot : dataSnapshot.getChildren()) {
+                            LostDevInfo temp = new LostDevInfo();
+                            temp.setDevAddr(tempSnapshot.getKey());
+                            temp.setLatitude(Double.valueOf(tempSnapshot.child("latitude").getKey()));
+                            temp.setLatitude(Double.valueOf(tempSnapshot.child("longitude").getKey()));
+                            temp.setLostDate(tempSnapshot.child("lastdate").getKey());
 
+                            Log.d("dbTest",temp.getDevAddr());
+
+                            dbOpenHelper.insert(temp.getDevAddr(),
+                                    temp.getLatitude(),
+                                    temp.getLongitude(),
+                                    temp.getlostDate());
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
 //        mDatabaseRef.addValueEventListener(new ValueEventListener() {
 //            @Override
 //            public void onDataChange(DataSnapshot dataSnapshot) {

@@ -132,6 +132,8 @@ public class DataStoreActivity extends AppCompatActivity {
         btChoose = (Button) findViewById(R.id.btn_add_image);
         ivPreview = (ImageView) findViewById(R.id.iv_image);
 
+
+
         btChoose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

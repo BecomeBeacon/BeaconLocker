@@ -350,40 +350,42 @@ public class BluetoothScan {
         {
             Log.d("SCAN","Tracking...: "+item.devAddress);
             Log.d("SCAN","mItem : "+mItemMap.toString());
-            if(mItemMap.containsKey(item.devAddress))
-            {
-                if(BeaconList.scannedMap.containsKey(item.devAddress))
-                {
-                    Log.d("SCAN","scanned map has my item");
+            if(mItemMap.containsKey(item.devAddress)) {
+                if (BeaconList.scannedMap.containsKey(item.devAddress)) {
+                    Log.d("SCAN", "scanned map has my item");
                     BeaconList.scannedMap.remove(item.devAddress);
 
-                    for(int i=0;i<BeaconList.mArrayListBleDevice.size();i++)
-                    {
-                        if(BeaconList.mArrayListBleDevice.get(i).devAddress==item.devAddress) {
+                    for (int i = 0; i < BeaconList.mArrayListBleDevice.size(); i++) {
+                        if (BeaconList.mArrayListBleDevice.get(i).devAddress == item.devAddress) {
                             BeaconList.mArrayListBleDevice.remove(i);
-                            Log.d("SCAN","removed");
+                            Log.d("SCAN", "removed");
 
                         }
                     }
                 }
-                Log.d("SCAN","Tracking.. contain1");
-                BleDeviceInfo tItem=mItemMap.get(item.devAddress);
+                Log.d("SCAN", "Tracking.. contain1");
+                BleDeviceInfo tItem = mItemMap.get(item.devAddress);
 
-                tItem.rssi=(int) tItem.rssiKalmanFileter.update(item.rssi);
+                tItem.rssi = (int) tItem.rssiKalmanFileter.update(item.rssi);
                 KalmanRSSI = tItem.rssi;
-                tItem.distance=mBleUtils.getDistance(KalmanRSSI, item.txPower);
-                tItem.distance2=mBleUtils.getDistance_20150515(KalmanRSSI, item.txPower);
+                tItem.distance = mBleUtils.getDistance(KalmanRSSI, item.txPower);
+                tItem.distance2 = mBleUtils.getDistance_20150515(KalmanRSSI, item.txPower);
                 tItem.timeout = item.TIME_OUT;
 
-                if(Values.useGPS)
-                {
-                    tItem.setCoordinate(Values.latitude,Values.longitude);
-                    Log.d(TAG,"in useGps : lat : "+tItem.latitude+" long : "+tItem.longitude);
+                if (Values.useGPS) {
+                    tItem.setCoordinate(Values.latitude, Values.longitude);
+                    Log.d(TAG, "in useGps : lat : " + tItem.latitude + " long : " + tItem.longitude);
                 }
 
-                Log.d("SCAN",tItem.devAddress+"dist : "+tItem.distance2+" isfar? "+tItem.isFar);
+                Log.d("SCAN", tItem.devAddress + "dist : " + tItem.distance2 + " isfar? " + tItem.isFar);
 
-                if(tItem.limitDistance<tItem.distance2&&tItem.isFar!=true) {
+                if (tItem.isLost)
+                {
+                    Log.d("Notic","Key"+tItem.devAddress+" LostedItem ");
+                    mBleService.pushFindNotification(tItem.nickname,tItem.devAddress);
+
+                }
+                else if(tItem.limitDistance<tItem.distance2&&tItem.isFar!=true) {
                 //if(0.2<tItem.distance2) {
                     //멀다 팝업 띄운다
 
