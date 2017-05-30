@@ -1,6 +1,8 @@
 package com.example.becomebeacon.beaconlocker;
 
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
@@ -31,6 +33,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 
 public class MultiMapActivity extends FragmentActivity
         implements OnMapReadyCallback {
@@ -42,6 +45,8 @@ public class MultiMapActivity extends FragmentActivity
     public  FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference mUserAddressRef = mDatabase.getReference("/lost_items/");
     private FirebaseUser mUser;
+    MarkerOptions myPlace = new MarkerOptions();
+    MarkerOptions markerOptions = new MarkerOptions();
 
     //맵 개체 생성
     @Override
@@ -53,6 +58,7 @@ public class MultiMapActivity extends FragmentActivity
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
     }
 
     public void getCurrentLocation() {
@@ -67,47 +73,71 @@ public class MultiMapActivity extends FragmentActivity
     @Override
     public void onMapReady(final GoogleMap googleMap) {
         this.googleMap = googleMap;
-        final LatLng[] LOST = new LatLng[1];
+        LatLng LOST;
         getCurrentLocation();
-        Log.d("TAAG","lat : "+lat);
-        Log.d("TAAG","lon : "+lon);
-        LOST[0] = new LatLng(lat, lon);
-
+        LOST = new LatLng(lat, lon);
+        onAddMyMarker(lat,lon);
+        mHandler.sendEmptyMessage(0);
         //좌표값 세팅
-
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(LOST[0])); // 지정 좌표로 카메라 무브
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(LOST)); // 지정 좌표로 카메라 무브
         googleMap.animateCamera(CameraUpdateFactory.zoomTo(16)); // 0~20(1:세계,5:대륙,10:도시,15:거리)
         FindLostItem();
-
-        TimerTask adTast = new TimerTask() {
-
-            public void run() {
-                LOST[0]=onMoveMarker(onAddMarker(lat,lon,"on"));
-                googleMap.moveCamera(CameraUpdateFactory.newLatLng(LOST[0])); // 지정 좌표로 카메라 무브
-                googleMap.animateCamera(CameraUpdateFactory.zoomTo(16)); // 0~20(1:세계,5:대륙,10:도시,15:거리)
-            }
-
-        };
-        Timer timer = new Timer();
-        timer.schedule(adTast,3,3000);
     }
-    public LatLng onMoveMarker(MarkerOptions mark)
+
+    @Override
+    public void onDestroy() {
+        // TODO Auto-generated method stub
+        Log.d("Service","service destory");
+        mHandler.removeMessages(0);
+        super.onDestroy();
+    }
+
+    private Handler mHandler= new Handler()
+    {
+        public void handleMessage(Message msg)
+        {
+                onMoveMarker();
+                mHandler.sendEmptyMessageDelayed(0, 2000);
+        }
+    };
+
+    public void onMoveMarker()
     {
         LatLng myLocation;
         getCurrentLocation();
         myLocation = new LatLng(lat,lon);
-        mark.position(myLocation);
-        //this.googleMap.addMarker(mark);
-        return myLocation;
+        myPlace.position(myLocation);
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(myLocation)); // 지정 좌표로 카메라 무브
+        googleMap.animateCamera(CameraUpdateFactory.zoomTo(16)); // 0~20(1:세계,5:대륙,10:도시,15:거리)
+        this.googleMap.addMarker(myPlace);
     }
-
-    public MarkerOptions onAddMarker(double latt, double lont,String date) {
+    public void onAddMyMarker(double latt,double lont)
+    {
         LatLng LOST;
 
         LOST = new LatLng(latt, lont);
 
         //마커 옵션(분실물 정보, 분실 시각) 왜안되냐 도대체가
 
+        myPlace.position(LOST);
+        myPlace.icon(BitmapDescriptorFactory.defaultMarker(200f));
+        myPlace.title("현재 위치");
+
+        //마커추가
+        this.googleMap.addMarker(myPlace);
+        //정보창 클릭 리스너
+        googleMap.setOnInfoWindowClickListener(infoWindowClickListener);
+        /*
+        //마커 클릭 리스너
+        this.googleMap.setOnMarkerClickListener(markerClickListener);
+        */
+    }
+    public void onAddMarker(double latt, double lont,String date) {
+        LatLng LOST;
+
+        LOST = new LatLng(latt, lont);
+
+        //마커 옵션(분실물 정보, 분실 시각) 왜안되냐 도대체가
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(LOST);
         markerOptions.title("분실물");
@@ -123,7 +153,6 @@ public class MultiMapActivity extends FragmentActivity
         //마커 클릭 리스너
         this.googleMap.setOnMarkerClickListener(markerClickListener);
         */
-        return markerOptions;
     }
 
 
@@ -154,7 +183,7 @@ public class MultiMapActivity extends FragmentActivity
         ret = EARTH_R * Math.acos(distance);
         double rslt = Math.round(Math.round(ret) / 1000);
         Log.d("Calcdis","Result ? : "+rslt);
-        if(rslt < 1000)
+        if(rslt < 1)
         {
             return true;
         }
@@ -177,7 +206,6 @@ public class MultiMapActivity extends FragmentActivity
 
 
     public void FindLostItem() {
-        int cnt1=0,cnt2=0;
         // users/$Uid/beacons/"Address"
         mUser= LoginActivity.getUser();
 
@@ -190,11 +218,8 @@ public class MultiMapActivity extends FragmentActivity
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for(DataSnapshot addressSnapshot : dataSnapshot.getChildren()) {
                             GetLatLong getLatLong = addressSnapshot.getValue(GetLatLong.class);
-                            Log.d("FUCK","lat : "+getLatLong.latitude);
-                            Log.d("FUCK","lon : "+getLatLong.longitude);
                             if(calcDistance(getLatLong.latitude,getLatLong.longitude,lat,lon))
                             {
-                                Log.d("TTT","is in?");
                                 onAddMarker(getLatLong.latitude,getLatLong.longitude,getLatLong.lastdate);
                                 addCircle(10,getLatLong.latitude,getLatLong.longitude);
                             }
