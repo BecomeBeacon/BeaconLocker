@@ -29,6 +29,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 
 public class MultiMapActivity extends FragmentActivity
         implements OnMapReadyCallback {
@@ -84,12 +85,21 @@ public class MultiMapActivity extends FragmentActivity
         LatLng LOST;
 
         LOST = new LatLng(latt, lont);
-
-        //마커 옵션(분실물 정보, 분실 시각) 왜안되냐 도대체가
         MarkerOptions markerOptions = new MarkerOptions();
+        //마커 옵션(분실물 정보, 분실 시각) 왜안되냐 도대체가
         markerOptions.position(LOST);
-        markerOptions.title("분실물");
-        markerOptions.snippet(date);
+
+        if(date == "on")
+        {
+//            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(200f));
+            markerOptions.title("현재 위치");
+        }
+        else
+        {
+            markerOptions.title("분실물");
+            markerOptions.snippet(date);
+        }
+
 
         //마커추가
         this.googleMap.addMarker(markerOptions);
@@ -131,7 +141,7 @@ public class MultiMapActivity extends FragmentActivity
         ret = EARTH_R * Math.acos(distance);
         double rslt = Math.round(Math.round(ret) / 1000);
         Log.d("Calcdis","Result ? : "+rslt);
-        if(rslt < 1000)
+        if(rslt < 1)
         {
             return true;
         }
@@ -154,37 +164,37 @@ public class MultiMapActivity extends FragmentActivity
 
 
     public void FindLostItem() {
-            int cnt1=0,cnt2=0;
-            // users/$Uid/beacons/"Address"
-            mUser= LoginActivity.getUser();
+        int cnt1=0,cnt2=0;
+        // users/$Uid/beacons/"Address"
+        mUser= LoginActivity.getUser();
 
 
-            Log.v("Test_Print_Uid", mUser.getUid());
+        Log.v("Test_Print_Uid", mUser.getUid());
 
-            mUserAddressRef
-                    .addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            for(DataSnapshot addressSnapshot : dataSnapshot.getChildren()) {
-                                GetLatLong getLatLong = addressSnapshot.getValue(GetLatLong.class);
-                                Log.d("FUCK","lat : "+getLatLong.latitude);
-                                Log.d("FUCK","lon : "+getLatLong.longitude);
-                                if(calcDistance(getLatLong.latitude,getLatLong.longitude,lat,lon))
-                                {
-                                    Log.d("TTT","is in?");
-                                    onAddMarker(getLatLong.latitude,getLatLong.longitude,getLatLong.lastdate);
-                                    addCircle(10,getLatLong.latitude,getLatLong.longitude);
-                                }
-                                //Log.v("Test_Print_ADDR", myBeaconOnUser.address);
-
+        mUserAddressRef
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for(DataSnapshot addressSnapshot : dataSnapshot.getChildren()) {
+                            GetLatLong getLatLong = addressSnapshot.getValue(GetLatLong.class);
+                            Log.d("FUCK","lat : "+getLatLong.latitude);
+                            Log.d("FUCK","lon : "+getLatLong.longitude);
+                            if(calcDistance(getLatLong.latitude,getLatLong.longitude,lat,lon))
+                            {
+                                Log.d("TTT","is in?");
+                                onAddMarker(getLatLong.latitude,getLatLong.longitude,getLatLong.lastdate);
+                                addCircle(10,getLatLong.latitude,getLatLong.longitude);
                             }
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                            //Log.v("Test_Print_ADDR", myBeaconOnUser.address);
 
                         }
-                    });
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
 
 
 
@@ -195,7 +205,3 @@ public class MultiMapActivity extends FragmentActivity
         mUserAddressRef.push().setValue(getLatLong);
     }
 }
-
-
-
-
