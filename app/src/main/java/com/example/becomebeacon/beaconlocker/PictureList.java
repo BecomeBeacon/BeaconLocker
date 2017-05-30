@@ -10,4 +10,13 @@ import java.util.HashMap;
 
 public class PictureList {
     static public HashMap<String,Bitmap> pictures=new HashMap<>();
+
+    public static void clear()
+    {
+        for(Bitmap bm:pictures.values())
+        {
+            bm.recycle();
+        }
+        pictures.clear();
+    }
 }

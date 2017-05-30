@@ -319,7 +319,7 @@ public class BleDeviceInfo {
         this.nickname = nickname;
     }
 
-    public void setLimitDistance(int d)
+    public void setLimitDistance(double d)
     {
         this.limitDistance=d;
     }
