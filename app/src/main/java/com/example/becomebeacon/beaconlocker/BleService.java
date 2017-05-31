@@ -273,6 +273,10 @@ public class BleService extends Service {
 
     public void pushFindNotification(String name,String devAddress)
     {
+        if(Notifications.notifications.containsKey(devAddress))
+        {
+            return;
+        }
 
         Log.d("SERVICE","LostItem name : "+name+" ADRRESS : "+devAddress);
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -291,7 +295,7 @@ public class BleService extends Service {
 
         Notification.Builder builder = new Notification.Builder(this);
         builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.small_main_logo));
-        builder.setSmallIcon(R.drawable.main_logo);
+        builder.setSmallIcon(R.drawable.small_main_logo);
         builder.setTicker("감지됨");
         builder.setContentTitle(name + "이 감지되었습니다");
         builder.setContentText("분실물을 습득하셨나요?");
@@ -312,18 +316,6 @@ public class BleService extends Service {
 
         notificationManager.notify(Notifications.cntNoti++, noti);
 
-
-//        ////        //소리추가
-//        noti.defaults = Notification.DEFAULT_SOUND;
-//
-//        //알림 소리를 한번만 내도록
-//        noti.flags = Notification.FLAG_ONLY_ALERT_ONCE;
-//
-//        //확인하면 자동으로 알림이 제거 되도록
-//        noti.flags = Notification.FLAG_AUTO_CANCEL;
-//
-//        //토스트 띄우기
-//       Toast.makeText(BleService.this, "비컨 멀어짐", Toast.LENGTH_LONG).show();
 
 
     }
