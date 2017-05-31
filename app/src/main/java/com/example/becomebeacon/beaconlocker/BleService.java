@@ -275,6 +275,7 @@ public class BleService extends Service {
     public void pushFindNotification(String name,String devAddress)
     {
 
+        Log.d("SERVICE","LostItem name : "+name+" ADRRESS : "+devAddress);
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         Intent intent = new Intent(this, RegLostDataActivity.class);
         Intent intent2 = new Intent();

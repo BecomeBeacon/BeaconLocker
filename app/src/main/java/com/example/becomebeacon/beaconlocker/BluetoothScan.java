@@ -366,7 +366,7 @@ public class BluetoothScan {
                     bdi=mItemMap.get(item.devAddress);
                     if(bdi.isLost) {
                         Log.d("Notic", "Key" + item.devAddress + " LostedItem ");
-                        mBleService.pushFindNotification(item.nickname, item.devAddress);
+                        //mBleService.pushFindNotification(item.nickname, item.devAddress);
                     }
                 }
                 //다른사람
@@ -415,6 +415,7 @@ public class BluetoothScan {
                 if(tItem.isLost)
                 {
                     Log.d("SCAN", tItem.devAddress+" is lost");
+
                 }
                 else if(tItem.isLost!=true&&tItem.limitDistance<tItem.distance2&&tItem.isFar!=true) {
                 //if(0.2<tItem.distance2) {
@@ -436,6 +437,7 @@ public class BluetoothScan {
                         NotificationManager notificationManager = (NotificationManager)BleService.mContext.getSystemService(Context.NOTIFICATION_SERVICE);
                         notificationManager.cancel(Notifications.notifications.get(tItem.devAddress));
                         Log.d("Notic","NotiNum is "+Notifications.notifications.get(tItem.devAddress)+" there is key "+Notifications.notifications.toString());
+
                         //Notifications.notifications.remove(tItem.devAddress);
 
 

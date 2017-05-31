@@ -65,7 +65,16 @@ public class RegLostDataActivity extends AppCompatActivity implements OnMapReady
 //        devInfo.setLongetude(128.609486);
 
         SimpleDateFormat CurDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        devInfo.setLostDate(CurDateFormat.format(bleDeviceInfo.lastDate));
+        if(bleDeviceInfo.lastDate!=null) {
+            Log.d("RLDA", "date : " + CurDateFormat.format(bleDeviceInfo.lastDate));
+
+            devInfo.setLostDate(CurDateFormat.format(bleDeviceInfo.lastDate));
+        }
+        else
+        {
+            Log.d("RLDA", "date : null");
+            devInfo.setLostDate("NO-DATE");
+        }
 
         Log.d("RLDA","devInfo : "+devInfo.getDevAddr()+" "+devInfo.getLatitude()+" "+devInfo.getLongitude());
 
