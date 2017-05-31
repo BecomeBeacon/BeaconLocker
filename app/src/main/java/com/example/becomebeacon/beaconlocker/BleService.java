@@ -92,7 +92,6 @@ public class BleService extends Service {
         mTimeOut.sendEmptyMessage(0);
 
         mDatabase = FirebaseDatabase.getInstance();
-        mDatabaseRef = mDatabase.getReference("lost_items/");
 
         dbOpenHelper = new DbOpenHelper(getApplicationContext());
         dbOpenHelper.open();
@@ -428,6 +427,8 @@ public class BleService extends Service {
     }
 
     public void pullLostDevices() {
+
+        mDatabaseRef = mDatabase.getReference("lost_items/");
         mDatabaseRef
                 .addValueEventListener(new ValueEventListener() {
 
