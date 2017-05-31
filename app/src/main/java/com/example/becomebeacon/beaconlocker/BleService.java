@@ -418,6 +418,7 @@ public class BleService extends Service {
 //        return builder;
 //    }
 
+
     public boolean isServiceRunningCheck() {
         ActivityManager manager = (ActivityManager) this.getSystemService(Activity.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
@@ -438,15 +439,19 @@ public class BleService extends Service {
                             LostDevInfo temp = new LostDevInfo();
 
                             temp.setDevAddr(tempSnapshot.getKey());
+                            Log.d("SNAP","snapshot : "+tempSnapshot.toString());
 
+                            temp.setLostDate(tempSnapshot.child("lastdate").getValue().toString());
                             temp.setLatitude(Double.valueOf(tempSnapshot.child("latitude").getValue().toString()));
                             temp.setLongetude(Double.valueOf(tempSnapshot.child("longitude").getValue().toString()));
-                            temp.setLostDate(tempSnapshot.child("lastdate").getValue().toString());
 
 
-                            Log.d("bleService", temp.getDevAddr());
-                            Log.d("bleService", ""+temp.getLatitude());
-                            Log.d("bleService", ""+temp.getLongitude());
+
+                            Log.d("SNAP", temp.getDevAddr());
+                            Log.d("SNAP", ""+temp.getLatitude());
+                            Log.d("SNAP", ""+temp.getLongitude());
+
+
 
                             if(dbOpenHelper.uniqueTest(temp.getDevAddr())) {
                                 dbOpenHelper.execSQL("INSERT INTO lost_devices VALUES('" + temp.getDevAddr() + "'," +

@@ -43,7 +43,7 @@ public class RegLostDataActivity extends AppCompatActivity implements OnMapReady
         int noti=notiIntent.getIntExtra("NOTI",-1);
 
         if(noti!=-1) {
-            NotificationManager notificationManager = (NotificationManager) BleService.mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.cancel(noti);
         }
 
