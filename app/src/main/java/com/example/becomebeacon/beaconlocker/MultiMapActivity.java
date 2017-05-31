@@ -45,8 +45,11 @@ public class MultiMapActivity extends FragmentActivity
     public  FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference mUserAddressRef = mDatabase.getReference("/lost_items/");
     private FirebaseUser mUser;
-    MarkerOptions myPlace = new MarkerOptions();
+    Marker m;
+
+    //MarkerOptions myPlace = new MarkerOptions();
     MarkerOptions markerOptions = new MarkerOptions();
+
 
     //맵 개체 생성
     @Override
@@ -96,21 +99,30 @@ public class MultiMapActivity extends FragmentActivity
     {
         public void handleMessage(Message msg)
         {
-                onMoveMarker();
+                m.remove();
+                Making();
                 mHandler.sendEmptyMessageDelayed(0, 2000);
         }
     };
-
+    /*
     public void onMoveMarker()
     {
         LatLng myLocation;
         getCurrentLocation();
         myLocation = new LatLng(lat,lon);
         myPlace.position(myLocation);
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(myLocation)); // 지정 좌표로 카메라 무브
-        googleMap.animateCamera(CameraUpdateFactory.zoomTo(16)); // 0~20(1:세계,5:대륙,10:도시,15:거리)
-        this.googleMap.addMarker(myPlace);
+        //this.googleMap.addMarker(myPlace);
     }
+    */
+    public void Making()
+    {
+        LatLng myLocation;
+        getCurrentLocation();
+        myLocation = new LatLng(lat,lon);
+        m = this.googleMap.addMarker(markerOptions.position(myLocation).
+                icon(BitmapDescriptorFactory.defaultMarker(200f)).title("현재 위치"));
+    }
+
     public void onAddMyMarker(double latt,double lont)
     {
         LatLng LOST;
@@ -118,13 +130,14 @@ public class MultiMapActivity extends FragmentActivity
         LOST = new LatLng(latt, lont);
 
         //마커 옵션(분실물 정보, 분실 시각) 왜안되냐 도대체가
-
+        /*
         myPlace.position(LOST);
         myPlace.icon(BitmapDescriptorFactory.defaultMarker(200f));
         myPlace.title("현재 위치");
-
+        */
         //마커추가
-        this.googleMap.addMarker(myPlace);
+        m = this.googleMap.addMarker(markerOptions.position(LOST).
+                icon(BitmapDescriptorFactory.defaultMarker(200f)).title("현재 위치"));
         //정보창 클릭 리스너
         googleMap.setOnInfoWindowClickListener(infoWindowClickListener);
         /*
