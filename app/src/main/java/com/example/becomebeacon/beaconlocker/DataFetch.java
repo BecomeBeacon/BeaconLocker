@@ -66,6 +66,7 @@ public class DataFetch {
 
                             findBeaconByAddress(myBeaconOnUser.address);
                         }
+                        GetMainActivity.getMainActity().mainProgressDialog.dismiss();
                     }
 
                     @Override
