@@ -11,6 +11,7 @@ import android.os.Message;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -96,7 +97,7 @@ public class DataStoreActivity extends AppCompatActivity {
         toolbar.setSubtitle("BLE 등록");
 
         toolbar.setTitleTextColor(Color.WHITE);
-        toolbar.setSubtitleTextColor(Color.GRAY);
+        toolbar.setSubtitleTextColor(ContextCompat.getColor(DataStoreActivity.this, R.color.colorSubtitle));
 
         if(getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
