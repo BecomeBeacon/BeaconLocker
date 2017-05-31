@@ -1,12 +1,13 @@
 package com.example.becomebeacon.beaconlocker.database;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 /**
- * Created by gwmail on 2017-04-26.
+ * Created by heeseung on 2017-05-30.
  */
 
 public class DbOpenHelper {
@@ -28,14 +29,13 @@ public class DbOpenHelper {
         // 최초 DB를 만들때 한번만 호출된다.
         @Override
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL(DeviceDatabase.CreateDB._CREATE);
-
+            db.execSQL(DataBases.CreateDB._CREATE);
         }
 
         // 버전이 업데이트 되었을 경우 DB를 다시 만들어 준다.
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            db.execSQL("DROP TABLE IF EXISTS "+DeviceDatabase.CreateDB._TABLENAME);
+            db.execSQL("DROP TABLE IF EXISTS "+DataBases.CreateDB._TABLENAME);
             onCreate(db);
         }
     }
@@ -48,17 +48,20 @@ public class DbOpenHelper {
         mDBHelper = new DatabaseHelper(mCtx, DATABASE_NAME, null, DATABASE_VERSION);
         mDB = mDBHelper.getWritableDatabase();
         return this;
-    }   // getWritableDatabase() = DB사용권한 부여
+    }
 
     public void close(){
         mDB.close();
     }
 
-    public void insert(String devAddr, double latitude, double longitude, String lostDate) {
-        // 읽고 쓰기가 가능하게 DB 열기
-        SQLiteDatabase db = mDBHelper.getWritableDatabase();
-        // DB에 입력한 값으로 행 추가
-        db.execSQL("INSERT INTO lostDevices VALUES(null, '" + devAddr + "', " + latitude + ", '" + longitude + ", '" + lostDate + "');");
-        db.close();
+    public void execSQL(String query) {
+        mDB.execSQL(query);
+    }
+
+    public boolean uniqueTest(String devAddr) {
+        if (mDB.rawQuery("SELECT * FROM lost_devices WHERE devaddr = ?", new String[] {devAddr}) == null)
+            return true;
+        else
+            return false;
     }
 }

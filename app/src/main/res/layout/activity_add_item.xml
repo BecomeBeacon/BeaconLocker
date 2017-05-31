@@ -106,7 +106,7 @@
             android:layout_alignStart="@+id/et_NICKNAME" />
 
         <EditText
-            android:id="@+id/editText"
+            android:id="@+id/et_Limit_distance"
             android:layout_width="258dp"
             android:layout_height="49dp"
             android:layout_alignStart="@+id/textView12"
@@ -114,7 +114,7 @@
             android:layout_column="1"
             android:layout_row="1"
             android:drawableLeft="@drawable/ic_create"
-            android:inputType="textPersonName"
+            android:inputType="numberDecimal"
             android:text=""
             android:textSize="15sp" />
 

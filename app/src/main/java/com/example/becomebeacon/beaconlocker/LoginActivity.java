@@ -99,6 +99,12 @@ public class LoginActivity extends AppCompatActivity implements
 
     }
     // [END on_start_check_user]
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+
+    }
 
     // [START onactivityresult]
     @Override
@@ -207,12 +213,14 @@ public class LoginActivity extends AppCompatActivity implements
             Log.d("sss","updateUI not null");
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
-
+            finish();
 
         } else {
 
         }
     }
+
+
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
