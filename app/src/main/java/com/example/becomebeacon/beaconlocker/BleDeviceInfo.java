@@ -6,6 +6,8 @@ package com.example.becomebeacon.beaconlocker;
 
 import android.bluetooth.BluetoothDevice;
 
+import java.util.Date;
+
 public class BleDeviceInfo {
 
     public static int TIME_OUT = 20;
@@ -31,6 +33,7 @@ public class BleDeviceInfo {
     public String hwVersion;           // H/W Version
     public String fwVersion;           // Firmware Version
     public KalmanFilter rssiKalmanFileter;
+    public Date lastDate;
 
     //User info
     public String nickname;
