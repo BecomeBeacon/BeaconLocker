@@ -59,7 +59,6 @@ public class BleService extends Service {
     private GpsInfo gps;
 
     private FirebaseDatabase mDatabase;
-    private DatabaseReference mDatabaseRef;
     private DbOpenHelper dbOpenHelper;
 
 //    NotificationManager Notifi_M;
@@ -430,8 +429,7 @@ public class BleService extends Service {
 
     public void pullLostDevices() {
 
-        mDatabaseRef = mDatabase.getReference("lost_items/");
-        mDatabaseRef
+        mDatabase.getReference("lost_items/")
                 .addValueEventListener(new ValueEventListener() {
 
                     @Override
