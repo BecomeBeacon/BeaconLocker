@@ -389,8 +389,7 @@ public class BluetoothScan {
                 Log.d("SCAN", "Tracking.. contain1");
                 BleDeviceInfo tItem = mItemMap.get(item.devAddress);
 
-                long now=System.currentTimeMillis();
-                tItem.lastDate=new Date(now);
+
                 tItem.rssi = (int) tItem.rssiKalmanFileter.update(item.rssi);
                 KalmanRSSI = tItem.rssi;
                 tItem.distance = mBleUtils.getDistance(KalmanRSSI, item.txPower);
@@ -400,6 +399,8 @@ public class BluetoothScan {
                 if (Values.useGPS) {
                     tItem.setCoordinate(Values.latitude, Values.longitude);
                     Log.d(TAG, "in useGps : lat : " + tItem.latitude + " long : " + tItem.longitude);
+                    long now=System.currentTimeMillis();
+                    tItem.lastDate=new Date(now);
                 }
 
                 Log.d("SCAN", tItem.devAddress + "dist : " + tItem.distance2 + " isfar? " + tItem.isFar);
