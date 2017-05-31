@@ -95,7 +95,7 @@ public class BleService extends Service {
 
         dbOpenHelper = new DbOpenHelper(getApplicationContext());
         dbOpenHelper.open();
-        /*
+
         dbOpenHelper.execSQL("CREATE TABLE IF NOT EXISTS lost_devices ( " +
                 "devaddr VARCHAR(32) NOT NULL, " +
                 "latitude DOUBLE NOT NULL, " +
@@ -103,7 +103,7 @@ public class BleService extends Service {
                 "lastdate VARCHAR(32) NOT NULL, " +
                 "PRIMARY KEY (devaddr));"
         );
-        */
+
         pullLostDevices();
     }
 
