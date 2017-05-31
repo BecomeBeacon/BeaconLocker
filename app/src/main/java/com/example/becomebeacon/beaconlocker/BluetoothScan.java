@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 
 import com.estimote.sdk.connection.internal.protocols.Operation;
+import com.example.becomebeacon.beaconlocker.database.DbOpenHelper;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -351,6 +352,27 @@ public class BluetoothScan {
         {
             Log.d("SCAN","Tracking...: "+item.devAddress);
             Log.d("SCAN","mItem : "+mItemMap.toString());
+
+            DbOpenHelper dbOpenHelper = new DbOpenHelper(BleService.mContext.getApplicationContext());
+
+            dbOpenHelper.open();
+
+            if(!dbOpenHelper.uniqueTest(item.devAddress)) //있을때 if문 작동함
+            {
+                BleDeviceInfo bdi;
+                //내꺼
+                if(mItemMap.containsKey(item.devAddress))
+                {
+                    bdi=mItemMap.get(item.devAddress);
+                    if(bdi.isLost) {
+                        Log.d("Notic", "Key" + item.devAddress + " LostedItem ");
+                        mBleService.pushFindNotification(item.nickname, item.devAddress);
+                    }
+                }
+                //다른사람
+
+            }
+
             if(mItemMap.containsKey(item.devAddress)) {
                 if (BeaconList.scannedMap.containsKey(item.devAddress)) {
                     Log.d("SCAN", "scanned map has my item");
@@ -382,13 +404,18 @@ public class BluetoothScan {
 
                 Log.d("SCAN", tItem.devAddress + "dist : " + tItem.distance2 + " isfar? " + tItem.isFar);
 
-                if (tItem.isLost)
+//                if (tItem.isLost)
+//                {
+//                    Log.d("Notic","Key"+tItem.devAddress+" LostedItem ");
+//                    mBleService.pushFindNotification(tItem.nickname,tItem.devAddress);
+//
+//
+//                }
+                if(tItem.isLost)
                 {
-                    Log.d("Notic","Key"+tItem.devAddress+" LostedItem ");
-                    mBleService.pushFindNotification(tItem.nickname,tItem.devAddress);
-
+                    Log.d("SCAN", tItem.devAddress+" is lost");
                 }
-                else if(tItem.limitDistance<tItem.distance2&&tItem.isFar!=true) {
+                else if(tItem.isLost!=true&&tItem.limitDistance<tItem.distance2&&tItem.isFar!=true) {
                 //if(0.2<tItem.distance2) {
                     //멀다 팝업 띄운다
 
