@@ -3,11 +3,14 @@ package com.example.becomebeacon.beaconlocker;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -40,6 +43,21 @@ public class SettingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
+
+        //툴바 세팅
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_additem);
+        setSupportActionBar(toolbar);
+
+        toolbar.setTitle(R.string.app_name);
+        toolbar.setSubtitle("세팅");
+
+        toolbar.setTitleTextColor(Color.WHITE);
+        toolbar.setSubtitleTextColor(ContextCompat.getColor(SettingActivity.this, R.color.colorSubtitle));
+
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
         Gps = new GpsInfo(this,this);
         mContext=this;
 
@@ -57,17 +75,6 @@ public class SettingActivity extends AppCompatActivity {
 
         scanOnOff.setOnCheckedChangeListener(new myListener());
         gpsSwitch.setOnCheckedChangeListener(new myListener());
-
-
-
-
-
-
-
-
-
-
-
     }
 
     public void onResume()
@@ -134,6 +141,17 @@ public class SettingActivity extends AppCompatActivity {
         editor.commit();
 
         mContext=null;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(android.view.MenuItem item) {
+        switch(item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data)

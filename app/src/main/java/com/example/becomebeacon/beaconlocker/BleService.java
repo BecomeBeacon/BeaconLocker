@@ -9,6 +9,7 @@ import android.app.Service;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
@@ -443,19 +444,22 @@ public class BleService extends Service {
                             temp.setLostDate(tempSnapshot.child("lastdate").getValue().toString());
 
 
+                            Log.d("bleService", temp.getDevAddr());
+                            Log.d("bleService", ""+temp.getLatitude());
+                            Log.d("bleService", ""+temp.getLongitude());
+
                             if(dbOpenHelper.uniqueTest(temp.getDevAddr())) {
                                 dbOpenHelper.execSQL("INSERT INTO lost_devices VALUES('" + temp.getDevAddr() + "'," +
                                         temp.getLatitude() + "," +
                                         temp.getLongitude() + ", '" +
                                         temp.getLostDate() + "')"
                                 );
+                                Log.d("bleService", temp.getDevAddr());
+                                Log.d("bleService", ""+temp.getLatitude());
+                                Log.d("bleService", ""+temp.getLongitude());
                             }
-                            /*
-                            dbOpenHelper.insert(temp.getDevAddr(),
-                                    temp.getLatitude(),
-                                    temp.getLongitude(),
-                                    temp.getlostDate());
-                                    */
+
+                            Cursor cursor = dbOpenHelper.selectQuery("SELECT devaddr FROM lost_devices");
                         }
                     }
 
