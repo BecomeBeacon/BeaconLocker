@@ -49,7 +49,10 @@ public class DataFetch {
     // users/$Uid/beacons/"Address"
         mUser= LoginActivity.getUser();
 
-        mUserAddressRef = mDatabase.getReference("users/"+mUser.getUid()+"/beacons");
+        if(mUser!=null)
+            mUserAddressRef = mDatabase.getReference("users/" + mUser.getUid() + "/beacons");
+
+
 
         Log.v("Test_Print_Uid", mUser.getUid());
 
@@ -63,6 +66,7 @@ public class DataFetch {
 
                             findBeaconByAddress(myBeaconOnUser.address);
                         }
+                        GetMainActivity.getMainActity().mainProgressDialog.dismiss();
                     }
 
                     @Override
@@ -83,10 +87,12 @@ public class DataFetch {
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        final BleDeviceInfo bleDeviceInfo;bleDeviceInfo = dataSnapshot.getValue(BleDeviceInfo.class);
+                        final BleDeviceInfo bleDeviceInfo;
+                        bleDeviceInfo = dataSnapshot.getValue(BleDeviceInfo.class);
 
-                        Log.d("DF", "datasnapshot bleinfo" + bleDeviceInfo.getDevAddress());
+
                         if(bleDeviceInfo!=null) {
+                            Log.d("DF", "datasnapshot bleinfo" + bleDeviceInfo.getDevAddress());
 
                             if(!myItemMap.containsKey(myAddress)) {
 

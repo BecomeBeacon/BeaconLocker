@@ -60,6 +60,7 @@ public class DataStoreActivity extends AppCompatActivity {
 
     private TextView et_Address;
     private EditText et_Nickname;
+    private EditText et_Limit_distance;
     //private TextView et_Picture;
     //private EditText et_Islost;
     //private EditText et_LATITUDE;
@@ -77,9 +78,7 @@ public class DataStoreActivity extends AppCompatActivity {
     private static final int CROP_SMALL_PICTURE = 2;
     private static Uri tempUri;
     private Bitmap mBitmap;
-
-    private boolean isReady = false;
-
+    private ProgressDialog progressDialog = null;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +109,7 @@ public class DataStoreActivity extends AppCompatActivity {
 
         et_Address = (TextView) findViewById(R.id.et_address);
         et_Nickname = (EditText) findViewById(R.id.et_NICKNAME);
+        et_Limit_distance = (EditText) findViewById(R.id.et_Limit_distance);
         //et_Picture = (TextView) findViewById(R.id.et_PICTURE);
         //et_LATITUDE = (EditText) findViewById(R.id.et_LATITUDE);
         //et_LONGITUDE = (EditText) findViewById(R.id.et_LONGITUDE);
@@ -149,6 +149,16 @@ public class DataStoreActivity extends AppCompatActivity {
 
     }
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+            progressDialog = null;
+        }
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_additem, menu);
         return true;
@@ -181,12 +191,13 @@ public class DataStoreActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Nickname 값이 없습니다. 다시 시도해 주세요.", Toast.LENGTH_SHORT).show();
             return;
         }
-        //else if (et_Picture.getText().toString().isEmpty()) {
-        //    Toast.makeText(getApplicationContext(), "Picture 값이 없습니다. 다시 시도해 주세요.", Toast.LENGTH_SHORT).show();
-        //    return;
-        //}
+        else if (et_Limit_distance.getText().toString().isEmpty()) {
+            Toast.makeText(getApplicationContext(), "한계거리 값이 없습니다. 다시 시도해 주세요.", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         //'users' 에 소지한 비콘 Address 넣기
+
 
         BleDeviceInfo bleDeviceInfo = DeviceInfoStore.getBleInfo();
         BeaconOnUser beaconOnUser = new BeaconOnUser(bleDeviceInfo.getDevAddress());
@@ -195,12 +206,9 @@ public class DataStoreActivity extends AppCompatActivity {
 
         //store beacon info to 'Beacon' DB in Uid order
         bleDeviceInfo.setNickname(et_Nickname.getText().toString());
+        bleDeviceInfo.setLimitDistance(Double.valueOf(et_Limit_distance.getText().toString()));
         if (filePath != null) {
             bleDeviceInfo.setPictureUri(uploadFile());
-        }
-
-        else {
-            isReady = true;
         }
             mDatabase
                     .getReference("beacon/")
@@ -211,7 +219,6 @@ public class DataStoreActivity extends AppCompatActivity {
                         public void onSuccess(Void aVoid) {
                             Toast.makeText(getApplicationContext(), "서버에 저장되었습니다.", Toast.LENGTH_LONG).show();
                             initData();
-                            while(!isReady);
                             finish();
                         }
                     })
@@ -221,7 +228,6 @@ public class DataStoreActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "저장에 실패하였습니다.", Toast.LENGTH_LONG).show();
                         }
                     });
-
             BeaconList.scannedMap.remove(bleDeviceInfo.devAddress);
             Log.d("dataStoreActivity", "size : " + BeaconList.mArrayListBleDevice.size());
             for (int i = 0; i < BeaconList.mArrayListBleDevice.size(); i++) {
@@ -256,8 +262,10 @@ public class DataStoreActivity extends AppCompatActivity {
         //업로드할 파일이 있으면 수행
         Log.v("Test","Filepath in uploadFile = " + String.valueOf(filePath));
         //업로드 진행 Dialog 보이기
-        final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("업로드중...");
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setMessage("업로드중...");
         progressDialog.show();
 
         //storage
@@ -274,28 +282,26 @@ public class DataStoreActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        progressDialog.dismiss(); //업로드 진행 Dialog 상자 닫기
+//                        progressDialog.dismiss(); //업로드 진행 Dialog 상자 닫기
                         Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
-                        isReady = true;
                     }
                 })
                 //실패시
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        progressDialog.dismiss();
+//                        progressDialog.dismiss();
                         Toast.makeText(getApplicationContext(), "업로드 실패!", Toast.LENGTH_SHORT).show();
-                        isReady = true;
                     }
                 })
                 //진행중
                 .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                        @SuppressWarnings("VisibleForTests")
-                        double progress = (100 * taskSnapshot.getBytesTransferred()) /  taskSnapshot.getTotalByteCount();
-                        //dialog에 진행률을 퍼센트로 출력해 준다
-                        progressDialog.setMessage("Uploaded " + ((int) progress) + "% ...");
+//                        @SuppressWarnings("VisibleForTests")
+//                        double progress = (100 * taskSnapshot.getBytesTransferred()) /  taskSnapshot.getTotalByteCount();
+//                        //dialog에 진행률을 퍼센트로 출력해 준다
+//                        progressDialog.setMessage("Uploaded " + ((int) progress) + "% ...");
                     }
                 });
         return "beacon_images/" + filename;

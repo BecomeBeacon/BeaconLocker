@@ -104,6 +104,8 @@ public class MainActivity extends AppCompatActivity
     private BleDeviceListAdapter mBleDeviceListAdapter;
     private MyBeaconsListAdapter mBeaconsListAdapter;
 
+    public ProgressDialog mainProgressDialog = null;
+
 
 
     private boolean mScan;
@@ -216,6 +218,11 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mainProgressDialog = new ProgressDialog(this);
+        mainProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mainProgressDialog.setMessage("목록을 불러오는 중...");
+        mainProgressDialog.show();
+
         BeaconList.refresh();
 
         mBleUtils=new BleUtils();
@@ -315,7 +322,6 @@ public class MainActivity extends AppCompatActivity
 
                     scannedBeacons.setVisibility(View.GONE);
                     mBleScan.changeMod(Values.USE_NOTHING);
-
                 }
 
 
@@ -529,9 +535,16 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_logout) {
             signOut();
+
+            //Memory 비우기
             mHandler.removeMessages(0);
             mTimeOut.removeMessages(0);
             stopBleService();
+            PictureList.clear();
+
+            //새 인텐트 불러오기
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
             finish();
 
         }
