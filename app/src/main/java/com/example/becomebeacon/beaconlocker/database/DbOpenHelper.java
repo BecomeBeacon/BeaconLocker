@@ -64,4 +64,8 @@ public class DbOpenHelper {
         else
             return false;
     }
+
+    public Cursor selectQuery(String query){
+        return mDB.rawQuery(query, null);
+    }
 }
