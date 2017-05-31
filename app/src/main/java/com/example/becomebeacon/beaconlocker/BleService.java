@@ -95,8 +95,16 @@ public class BleService extends Service {
 
         dbOpenHelper = new DbOpenHelper(getApplicationContext());
         dbOpenHelper.open();
-
-        //pullLostDevices();
+        /*
+        dbOpenHelper.execSQL("CREATE TABLE IF NOT EXISTS lost_devices ( " +
+                "devaddr VARCHAR(32) NOT NULL, " +
+                "latitude DOUBLE NOT NULL, " +
+                "longitude DOUBLE NOT NULL, " +
+                "lastdate VARCHAR(32) NOT NULL, " +
+                "PRIMARY KEY (devaddr));"
+        );
+        */
+        pullLostDevices();
     }
 
 
@@ -421,21 +429,32 @@ public class BleService extends Service {
     public void pullLostDevices() {
         mDatabaseRef
                 .addValueEventListener(new ValueEventListener() {
+
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for(DataSnapshot tempSnapshot : dataSnapshot.getChildren()) {
                             LostDevInfo temp = new LostDevInfo();
+
                             temp.setDevAddr(tempSnapshot.getKey());
-                            temp.setLatitude(Double.valueOf(tempSnapshot.child("latitude").getKey()));
-                            temp.setLatitude(Double.valueOf(tempSnapshot.child("longitude").getKey()));
-                            temp.setLostDate(tempSnapshot.child("lastdate").getKey());
 
-                            Log.d("dbTest",temp.getDevAddr());
+                            temp.setLatitude(Double.valueOf(tempSnapshot.child("latitude").getValue().toString()));
+                            temp.setLongetude(Double.valueOf(tempSnapshot.child("longitude").getValue().toString()));
+                            temp.setLostDate(tempSnapshot.child("lastdate").getValue().toString());
 
+
+                            if(dbOpenHelper.uniqueTest(temp.getDevAddr())) {
+                                dbOpenHelper.execSQL("INSERT INTO lost_devices VALUES('" + temp.getDevAddr() + "'," +
+                                        temp.getLatitude() + "," +
+                                        temp.getLongitude() + ", '" +
+                                        temp.getLostDate() + "')"
+                                );
+                            }
+                            /*
                             dbOpenHelper.insert(temp.getDevAddr(),
                                     temp.getLatitude(),
                                     temp.getLongitude(),
                                     temp.getlostDate());
+                                    */
                         }
                     }
 

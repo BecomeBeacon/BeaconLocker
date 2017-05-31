@@ -32,5 +32,5 @@ public class LostDevInfo {
 
     public String getDevAddr(){return devAddr;}
 
-    public String getlostDate(){return lostDate;}
+    public String getLostDate(){return lostDate;}
 }
