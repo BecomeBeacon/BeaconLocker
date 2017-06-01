@@ -59,7 +59,6 @@ public class RegLostDataActivity extends AppCompatActivity implements OnMapReady
         devInfo.setDevAddr(bleDeviceInfo.getDevAddress());
         devInfo.setLatitude(Double.valueOf(bleDeviceInfo.latitude));
         devInfo.setLongitude(Double.valueOf(bleDeviceInfo.longitude));
-        devInfo.setLongetude(Double.valueOf(bleDeviceInfo.longitude));
 //        devInfo.setDevAddr("EE:EE:EE:EE:EE:EE");
 //        devInfo.setLatitude(35.885661);
 //        devInfo.setLongetude(128.609486);

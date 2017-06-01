@@ -434,35 +434,22 @@ public class BleService extends Service {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for(DataSnapshot tempSnapshot : dataSnapshot.getChildren()) {
-                            //LostDevInfo temp = new LostDevInfo();
-//                            temp.setDevAddr(tempSnapshot.getKey());
-//                            temp.setLostDate(tempSnapshot.child("lastdate").getValue().toString());
-//                            temp.setLatitude(Double.valueOf(tempSnapshot.child("latitude").getValue().toString()));
-//                            temp.setLongetude(Double.valueOf(tempSnapshot.child("longitude").getValue().toString()));
 
-                            GetLatLong lostInfo = tempSnapshot.getValue(LostDevInfo.class);
-
-                            temp.setLatitude(Double.valueOf(tempSnapshot.child("latitude").getValue().toString()));
-                            temp.setLongitude(Double.valueOf(tempSnapshot.child("longitude").getValue().toString()));
-                            temp.setLostDate(tempSnapshot.child("lastdate").getValue().toString());
+                            LostDevInfo lostDevInfo = tempSnapshot.getValue(LostDevInfo.class);
                             Log.d("SNAP","snapshot : "+tempSnapshot.toString());
-
-
-
-
 
                             if(dbOpenHelper.uniqueTest(tempSnapshot.getKey())) {
                                 dbOpenHelper.execSQL("INSERT INTO lost_devices VALUES('" + tempSnapshot.getKey() + "'," +
-                                        lostInfo.latitude + "," +
-                                        lostInfo.longitude + ", '" +
-                                        lostInfo.lastdate + "')"
+                                        lostDevInfo.getLatitude() + "," +
+                                        lostDevInfo.getLongitude() + ", '" +
+                                        lostDevInfo.getLostDate() + "')"
                                 );
-                                Log.d("DATABASE", ""+lostInfo.latitude);
-                                Log.d("DATABASE", ""+lostInfo.longitude);
-                                Log.d("DATABASE", ""+lostInfo.lastdate);
+                                Log.d("DATABASE", ""+lostDevInfo.getLatitude());
+                                Log.d("DATABASE", ""+lostDevInfo.getLongitude());
+                                Log.d("DATABASE", ""+lostDevInfo.getLostDate());
                             }
                             else{
-                                Log.d("DATABASE","already exist key : "+lostInfo.toString());
+                                Log.d("DATABASE","already exist key : "+lostDevInfo.toString());
                             }
 
                             Cursor cursor = dbOpenHelper.selectQuery("SELECT devaddr FROM lost_devices");

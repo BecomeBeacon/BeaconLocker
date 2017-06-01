@@ -21,8 +21,6 @@ public class BleDeviceInfo {
     public int timeout;                // defatlt: 10; decrease per second
 
     public double limitDistance;
-    public int major;                  // Major
-    public int minor;                  // Minor
     public int measuredPower;          // Measured Power
     public int txPower;                // Tx Power
     public int rssi;                   // RSSI
@@ -30,8 +28,6 @@ public class BleDeviceInfo {
     public double distance2;            // Distance
 
     //Device Info
-    public String hwVersion;           // H/W Version
-    public String fwVersion;           // Firmware Version
     public KalmanFilter rssiKalmanFileter;
     public Date lastDate;
 
@@ -49,6 +45,8 @@ public class BleDeviceInfo {
     public String uid;
     public String userName;
 
+    public String pictureLink;
+
     //Constructor
     public BleDeviceInfo() {
         isCheckLocation=false;
@@ -58,17 +56,12 @@ public class BleDeviceInfo {
         this.isFar=false;
         this.isLost=false;
 
-        this.major = 0;
-        this.minor = 0;
         this.measuredPower = 0;
         this.txPower = 0;
         this.rssi = 0;
         this.distance = 0;
         this.distance2 = 0;
         this.limitDistance=Values.basicLimitDistance;
-
-        this.hwVersion = "";
-        this.fwVersion = "";
 
         this.rssiKalmanFileter = new KalmanFilter(0);
 
@@ -79,6 +72,8 @@ public class BleDeviceInfo {
         this.longitude = "";
         this.uid = LoginActivity.getUser().getUid();
         this.userName = LoginActivity.getUser().getDisplayName();
+
+        this.pictureLink = "";
     }
 
     //Constructor
@@ -89,16 +84,11 @@ public class BleDeviceInfo {
         this.devAddress = devAddress;
         this.limitDistance=Values.basicLimitDistance;
         this.isFar=false;
-        this.major = 0;
-        this.minor = 0;
         this.measuredPower = 0;
         this.txPower = 0;
         this.rssi = 0;
         this.distance = 0;
         this.distance2 = 0;
-
-        this.hwVersion = "";
-        this.fwVersion = "";
 
         this.rssiKalmanFileter = new KalmanFilter(0);
 
@@ -110,6 +100,8 @@ public class BleDeviceInfo {
 
         this.uid = LoginActivity.getUser().getUid();
         this.userName = LoginActivity.getUser().getDisplayName();
+
+        this.pictureLink = "";
     }
 
 
@@ -124,8 +116,6 @@ public class BleDeviceInfo {
         this.proximityUuid = proximityUuid;
         this.devName = devName;
         this.devAddress = devAddress;
-        this.major = major;
-        this.minor = minor;
         this.measuredPower = mPower;
         this.txPower = txPower;
         this.isFar=false;
@@ -146,6 +136,8 @@ public class BleDeviceInfo {
 
         this.uid = LoginActivity.getUser().getUid();
         this.userName = LoginActivity.getUser().getDisplayName();
+
+        this.pictureLink = "";
     }
 
     // Measured Power 제외, 거리 1개
@@ -157,8 +149,6 @@ public class BleDeviceInfo {
         this.proximityUuid = proximityUuid;
         this.devName = devName;
         this.devAddress = devAddress;
-        this.major = major;
-        this.minor = minor;
         //this.measuredPower = mPower;
         this.txPower = txPower;
         this.limitDistance=Values.basicLimitDistance;
@@ -177,6 +167,8 @@ public class BleDeviceInfo {
 
         this.uid = LoginActivity.getUser().getUid();
         this.userName = LoginActivity.getUser().getDisplayName();
+
+        this.pictureLink = "";
     }
 
     // Measured Power를 제외한 생성자
@@ -188,8 +180,6 @@ public class BleDeviceInfo {
         this.proximityUuid = proximityUuid;
         this.devName = devName;
         this.devAddress = devAddress;
-        this.major = major;
-        this.minor = minor;
         //this.measuredPower = mPower;
         this.txPower = txPower;
         this.limitDistance=Values.basicLimitDistance;
@@ -203,6 +193,8 @@ public class BleDeviceInfo {
 
         this.uid = LoginActivity.getUser().getUid();
         this.userName = LoginActivity.getUser().getDisplayName();
+
+        this.pictureLink = "";
     }
 
     /*
@@ -238,26 +230,6 @@ public class BleDeviceInfo {
         this.devAddress = deviceAddr;
     }
 
-    public int getMajor()
-    {
-        return this.major;
-    }
-
-    public void setMajor(int major)
-    {
-        this.major = major;
-    }
-
-    public int getMinor()
-    {
-        return this.minor;
-    }
-
-    public void setMinor(int minor)
-    {
-        this.minor = minor;
-    }
-
     public int getMeasuredPower()
     {
         return measuredPower;
@@ -287,16 +259,6 @@ public class BleDeviceInfo {
     public void setTxPower(int power)
     {
         this.txPower = power;
-    }
-
-    public String getHwVersion()
-    {
-        return this.hwVersion;
-    }
-
-    public String getFwVersion()
-    {
-        return this.fwVersion;
     }
 
     public double getDistance()
@@ -360,7 +322,15 @@ public class BleDeviceInfo {
         this.userName = userName;
     }
 
-/*----------------------------------------------------------*/
+    public String getPictureLink() {
+        return pictureLink;
+    }
+
+    public void setPictureLink(String pictureLink) {
+        this.pictureLink = pictureLink;
+    }
+
+    /*----------------------------------------------------------*/
     /*
         거리 계산
      */
