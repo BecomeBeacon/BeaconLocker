@@ -43,6 +43,9 @@ public class BleDeviceInfo {
     public boolean isFar;
     public boolean isLost;
 
+    public String uid;
+    public String userName;
+
     //Constructor
     public BleDeviceInfo() {
         isCheckLocation=false;
@@ -71,6 +74,8 @@ public class BleDeviceInfo {
 
         this.latitude = "";
         this.longitude = "";
+        this.uid = LoginActivity.getUser().getUid();
+        this.userName = LoginActivity.getUser().getDisplayName();
     }
 
     //Constructor
@@ -99,6 +104,9 @@ public class BleDeviceInfo {
 
         this.latitude = "";
         this.longitude = "";
+
+        this.uid = LoginActivity.getUser().getUid();
+        this.userName = LoginActivity.getUser().getDisplayName();
     }
 
 
@@ -132,6 +140,9 @@ public class BleDeviceInfo {
 
         this.latitude = "";
         this.longitude = "";
+
+        this.uid = LoginActivity.getUser().getUid();
+        this.userName = LoginActivity.getUser().getDisplayName();
     }
 
     // Measured Power 제외, 거리 1개
@@ -160,6 +171,9 @@ public class BleDeviceInfo {
 
         this.latitude = "";
         this.longitude = "";
+
+        this.uid = LoginActivity.getUser().getUid();
+        this.userName = LoginActivity.getUser().getDisplayName();
     }
 
     // Measured Power를 제외한 생성자
@@ -183,6 +197,9 @@ public class BleDeviceInfo {
         this.timeout = TIME_OUT;
 
         this.rssiKalmanFileter = new KalmanFilter(this.rssi);
+
+        this.uid = LoginActivity.getUser().getUid();
+        this.userName = LoginActivity.getUser().getDisplayName();
     }
 
     /*
@@ -324,7 +341,23 @@ public class BleDeviceInfo {
         this.limitDistance=d;
     }
 
-    /*----------------------------------------------------------*/
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+/*----------------------------------------------------------*/
     /*
         거리 계산
      */

@@ -438,7 +438,7 @@ public class BleService extends Service {
                             temp.setDevAddr(tempSnapshot.getKey());
 
                             temp.setLatitude(Double.valueOf(tempSnapshot.child("latitude").getValue().toString()));
-                            temp.setLongetude(Double.valueOf(tempSnapshot.child("longitude").getValue().toString()));
+                            temp.setLongitude(Double.valueOf(tempSnapshot.child("longitude").getValue().toString()));
                             temp.setLostDate(tempSnapshot.child("lastdate").getValue().toString());
 
 

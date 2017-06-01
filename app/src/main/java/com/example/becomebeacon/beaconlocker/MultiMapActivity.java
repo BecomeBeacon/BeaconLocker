@@ -230,11 +230,11 @@ public class MultiMapActivity extends FragmentActivity
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for(DataSnapshot addressSnapshot : dataSnapshot.getChildren()) {
-                            GetLatLong getLatLong = addressSnapshot.getValue(GetLatLong.class);
-                            if(calcDistance(getLatLong.latitude,getLatLong.longitude,lat,lon))
+                            LostDevInfo lostDevInfo = addressSnapshot.getValue(LostDevInfo.class);
+                            if(calcDistance(lostDevInfo.getLatitude(),lostDevInfo.getLongitude(),lat,lon))
                             {
-                                onAddMarker(getLatLong.latitude,getLatLong.longitude,getLatLong.lastdate);
-                                addCircle(10,getLatLong.latitude,getLatLong.longitude);
+                                onAddMarker(lostDevInfo.getLatitude(),lostDevInfo.getLongitude(),lostDevInfo.getLostDate());
+                                addCircle(10,lostDevInfo.getLatitude(),lostDevInfo.getLongitude());
                             }
                             //Log.v("Test_Print_ADDR", myBeaconOnUser.address);
 
