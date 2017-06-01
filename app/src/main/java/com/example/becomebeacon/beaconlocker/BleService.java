@@ -218,6 +218,12 @@ public class BleService extends Service {
     public void pushNotification(String name,String devAddress)
     {
 
+        if(Notifications.notifications.containsKey(devAddress))
+        {
+            Log.d("NOTIC",name+"NOTI is already exist "+Notifications.notifications);
+            return;
+        }
+
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         Intent intent = new Intent(this, RegLostDataActivity.class);
         Intent intent2 = new Intent();
@@ -275,6 +281,7 @@ public class BleService extends Service {
     {
         if(Notifications.notifications.containsKey(devAddress))
         {
+            Log.d("NOTIC",name+"NOTI is already exist "+Notifications.notifications);
             return;
         }
 
@@ -427,32 +434,32 @@ public class BleService extends Service {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for(DataSnapshot tempSnapshot : dataSnapshot.getChildren()) {
-                            LostDevInfo temp = new LostDevInfo();
+                            //LostDevInfo temp = new LostDevInfo();
+//                            temp.setDevAddr(tempSnapshot.getKey());
+//                            temp.setLostDate(tempSnapshot.child("lastdate").getValue().toString());
+//                            temp.setLatitude(Double.valueOf(tempSnapshot.child("latitude").getValue().toString()));
+//                            temp.setLongetude(Double.valueOf(tempSnapshot.child("longitude").getValue().toString()));
 
-                            temp.setDevAddr(tempSnapshot.getKey());
+                            GetLatLong lostInfo = tempSnapshot.getValue(GetLatLong.class);
+
                             Log.d("SNAP","snapshot : "+tempSnapshot.toString());
 
-                            temp.setLostDate(tempSnapshot.child("lastdate").getValue().toString());
-                            temp.setLatitude(Double.valueOf(tempSnapshot.child("latitude").getValue().toString()));
-                            temp.setLongetude(Double.valueOf(tempSnapshot.child("longitude").getValue().toString()));
 
 
 
-                            Log.d("SNAP", temp.getDevAddr());
-                            Log.d("SNAP", ""+temp.getLatitude());
-                            Log.d("SNAP", ""+temp.getLongitude());
 
-
-
-                            if(dbOpenHelper.uniqueTest(temp.getDevAddr())) {
-                                dbOpenHelper.execSQL("INSERT INTO lost_devices VALUES('" + temp.getDevAddr() + "'," +
-                                        temp.getLatitude() + "," +
-                                        temp.getLongitude() + ", '" +
-                                        temp.getLostDate() + "')"
+                            if(dbOpenHelper.uniqueTest(tempSnapshot.getKey())) {
+                                dbOpenHelper.execSQL("INSERT INTO lost_devices VALUES('" + tempSnapshot.getKey() + "'," +
+                                        lostInfo.latitude + "," +
+                                        lostInfo.longitude + ", '" +
+                                        lostInfo.lastdate + "')"
                                 );
-                                Log.d("bleService", temp.getDevAddr());
-                                Log.d("bleService", ""+temp.getLatitude());
-                                Log.d("bleService", ""+temp.getLongitude());
+                                Log.d("DATABASE", ""+lostInfo.latitude);
+                                Log.d("DATABASE", ""+lostInfo.longitude);
+                                Log.d("DATABASE", ""+lostInfo.lastdate);
+                            }
+                            else{
+                                Log.d("DATABASE","already exist key : "+lostInfo.toString());
                             }
 
                             Cursor cursor = dbOpenHelper.selectQuery("SELECT devaddr FROM lost_devices");
