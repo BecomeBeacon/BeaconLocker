@@ -108,14 +108,14 @@ public class BeaconDetailsActivity extends AppCompatActivity {
     }
 
     private void initListeners() {
-        if(item.isLost==false)
-        {
-            findStuff.setEnabled(false);
-        }
-        else
-        {
-            findStuff.setEnabled(true);
-        }
+//        if(item.isLost==false)
+//        {
+//            findStuff.setEnabled(false);
+//        }
+//        else
+//        {
+//            findStuff.setEnabled(true);
+//        }
         disconnect.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v)
             {
