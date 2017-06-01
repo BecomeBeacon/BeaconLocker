@@ -518,11 +518,13 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_laf) {
             double lat, lng;
 
-            GpsInfo gpsCoordi =  new GpsInfo();
+            GpsInfo gpsCoordi= new GpsInfo(GetMainActivity.getMainActity(),GetMainActivity.getMainActity());
             gpsCoordi.getLocation();
 
-            lat = gpsCoordi.getLatitude();
-            lng = gpsCoordi.getLongitude();
+            lat = gpsCoordi.lat;
+            lng = gpsCoordi.lon;
+            Log.d("gpsgps","lat : "+gpsCoordi.lat);
+            Log.d("gpsgps","lon : "+gpsCoordi.lon);
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse( "https://beaconlocker-51c69.firebaseapp.com/?lat=" + lat + "&lng=" + lng  ));
             //Intent intent = new Intent(getApplicationContext(), RegLostDataActivity.class);
             startActivity(intent);
