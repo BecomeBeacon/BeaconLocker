@@ -5,32 +5,67 @@ package com.example.becomebeacon.beaconlocker;
  */
 
 public class LostDevInfo {
-    public double longitude;
-    public double latitude;
-    public String lostDate;
-    public String devAddr;
+    private double longitude;
+    private double latitude;
+    private String lostDate;
+    private String devAddr;
+    private String uid;
+    private String userName;
 
-    public void setLongetude(double lngTemp){
-        longitude = lngTemp;
+    public LostDevInfo() {
+        double longitude = 0;
+        double latitude = 0;
+        String lostDate = "";
+        String devAddr = "";
+        this.uid = LoginActivity.getUser().getUid();
+        this.userName = LoginActivity.getUser().getDisplayName();
     }
 
-    public void setLatitude(double latTemp){
-        latitude = latTemp;
+    public double getLongitude() {
+        return longitude;
     }
 
-    public void setLostDate(String dateTemp) {
-        lostDate = dateTemp;
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
-    public void setDevAddr(String devTemp) {
-        devAddr = devTemp;
+    public double getLatitude() {
+        return latitude;
     }
 
-    public double getLongitude(){return longitude;}
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
 
-    public double getLatitude(){return latitude;}
+    public String getLostDate() {
+        return lostDate;
+    }
 
-    public String getDevAddr(){return devAddr;}
+    public void setLostDate(String lostDate) {
+        this.lostDate = lostDate;
+    }
 
-    public String getLostDate(){return lostDate;}
+    public String getDevAddr() {
+        return devAddr;
+    }
+
+    public void setDevAddr(String devAddr) {
+        this.devAddr = devAddr;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 }

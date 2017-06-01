@@ -208,6 +208,7 @@ public class DataStoreActivity extends AppCompatActivity {
         //store beacon info to 'Beacon' DB in Uid order
         bleDeviceInfo.setNickname(et_Nickname.getText().toString());
         bleDeviceInfo.setLimitDistance(Double.valueOf(et_Limit_distance.getText().toString()));
+
         if (filePath != null) {
             bleDeviceInfo.setPictureUri(uploadFile());
         }
