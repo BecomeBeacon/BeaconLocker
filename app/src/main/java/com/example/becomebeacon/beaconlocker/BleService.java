@@ -9,6 +9,7 @@ import android.app.Service;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
@@ -58,7 +59,6 @@ public class BleService extends Service {
     private GpsInfo gps;
 
     private FirebaseDatabase mDatabase;
-    private DatabaseReference mDatabaseRef;
     private DbOpenHelper dbOpenHelper;
 
 //    NotificationManager Notifi_M;
@@ -91,7 +91,6 @@ public class BleService extends Service {
         mTimeOut.sendEmptyMessage(0);
 
         mDatabase = FirebaseDatabase.getInstance();
-        mDatabaseRef = mDatabase.getReference("lost_items/");
 
         dbOpenHelper = new DbOpenHelper(getApplicationContext());
         dbOpenHelper.open();
@@ -219,6 +218,12 @@ public class BleService extends Service {
     public void pushNotification(String name,String devAddress)
     {
 
+        if(Notifications.notifications.containsKey(devAddress))
+        {
+            Log.d("NOTIC",name+"NOTI is already exist "+Notifications.notifications);
+            return;
+        }
+
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         Intent intent = new Intent(this, RegLostDataActivity.class);
         Intent intent2 = new Intent();
@@ -274,7 +279,13 @@ public class BleService extends Service {
 
     public void pushFindNotification(String name,String devAddress)
     {
+        if(Notifications.notifications.containsKey(devAddress))
+        {
+            Log.d("NOTIC",name+"NOTI is already exist "+Notifications.notifications);
+            return;
+        }
 
+        Log.d("SERVICE","LostItem name : "+name+" ADRRESS : "+devAddress);
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         Intent intent = new Intent(this, RegLostDataActivity.class);
         Intent intent2 = new Intent();
@@ -291,7 +302,7 @@ public class BleService extends Service {
 
         Notification.Builder builder = new Notification.Builder(this);
         builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.small_main_logo));
-        builder.setSmallIcon(R.drawable.main_logo);
+        builder.setSmallIcon(R.drawable.small_main_logo);
         builder.setTicker("감지됨");
         builder.setContentTitle(name + "이 감지되었습니다");
         builder.setContentText("분실물을 습득하셨나요?");
@@ -312,18 +323,6 @@ public class BleService extends Service {
 
         notificationManager.notify(Notifications.cntNoti++, noti);
 
-
-//        ////        //소리추가
-//        noti.defaults = Notification.DEFAULT_SOUND;
-//
-//        //알림 소리를 한번만 내도록
-//        noti.flags = Notification.FLAG_ONLY_ALERT_ONCE;
-//
-//        //확인하면 자동으로 알림이 제거 되도록
-//        noti.flags = Notification.FLAG_AUTO_CANCEL;
-//
-//        //토스트 띄우기
-//       Toast.makeText(BleService.this, "비컨 멀어짐", Toast.LENGTH_LONG).show();
 
 
     }
@@ -416,6 +415,7 @@ public class BleService extends Service {
 //        return builder;
 //    }
 
+
     public boolean isServiceRunningCheck() {
         ActivityManager manager = (ActivityManager) this.getSystemService(Activity.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
@@ -427,34 +427,45 @@ public class BleService extends Service {
     }
 
     public void pullLostDevices() {
-        mDatabaseRef
+
+        mDatabase.getReference("lost_items/")
                 .addValueEventListener(new ValueEventListener() {
 
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for(DataSnapshot tempSnapshot : dataSnapshot.getChildren()) {
-                            LostDevInfo temp = new LostDevInfo();
+                            //LostDevInfo temp = new LostDevInfo();
+//                            temp.setDevAddr(tempSnapshot.getKey());
+//                            temp.setLostDate(tempSnapshot.child("lastdate").getValue().toString());
+//                            temp.setLatitude(Double.valueOf(tempSnapshot.child("latitude").getValue().toString()));
+//                            temp.setLongetude(Double.valueOf(tempSnapshot.child("longitude").getValue().toString()));
 
-                            temp.setDevAddr(tempSnapshot.getKey());
+                            GetLatLong lostInfo = tempSnapshot.getValue(LostDevInfo.class);
 
                             temp.setLatitude(Double.valueOf(tempSnapshot.child("latitude").getValue().toString()));
                             temp.setLongitude(Double.valueOf(tempSnapshot.child("longitude").getValue().toString()));
                             temp.setLostDate(tempSnapshot.child("lastdate").getValue().toString());
+                            Log.d("SNAP","snapshot : "+tempSnapshot.toString());
 
 
-                            if(dbOpenHelper.uniqueTest(temp.getDevAddr())) {
-                                dbOpenHelper.execSQL("INSERT INTO lost_devices VALUES('" + temp.getDevAddr() + "'," +
-                                        temp.getLatitude() + "," +
-                                        temp.getLongitude() + ", '" +
-                                        temp.getLostDate() + "')"
+
+
+
+                            if(dbOpenHelper.uniqueTest(tempSnapshot.getKey())) {
+                                dbOpenHelper.execSQL("INSERT INTO lost_devices VALUES('" + tempSnapshot.getKey() + "'," +
+                                        lostInfo.latitude + "," +
+                                        lostInfo.longitude + ", '" +
+                                        lostInfo.lastdate + "')"
                                 );
+                                Log.d("DATABASE", ""+lostInfo.latitude);
+                                Log.d("DATABASE", ""+lostInfo.longitude);
+                                Log.d("DATABASE", ""+lostInfo.lastdate);
                             }
-                            /*
-                            dbOpenHelper.insert(temp.getDevAddr(),
-                                    temp.getLatitude(),
-                                    temp.getLongitude(),
-                                    temp.getlostDate());
-                                    */
+                            else{
+                                Log.d("DATABASE","already exist key : "+lostInfo.toString());
+                            }
+
+                            Cursor cursor = dbOpenHelper.selectQuery("SELECT devaddr FROM lost_devices");
                         }
                     }
 

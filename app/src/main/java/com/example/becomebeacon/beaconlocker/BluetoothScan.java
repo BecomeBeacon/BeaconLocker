@@ -19,8 +19,10 @@ import android.widget.Toast;
 
 
 import com.estimote.sdk.connection.internal.protocols.Operation;
+import com.example.becomebeacon.beaconlocker.database.DbOpenHelper;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 
@@ -350,6 +352,32 @@ public class BluetoothScan {
         {
             Log.d("SCAN","Tracking...: "+item.devAddress);
             Log.d("SCAN","mItem : "+mItemMap.toString());
+
+            DbOpenHelper dbOpenHelper = new DbOpenHelper(BleService.mContext.getApplicationContext());
+
+            dbOpenHelper.open();
+
+            if(!dbOpenHelper.uniqueTest(item.devAddress)) //있을때 if문 작동함
+            {
+                BleDeviceInfo bdi;
+                //내꺼
+                if(mItemMap.containsKey(item.devAddress))
+                {
+                    bdi=mItemMap.get(item.devAddress);
+                    if(bdi.isLost) {
+                        Log.d("DATABASE", "Key" + item.devAddress + " LostedItem ");
+                        mBleService.pushFindNotification(bdi.nickname, bdi.devAddress);
+                    }
+                }
+                //다른사람
+                Log.d("DATABASE", "WTF");
+
+            }
+            else
+            {
+                Log.d("DATABASE",item.devAddress+" is not in DB : ");
+            }
+
             if(mItemMap.containsKey(item.devAddress)) {
                 if (BeaconList.scannedMap.containsKey(item.devAddress)) {
                     Log.d("SCAN", "scanned map has my item");
@@ -366,6 +394,7 @@ public class BluetoothScan {
                 Log.d("SCAN", "Tracking.. contain1");
                 BleDeviceInfo tItem = mItemMap.get(item.devAddress);
 
+
                 tItem.rssi = (int) tItem.rssiKalmanFileter.update(item.rssi);
                 KalmanRSSI = tItem.rssi;
                 tItem.distance = mBleUtils.getDistance(KalmanRSSI, item.txPower);
@@ -375,17 +404,25 @@ public class BluetoothScan {
                 if (Values.useGPS) {
                     tItem.setCoordinate(Values.latitude, Values.longitude);
                     Log.d(TAG, "in useGps : lat : " + tItem.latitude + " long : " + tItem.longitude);
+                    long now=System.currentTimeMillis();
+                    tItem.lastDate=new Date(now);
                 }
 
                 Log.d("SCAN", tItem.devAddress + "dist : " + tItem.distance2 + " isfar? " + tItem.isFar);
 
-                if (tItem.isLost)
+//                if (tItem.isLost)
+//                {
+//                    Log.d("Notic","Key"+tItem.devAddress+" LostedItem ");
+//                    mBleService.pushFindNotification(tItem.nickname,tItem.devAddress);
+//
+//
+//                }
+                if(tItem.isLost)
                 {
-                    Log.d("Notic","Key"+tItem.devAddress+" LostedItem ");
-                    mBleService.pushFindNotification(tItem.nickname,tItem.devAddress);
+                    Log.d("SCAN", tItem.devAddress+" is lost");
 
                 }
-                else if(tItem.limitDistance<tItem.distance2&&tItem.isFar!=true) {
+                else if(tItem.isLost!=true&&tItem.limitDistance<tItem.distance2&&tItem.isFar!=true) {
                 //if(0.2<tItem.distance2) {
                     //멀다 팝업 띄운다
 
@@ -405,6 +442,7 @@ public class BluetoothScan {
                         NotificationManager notificationManager = (NotificationManager)BleService.mContext.getSystemService(Context.NOTIFICATION_SERVICE);
                         notificationManager.cancel(Notifications.notifications.get(tItem.devAddress));
                         Log.d("Notic","NotiNum is "+Notifications.notifications.get(tItem.devAddress)+" there is key "+Notifications.notifications.toString());
+
                         //Notifications.notifications.remove(tItem.devAddress);
 
 

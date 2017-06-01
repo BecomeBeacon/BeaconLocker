@@ -23,6 +23,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.SimpleDateFormat;
+
 public class RegLostDataActivity extends AppCompatActivity implements OnMapReadyCallback {
     private FirebaseDatabase mDatabase;
     private DatabaseReference mDatabaseRef;
@@ -40,7 +42,7 @@ public class RegLostDataActivity extends AppCompatActivity implements OnMapReady
         int noti=notiIntent.getIntExtra("NOTI",-1);
 
         if(noti!=-1) {
-            NotificationManager notificationManager = (NotificationManager) BleService.mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.cancel(noti);
         }
 
@@ -57,6 +59,22 @@ public class RegLostDataActivity extends AppCompatActivity implements OnMapReady
         devInfo.setDevAddr(bleDeviceInfo.getDevAddress());
         devInfo.setLatitude(Double.valueOf(bleDeviceInfo.latitude));
         devInfo.setLongitude(Double.valueOf(bleDeviceInfo.longitude));
+        devInfo.setLongetude(Double.valueOf(bleDeviceInfo.longitude));
+//        devInfo.setDevAddr("EE:EE:EE:EE:EE:EE");
+//        devInfo.setLatitude(35.885661);
+//        devInfo.setLongetude(128.609486);
+
+        SimpleDateFormat CurDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        if(bleDeviceInfo.lastDate!=null) {
+            Log.d("RLDA", "date : " + CurDateFormat.format(bleDeviceInfo.lastDate));
+
+            devInfo.setLostDate(CurDateFormat.format(bleDeviceInfo.lastDate));
+        }
+        else
+        {
+            Log.d("RLDA", "date : null");
+            devInfo.setLostDate("NO-DATE");
+        }
 
         Log.d("RLDA","devInfo : "+devInfo.getDevAddr()+" "+devInfo.getLatitude()+" "+devInfo.getLongitude());
 

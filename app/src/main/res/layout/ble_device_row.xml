@@ -19,14 +19,14 @@
 
         <TextView
             android:id="@+id/text_bd_name"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="text_bd_name"
             android:textSize="20dp" />
 
         <TextView
             android:id="@+id/text_bd_address"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="text_bd_address"
             android:textSize="18dp" />
@@ -37,7 +37,7 @@
 
             <TextView
                 android:id="@+id/text_distance"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="text_distance"
