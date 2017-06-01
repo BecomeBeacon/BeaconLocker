@@ -365,7 +365,7 @@ public class BluetoothScan {
                 {
                     bdi=mItemMap.get(item.devAddress);
                     if(bdi.isLost) {
-                        //Log.d("DATABASE", "Key" + item.devAddress + " LostedItem ");
+                        Log.d("DATABASE", "Key" + item.devAddress + " LostItem ");
                         mBleService.pushFindNotification(bdi.nickname, bdi.devAddress);
                     }
                 }
