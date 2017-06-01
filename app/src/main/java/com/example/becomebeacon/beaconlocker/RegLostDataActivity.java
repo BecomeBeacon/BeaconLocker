@@ -7,7 +7,6 @@ package com.example.becomebeacon.beaconlocker;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -59,7 +58,7 @@ public class RegLostDataActivity extends AppCompatActivity implements OnMapReady
         devInfo = new LostDevInfo();
         devInfo.setDevAddr(bleDeviceInfo.getDevAddress());
         devInfo.setLatitude(Double.valueOf(bleDeviceInfo.latitude));
-        devInfo.setLongetude(Double.valueOf(bleDeviceInfo.longitude));
+        devInfo.setLongitude(Double.valueOf(bleDeviceInfo.longitude));
 //        devInfo.setDevAddr("EE:EE:EE:EE:EE:EE");
 //        devInfo.setLatitude(35.885661);
 //        devInfo.setLongetude(128.609486);
