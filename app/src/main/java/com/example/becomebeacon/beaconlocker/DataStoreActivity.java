@@ -210,8 +210,20 @@ public class DataStoreActivity extends AppCompatActivity {
         bleDeviceInfo.setLimitDistance(Double.valueOf(et_Limit_distance.getText().toString()));
 
         if (filePath != null) {
+            StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+            storageRef.child(uploadFile()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Log.d("DataStoreActivity", uri.toString());
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    Log.d("DataStoreActivity", "Pic uri retrivation failed.");
+                }
+            });
             bleDeviceInfo.setPictureUri(uploadFile());
-        }
+        } // 여기까지
             mDatabase
                     .getReference("beacon/")
                     .child(bleDeviceInfo.getDevAddress())
