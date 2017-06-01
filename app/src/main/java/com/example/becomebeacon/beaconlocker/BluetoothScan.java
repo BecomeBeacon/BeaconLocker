@@ -370,7 +370,7 @@ public class BluetoothScan {
                     }
                 }
                 //다른사람
-                Log.d("DATABASE", "WTF");
+                Log.d("DATABASE", "WTF : "+item.devAddress);
 
             }
             else

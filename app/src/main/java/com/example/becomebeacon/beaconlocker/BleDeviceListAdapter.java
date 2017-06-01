@@ -140,25 +140,22 @@ public class BleDeviceListAdapter extends BaseAdapter {
 
         TextView txtDistance = (TextView)convertView.findViewById(R.id.text_distance);
         txtDistance.setText("Distance: " //+ String.format("%.2f",String.valueOf(mBleDeviceInfoArrayList.get(position).distance))+ " m ("
-                 + String.format("%.2f", mBleDeviceInfoArrayList.get(position).distance2) +"m");
+                + String.format("%.2f", mBleDeviceInfoArrayList.get(position).distance2) +"m");
 
         //TextView txtTimeout = (TextView)convertView.findViewById(R.id.text_timeout);
         //txtTimeout.setText("Timeout: " + String.valueOf(mBleDeviceInfoArrayList.get(position).timeout));
 
         Button btnConnect = (Button)convertView.findViewById(R.id.button_connect);
-        if(BeaconList.mItemMap.containsKey(mBleDeviceInfoArrayList.get(pos).devAddress))
-        {
-            //Toast.makeText(GetMainActivity.getMainActity(), "이미 등록된 비컨", Toast.LENGTH_LONG).show();
-            btnConnect.setEnabled(false);
-        }
-        else
-        {
-            btnConnect.setEnabled(true);
-        }
-
         btnConnect.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v)
             {
+
+                if(BeaconList.mItemMap.containsKey(mBleDeviceInfoArrayList.get(pos).devAddress))
+                {
+                    Toast.makeText(GetMainActivity.getMainActity(), "이미 등록된 비컨", Toast.LENGTH_LONG).show();
+
+                }
+                else {
                     if (!mAssignedBleMap.containsKey(mBleDeviceInfoArrayList.get(pos).devAddress)) {
 //                    mAssignedArrayList.add(mBleDeviceInfoArrayList.get(pos));
 //                    mAssignedBleMap.put(mBleDeviceInfoArrayList.get(pos).getDevAddress(), mBleDeviceInfoArrayList.get(pos));
@@ -179,7 +176,7 @@ public class BleDeviceListAdapter extends BaseAdapter {
                 }
 
             }
-        );
+        });
 //
 //
         return convertView;
@@ -214,7 +211,6 @@ public class BleDeviceListAdapter extends BaseAdapter {
     {
         int pos = 0;
         int maxRssi = mBleDeviceInfoArrayList.get(0).rssi;
-
         for(int i = 1; i  < mBleDeviceInfoArrayList.size() ; i++)
         {
             if(maxRssi < mBleDeviceInfoArrayList.get(pos).rssi)
