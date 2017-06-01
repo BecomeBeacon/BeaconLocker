@@ -119,8 +119,9 @@ public class MultiMapActivity extends FragmentActivity
         LatLng myLocation;
         getCurrentLocation();
         myLocation = new LatLng(lat,lon);
-        m = this.googleMap.addMarker(markerOptions.position(myLocation).
-                icon(BitmapDescriptorFactory.defaultMarker(200f)).title("현재 위치"));
+      //  m = this.googleMap.addMarker(markerOptions.position(myLocation).
+      //          icon(BitmapDescriptorFactory.defaultMarker(200f)).title("현재 위치"));
+        m = this.googleMap.addMarker(markerOptions.position(myLocation).icon(BitmapDescriptorFactory.fromResource(R.drawable.hos)).title("현재 위치"));
     }
 
     public void onAddMyMarker(double latt,double lont)
@@ -136,8 +137,9 @@ public class MultiMapActivity extends FragmentActivity
         myPlace.title("현재 위치");
         */
         //마커추가
-        m = this.googleMap.addMarker(markerOptions.position(LOST).
-                icon(BitmapDescriptorFactory.defaultMarker(200f)).title("현재 위치"));
+        //m = this.googleMap.addMarker(markerOptions.position(LOST).
+          //      icon(BitmapDescriptorFactory.defaultMarker(200f)).title("현재 위치"));
+        m = this.googleMap.addMarker(markerOptions.position(LOST).icon(BitmapDescriptorFactory.fromResource(R.drawable.hos)).title("현재 위치"));
         //정보창 클릭 리스너
         googleMap.setOnInfoWindowClickListener(infoWindowClickListener);
         /*
