@@ -91,7 +91,7 @@ public class DataFetch {
                         if(bleDeviceInfo!=null) {
                             Log.d("DF", "datasnapshot bleinfo" + bleDeviceInfo.getDevAddress());
 
-                            if(!myItemMap.containsKey(myAddress)) {
+                            //if(!myItemMap.containsKey(myAddress)) {
 
                                 ////////
                                 if(bleDeviceInfo.getPictureUri() != null)
@@ -124,18 +124,23 @@ public class DataFetch {
                                     }
                                 }
 
+                                ////////
+
+                                if(myItemMap.containsKey(myAddress)) {
+                                    Log.d("DF", "갱신");
+                                    myItemMap.remove(myAddress);
+                                }
                                 else
                                 {
-                                    Log.d("DF","null");
+                                    myBleInfo.add(bleDeviceInfo);
+                                    Log.d("DF", "신규");
                                 }
-                                ////////
-                                myBleInfo.add(bleDeviceInfo);
                                 myItemMap.put(myAddress, bleDeviceInfo);
-                                Log.v("Test_Print_nick", bleDeviceInfo.nickname);
+
                             }
 
                         }
-                    }
+                   // }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {

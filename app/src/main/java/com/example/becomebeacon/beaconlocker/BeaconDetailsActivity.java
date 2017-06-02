@@ -1,6 +1,8 @@
 package com.example.becomebeacon.beaconlocker;
 
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -42,6 +44,7 @@ import static com.example.becomebeacon.beaconlocker.R.id.iv_image;
 public class BeaconDetailsActivity extends AppCompatActivity {
 
     private BleDeviceInfo item;
+    private int noti;
     private EditText nickName;
     private TextView address;
     private TextView meter;
@@ -73,9 +76,21 @@ public class BeaconDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_item_meter);
         mContext=this;
 
+        Intent intent=getIntent();
+        String da=intent.getStringExtra("MAC");
+        noti=intent.getIntExtra("NOTI",-1);
+
+        item=BeaconList.mItemMap.get(da);
+
+        if(noti!=-1) {
+            Log.d("NOTIC","noti : "+noti);
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel(noti);
+
+        }
 
 
-        item=DeviceInfoStore.getBleInfo();
+
         initUI();
         initListeners();
 
@@ -177,13 +192,16 @@ public class BeaconDetailsActivity extends AppCompatActivity {
             public void onClick(View v)
             {
 
-                    mDatabase.getReference("beacon/"+ item.devAddress + "/")
+                mDatabase.getReference("beacon/"+ item.devAddress + "/")
                             .child("isLost")
                             .setValue(false);
 
-                    mDatabase.getReference("lost_items/").child(item.devAddress).removeValue();
+                mDatabase.getReference("lost_items/").child(item.devAddress).removeValue();
 
-                    item.isLost = false;
+                item.isLost = false;
+                Toast.makeText(getApplicationContext(),"찾음 ㅅㄱ",Toast.LENGTH_SHORT).show();
+                findStuff.setEnabled(false);
+                Notifications.notifications.remove(item.devAddress);
             }
         });
     }

@@ -101,7 +101,7 @@
             android:layout_weight="2"
             android:backgroundTint="@color/common_google_signin_btn_text_dark_default"
             android:drawableTop="@drawable/ic_menu_laf"
-            android:text="찾아 보기" />
+            android:text="물건 습득" />
 
         <Button
             android:id="@+id/toMain"
