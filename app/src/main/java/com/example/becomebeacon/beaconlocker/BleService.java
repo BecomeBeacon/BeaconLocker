@@ -166,8 +166,8 @@ public class BleService extends Service {
                         gps = new GpsInfo(GetMainActivity.getMainActity(),GetMainActivity.getMainActity());
                         gps.getLocation();
 
-                        Values.latitude = Double.toString(gps.lat);
-                        Values.longitude = Double.toString(gps.lon);
+                        Values.latitude = gps.lat;
+                        Values.longitude = gps.lon;
 
 
                     }
@@ -255,7 +255,7 @@ public class BleService extends Service {
 
 
         Notifications.notifications.put(devAddress,Notifications.cntNoti);
-        Log.d("service","NotiNum is "+Notifications.cntNoti+" there is key "+Notifications.notifications.toString());
+        Log.d("NOTIC","NotiNum is "+Notifications.cntNoti+" there is key "+Notifications.notifications.toString());
 
         notificationManager.notify(Notifications.cntNoti++, noti);
 
@@ -283,7 +283,7 @@ public class BleService extends Service {
             return;
         }
 
-        Log.d("SERVICE","LostItem name : "+name+" ADRRESS : "+devAddress);
+        Log.d("NOTIC","LostItem name : "+name+" ADRRESS : "+devAddress);
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         Intent intent = new Intent(this, RegLostDataActivity.class);
         Intent intent2 = new Intent();
@@ -317,7 +317,7 @@ public class BleService extends Service {
 
 
         Notifications.notifications.put(devAddress,Notifications.cntNoti);
-        Log.d("service","NotiNum is "+Notifications.cntNoti+" there is key "+Notifications.notifications.toString());
+        Log.d("NOTIC","NotiNum is "+Notifications.cntNoti+" there is key "+Notifications.notifications.toString());
 
         notificationManager.notify(Notifications.cntNoti++, noti);
 

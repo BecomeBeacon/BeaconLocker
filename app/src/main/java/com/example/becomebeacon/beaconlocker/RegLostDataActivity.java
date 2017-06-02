@@ -41,10 +41,7 @@ public class RegLostDataActivity extends AppCompatActivity implements OnMapReady
         Intent notiIntent=getIntent();
         int noti=notiIntent.getIntExtra("NOTI",-1);
 
-        if(noti!=-1) {
-            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.cancel(noti);
-        }
+
 
         mDatabase = FirebaseDatabase.getInstance();
         mDatabaseRef = mDatabase.getReference();
@@ -57,11 +54,17 @@ public class RegLostDataActivity extends AppCompatActivity implements OnMapReady
 
         devInfo = new LostDevInfo();
         devInfo.setDevAddr(bleDeviceInfo.getDevAddress());
-        devInfo.setLatitude(Double.valueOf(bleDeviceInfo.latitude));
-        devInfo.setLongitude(Double.valueOf(bleDeviceInfo.longitude));
+        devInfo.setLatitude(bleDeviceInfo.latitude);
+        devInfo.setLongitude(bleDeviceInfo.longitude);
 //        devInfo.setDevAddr("EE:EE:EE:EE:EE:EE");
 //        devInfo.setLatitude(35.885661);
 //        devInfo.setLongetude(128.609486);
+
+        if(noti!=-1) {
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel(noti);
+            Notifications.notifications.remove(devInfo.getDevAddr());
+        }
 
         SimpleDateFormat CurDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         if(bleDeviceInfo.lastDate!=null) {
@@ -76,6 +79,8 @@ public class RegLostDataActivity extends AppCompatActivity implements OnMapReady
         }
 
         Log.d("RLDA","devInfo : "+devInfo.getDevAddr()+" "+devInfo.getLatitude()+" "+devInfo.getLongitude());
+
+        BeaconList.mItemMap.get(devInfo.getDevAddr()).isLost=true;
 
         mDatabase
                 .getReference("beacon/" + devInfo.getDevAddr() + "/")

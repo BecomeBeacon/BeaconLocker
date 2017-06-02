@@ -38,8 +38,8 @@ public class MapActivity extends FragmentActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Intent intent = getIntent();
-        inlat = Double.valueOf(intent.getExtras().getString("LAT"));
-        inlon = Double.valueOf(intent.getExtras().getString("LON"));
+        inlat = intent.getDoubleExtra("LAT",0);
+        inlon = intent.getDoubleExtra("LON",0);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 

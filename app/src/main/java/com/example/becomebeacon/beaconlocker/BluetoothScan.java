@@ -419,6 +419,8 @@ public class BluetoothScan {
 //
 //
 //                }
+                Log.d("LOST",tItem.devAddress+" isLost : "+tItem.isLost);
+
                 if(tItem.isLost)
                 {
                     Log.d("SCAN", tItem.devAddress+" is lost");
