@@ -95,8 +95,7 @@ public class BleService extends Service {
         dbOpenHelper = new DbOpenHelper(getApplicationContext());
         dbOpenHelper.open();
 
-        dbOpenHelper.execSQL("IF OBJECT_ID('lostDevices..#lost_devices') IS NOT NULL " +
-                "       DROP TABLE #lost_devices");
+        dbOpenHelper.execSQL("DROP TABLE IF EXISTS lostDevices.lost_devices");
 
         dbOpenHelper.execSQL("CREATE TABLE IF NOT EXISTS lost_devices ( " +
                 "devaddr VARCHAR(32) NOT NULL, " +
