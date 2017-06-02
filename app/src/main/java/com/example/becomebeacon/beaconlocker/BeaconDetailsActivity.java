@@ -310,51 +310,49 @@ public class BeaconDetailsActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == MainActivity.RESULT_OK) {
-            // 임시
-            /*
+            Log.d("BeaconDetailsAct", "버튼 클릭");
             int result = new PermissionRequester.Builder(BeaconDetailsActivity.this)
                     .setTitle("권한 요청")
                     .setMessage("권한을 요청합니다.")
                     .setPositiveButtonName("네")
                     .setNegativeButtonName("아니요.")
                     .create()
-                    .request(Manifest.permission.READ_EXTERNAL_STORAGE, 1000 , new PermissionRequester.OnClickDenyButtonListener() {
+                    .request(Manifest.permission.CALL_PHONE, 1000 , new PermissionRequester.OnClickDenyButtonListener() {
                         @Override
                         public void onClick(Activity activity) {
                             Log.d("RESULT", "취소함.");
                         }
                     });
+
             if (result == PermissionRequester.ALREADY_GRANTED) {
                 Log.d("RESULT", "권한이 이미 존재함.");
                 if (ActivityCompat.checkSelfPermission(BeaconDetailsActivity.this,
-                        Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    Intent intent = new Intent(Intent, );
-                    startActivity(intent);
+                        Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
                 }
             }
-            else if(result == PermissionRequester.REQUEST_PERMISSION)
+            else if(result == PermissionRequester.NOT_SUPPORT_VERSION)
+                Log.d("RESULT", "마쉬멜로우 이상 버젼 아님.");
+            else if(result == PermissionRequester.REQUEST_PERMISSION) {
                 Log.d("RESULT", "요청함. 응답을 기다림.");
-            */
-            // 임시 끝
-
-            switch (requestCode) {
-                case TAKE_PICTURE:
-                    //cutImage(tempUri); // 사진 마름질하다.
-                    filePath = tempUri;
-                    imageToView(filePath);
-                    Log.v("Test", "filepath = " + filePath);
-                    break;
-                case CHOOSE_PICTURE:
-                    //cutImage(data.getData());
-                    filePath = data.getData();
-                    imageToView(filePath);
-                    Log.v("Test", "filepath = " + filePath);
-                    break;
-                case CROP_SMALL_PICTURE:
-                    if (data != null) {
-                        setImageToView(data); // 사진은 미리보기
-                    }
-                    break;
+                switch (requestCode) {
+                    case TAKE_PICTURE:
+                        //cutImage(tempUri); // 사진 마름질하다.
+                        filePath = tempUri;
+                        imageToView(filePath);
+                        Log.v("Test", "filepath = " + filePath);
+                        break;
+                    case CHOOSE_PICTURE:
+                        //cutImage(data.getData());
+                        filePath = data.getData();
+                        imageToView(filePath);
+                        Log.v("Test", "filepath = " + filePath);
+                        break;
+                    case CROP_SMALL_PICTURE:
+                        if (data != null) {
+                            setImageToView(data); // 사진은 미리보기
+                        }
+                        break;
+                }
             }
         }
     }

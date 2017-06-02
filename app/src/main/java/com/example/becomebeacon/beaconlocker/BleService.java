@@ -60,7 +60,8 @@ public class BleService extends Service {
     private GpsInfo gps;
 
     private FirebaseDatabase mDatabase;
-    private DbOpenHelper dbOpenHelper;
+    //private DbOpenHelper dbOpenHelper;
+    //DB 비활성화
 
 //    NotificationManager Notifi_M;
 //    Notification Notifi ;
@@ -93,6 +94,7 @@ public class BleService extends Service {
 
         mDatabase = FirebaseDatabase.getInstance();
 
+        /* DB 비활성화
         dbOpenHelper = new DbOpenHelper(getApplicationContext());
         dbOpenHelper.open();
 
@@ -107,6 +109,7 @@ public class BleService extends Service {
         );
 
         pullLostDevices();
+        */
     }
 
 
@@ -427,6 +430,7 @@ public class BleService extends Service {
         return false;
     }
 
+    /* DB 비활성화
     public void pullLostDevices() {
 
         mDatabase.getReference("lost_items/")
@@ -443,7 +447,7 @@ public class BleService extends Service {
                                     lostDevInfo.getLatitude() + "," +
                                     lostDevInfo.getLongitude() + ", '" +
                                     lostDevInfo.getLostDate() + "')");
-                            /*
+
                             if(dbOpenHelper.uniqueTest(tempSnapshot.getKey())) {
                                 dbOpenHelper.execSQL("INSERT INTO lost_devices VALUES('" + tempSnapshot.getKey() + "'," +
                                         lostDevInfo.getLatitude() + "," +
@@ -457,7 +461,7 @@ public class BleService extends Service {
                             else{
                                 Log.d("DATABASE","already exist key : "+lostDevInfo.toString());
                             }
-                            */
+
                         }
                     }
 
@@ -485,6 +489,7 @@ public class BleService extends Service {
 //            }
 //        });
     }
+    */
 
 
 
