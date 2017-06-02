@@ -140,16 +140,13 @@ public class BleService extends Service {
     {
         public void handleMessage(Message msg)
         {
-            Log.d("SERVICE"," in handler");
-            Log.d("PICTURES", "Picture = " + PictureList.pictures.toString());
+
+
             if(mBleScan.getMod()== Values.USE_TRACK) {
-                Log.d("SERVICE"," in track");
+
 
                 if(mScan) {
 
-                    Log.d("SERVICE","useBLE is "+Values.useBLE);
-
-                    Log.d("SERVICE", "scan stop "+Values.scanBreakTime);
                     mBleScan.getBtAdapter().stopLeScan(mBleScan.mLeScanCallback);
 
                     mScan = false;
@@ -163,20 +160,19 @@ public class BleService extends Service {
                     Log.d(TAG,"gps : "+Values.useGPS);
                     if(Values.useGPS)
                     {
-                        Log.d("SERVICE"," in gps");
+
 
                         //여기서 Values.latitude, Values.longitude에 현재 좌표 저장
                         gps = new GpsInfo(GetMainActivity.getMainActity(),GetMainActivity.getMainActity());
                         gps.getLocation();
 
-                        Values.latitude = Double.toString(gps.lat);
-                        Values.longitude = Double.toString(gps.lon);
+                        Values.latitude = gps.lat;
+                        Values.longitude = gps.lon;
 
-                        Log.d(TAG,"lat : "+gps.lat+ " long : "+gps.lon);
 
                     }
                     if(Values.useBLE) {
-                        Log.d("SERVICE", "scan start "+Values.scanTime );
+
                         mBleScan.getBtAdapter().startLeScan(mBleScan.mLeScanCallback);
                     }
                     mScan = true;
@@ -194,7 +190,7 @@ public class BleService extends Service {
     {
         public void handleMessage(Message msg)
         {
-            Log.d("SERVICE"," in Timeout");
+
             if(Values.useBLE) {
 
                 for(int i=0;i<BeaconList.mAssignedItem.size();i++)
@@ -242,7 +238,7 @@ public class BleService extends Service {
 
         Notification.Builder builder = new Notification.Builder(this);
         builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.small_main_logo));
-        builder.setSmallIcon(R.drawable.main_logo);
+        builder.setSmallIcon(R.drawable.small_main_logo);
         builder.setTicker("멀어짐");
         builder.setContentTitle(name + "이 멀어졌습니다");
         builder.setContentText("분실물로 등록할까요?");
@@ -259,7 +255,7 @@ public class BleService extends Service {
 
 
         Notifications.notifications.put(devAddress,Notifications.cntNoti);
-        Log.d("service","NotiNum is "+Notifications.cntNoti+" there is key "+Notifications.notifications.toString());
+        Log.d("NOTIC","NotiNum is "+Notifications.cntNoti+" there is key "+Notifications.notifications.toString());
 
         notificationManager.notify(Notifications.cntNoti++, noti);
 
@@ -287,7 +283,7 @@ public class BleService extends Service {
             return;
         }
 
-        Log.d("SERVICE","LostItem name : "+name+" ADRRESS : "+devAddress);
+        Log.d("NOTIC","LostItem name : "+name+" ADRRESS : "+devAddress);
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         Intent intent = new Intent(this, RegLostDataActivity.class);
         Intent intent2 = new Intent();
@@ -321,7 +317,7 @@ public class BleService extends Service {
 
 
         Notifications.notifications.put(devAddress,Notifications.cntNoti);
-        Log.d("service","NotiNum is "+Notifications.cntNoti+" there is key "+Notifications.notifications.toString());
+        Log.d("NOTIC","NotiNum is "+Notifications.cntNoti+" there is key "+Notifications.notifications.toString());
 
         notificationManager.notify(Notifications.cntNoti++, noti);
 

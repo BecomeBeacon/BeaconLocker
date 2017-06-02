@@ -140,7 +140,7 @@ public class BleDeviceListAdapter extends BaseAdapter {
 
         TextView txtDistance = (TextView)convertView.findViewById(R.id.text_distance);
         txtDistance.setText("Distance: " //+ String.format("%.2f",String.valueOf(mBleDeviceInfoArrayList.get(position).distance))+ " m ("
-                 + String.format("%.2f", mBleDeviceInfoArrayList.get(position).distance2) +"m");
+                + String.format("%.2f", mBleDeviceInfoArrayList.get(position).distance2) +"m");
 
         //TextView txtTimeout = (TextView)convertView.findViewById(R.id.text_timeout);
         //txtTimeout.setText("Timeout: " + String.valueOf(mBleDeviceInfoArrayList.get(position).timeout));
@@ -211,7 +211,6 @@ public class BleDeviceListAdapter extends BaseAdapter {
     {
         int pos = 0;
         int maxRssi = mBleDeviceInfoArrayList.get(0).rssi;
-
         for(int i = 1; i  < mBleDeviceInfoArrayList.size() ; i++)
         {
             if(maxRssi < mBleDeviceInfoArrayList.get(pos).rssi)

@@ -212,6 +212,7 @@ public class DataStoreActivity extends AppCompatActivity {
         bleDeviceInfo.setLimitDistance(Double.valueOf(et_Limit_distance.getText().toString()));
 
         if (filePath != null) {
+            /*
             picUri = uploadFile();
             StorageReference storageRef = FirebaseStorage.getInstance().getReference();
             storageRef.child(picUri).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -226,7 +227,8 @@ public class DataStoreActivity extends AppCompatActivity {
                     Log.d("DataStoreActivity", "Pic uri retrivation failed.");
                 }
             });
-            bleDeviceInfo.setPictureUri(filePath.toString());
+            */
+            bleDeviceInfo.setPictureUri(uploadFile());
         }
             mDatabase
                     .getReference("beacon/")

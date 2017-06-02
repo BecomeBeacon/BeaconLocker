@@ -365,12 +365,14 @@ public class BluetoothScan {
                 {
                     bdi=mItemMap.get(item.devAddress);
                     if(bdi.isLost) {
-                        Log.d("DATABASE", "Key" + item.devAddress + " LostedItem ");
+                        Log.d("DATABASE", "Key" + item.devAddress + " LostItem ");
                         mBleService.pushFindNotification(bdi.nickname, bdi.devAddress);
                     }
                 }
-                //다른사람
-                Log.d("DATABASE", "WTF");
+                else {
+                    Log.d("DATABASE", "address :" + item.devAddress + "is Not mine : " + mItemMap);
+                    //다른사람
+                }
 
             }
             else
@@ -417,6 +419,8 @@ public class BluetoothScan {
 //
 //
 //                }
+                Log.d("LOST",tItem.devAddress+" isLost : "+tItem.isLost);
+
                 if(tItem.isLost)
                 {
                     Log.d("SCAN", tItem.devAddress+" is lost");

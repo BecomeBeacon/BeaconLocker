@@ -36,8 +36,8 @@ public class BleDeviceInfo {
     public String pictureUri;
 
     //Coordination
-    public String latitude;
-    public String longitude;
+    public double latitude;
+    public double longitude;
 
     public boolean isFar;
     public boolean isLost;
@@ -68,8 +68,8 @@ public class BleDeviceInfo {
         this.nickname = "";
         this.pictureUri = "";
 
-        this.latitude = "";
-        this.longitude = "";
+        this.latitude = 0;
+        this.longitude = 0;
         this.uid = LoginActivity.getUser().getUid();
         this.userName = LoginActivity.getUser().getDisplayName();
 
@@ -95,8 +95,8 @@ public class BleDeviceInfo {
         this.nickname = nickname;
         this.pictureUri = "";
 
-        this.latitude = "";
-        this.longitude = "";
+        this.latitude = 0;
+        this.longitude = 0;
 
         this.uid = LoginActivity.getUser().getUid();
         this.userName = LoginActivity.getUser().getDisplayName();
@@ -131,8 +131,8 @@ public class BleDeviceInfo {
         this.nickname = "";
         this.pictureUri = "";
 
-        this.latitude = "";
-        this.longitude = "";
+        this.latitude = 0;
+        this.longitude = 0;
 
         this.uid = LoginActivity.getUser().getUid();
         this.userName = LoginActivity.getUser().getDisplayName();
@@ -162,8 +162,8 @@ public class BleDeviceInfo {
         this.nickname = "";
         this.pictureUri = "";
 
-        this.latitude = "";
-        this.longitude = "";
+        this.latitude = 0;
+        this.longitude = 0;
 
         this.uid = LoginActivity.getUser().getUid();
         this.userName = LoginActivity.getUser().getDisplayName();
@@ -183,6 +183,9 @@ public class BleDeviceInfo {
         //this.measuredPower = mPower;
         this.txPower = txPower;
         this.limitDistance=Values.basicLimitDistance;
+
+        this.latitude = 0;
+        this.longitude = 0;
 
         this.rssi = rssi;
         this.distance = distance;
@@ -367,7 +370,7 @@ public class BleDeviceInfo {
             return false;
     }
 
-    public void setCoordinate(String lati,String longi)
+    public void setCoordinate(double lati,double longi)
     {
         latitude=lati;
         longitude=longi;
