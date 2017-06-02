@@ -81,8 +81,6 @@ public class DataStoreActivity extends AppCompatActivity {
     private Bitmap mBitmap;
     private ProgressDialog progressDialog = null;
 
-    private String picUri;
-
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -200,132 +198,104 @@ public class DataStoreActivity extends AppCompatActivity {
         }
 
         //'users' 에 소지한 비콘 Address 넣기
+        BeaconOnUser beaconOnUser = new BeaconOnUser(mBleDeviceInfo.getDevAddress());
 
-
-        BleDeviceInfo bleDeviceInfo = DeviceInfoStore.getBleInfo();
-        BeaconOnUser beaconOnUser = new BeaconOnUser(bleDeviceInfo.getDevAddress());
-
-        mUserAddressRef.child(bleDeviceInfo.getDevAddress()).setValue(beaconOnUser);
+        mUserAddressRef.child(mBleDeviceInfo.getDevAddress()).setValue(beaconOnUser);
 
         //store beacon info to 'Beacon' DB in Uid order
-        bleDeviceInfo.setNickname(et_Nickname.getText().toString());
-        bleDeviceInfo.setLimitDistance(Double.valueOf(et_Limit_distance.getText().toString()));
+        mBleDeviceInfo.setNickname(et_Nickname.getText().toString());
+        mBleDeviceInfo.setLimitDistance(Double.valueOf(et_Limit_distance.getText().toString()));
 
+        //사진이 있는 경우
         if (filePath != null) {
-            /*
-            picUri = uploadFile();
-            StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-            storageRef.child(picUri).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            PictureUpload pictureUpload = new PictureUpload(new Callback() {
                 @Override
-                public void onSuccess(Uri uri) {
-                    Log.d("DataStoreActivity", uri.toString());
-                    filePath = uri;
+                public void callBackMethod(Object obj) {
+                    //Upload 성공시
+                    Log.d("MODULE_TEST", "Upload Success");
+                    mBleDeviceInfo = (BleDeviceInfo)obj;
+                    databaseStore();
+                    progressDialog.dismiss();
+                    Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
                 }
-            }).addOnFailureListener(new OnFailureListener() {
+            }, new Callback() {
                 @Override
-                public void onFailure(@NonNull Exception exception) {
-                    Log.d("DataStoreActivity", "Pic uri retrivation failed.");
+                public void callBackMethod(Object obj) {
+                    //Upload 실패시
+                    Log.d("MODULE_TEST", "Upload Fail");
+                    Exception e = (Exception)obj;
+                    e.getStackTrace();
+                    progressDialog.dismiss();
+                    Toast.makeText(getApplicationContext(), "사진 업로드에 실패했습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
                 }
             });
-            */
-            bleDeviceInfo.setPictureUri(uploadFile());
+
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setMessage("업로드중...");
+            progressDialog.show();
+
+            Log.d("MODULE_TEST", "do->upload");
+            pictureUpload.uploadPicture(mBleDeviceInfo, filePath);
         }
-            mDatabase
-                    .getReference("beacon/")
-                    .child(bleDeviceInfo.getDevAddress())
-                    .setValue(bleDeviceInfo)
-                    .addOnSuccessListener(DataStoreActivity.this, new OnSuccessListener<Void>() {
+
+        //사진 없는경우 바로 업로드
+        else {
+            databaseStore();
+        }
+
+        BeaconList.scannedMap.remove(mBleDeviceInfo.devAddress);
+        Log.d("dataStoreActivity", "size : " + BeaconList.mArrayListBleDevice.size());
+        for (int i = 0; i < BeaconList.mArrayListBleDevice.size(); i++) {
+            if (BeaconList.mArrayListBleDevice.get(i).devAddress == mBleDeviceInfo.devAddress) {
+                BeaconList.mArrayListBleDevice.remove(i);
+                Log.d("dataStoreActivity", "removed");
+
+            }
+        }
+    }
+
+    private void databaseStore() {
+        Log.d("MODULE_TEST", "dbStore");
+        if(mBleDeviceInfo.pictureLink != null) {
+            Log.d("MODULE_TEST", mBleDeviceInfo.getPictureLink());
+        }
+        Log.d("MODULE_TEST", mBleDeviceInfo.toString());
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setMessage("DB 게시중...");
+        progressDialog.show();
+
+        DatabaseReference databaseReference = mDatabase.getReference("beacon/").child(mBleDeviceInfo.getDevAddress());
+
+        try {
+            databaseReference.setValue(mBleDeviceInfo)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
+                            Log.v("MOUDLE_TEST", "Server Save Success");
                             Toast.makeText(getApplicationContext(), "서버에 저장되었습니다.", Toast.LENGTH_LONG).show();
-                            initData();
+                            progressDialog.dismiss();
                             finish();
                         }
                     })
-                    .addOnFailureListener(DataStoreActivity.this, new OnFailureListener() {
+                    .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getApplicationContext(), "저장에 실패하였습니다.", Toast.LENGTH_LONG).show();
+                            Log.v("MOUDLE_TEST", "Server SaveFail");
+                            e.getStackTrace();
+                            Toast.makeText(getApplicationContext(), "DB 저장에 실패하였습니다. 다시 시도해주세요.", Toast.LENGTH_LONG).show();
+                            progressDialog.dismiss();
                         }
                     });
-            BeaconList.scannedMap.remove(bleDeviceInfo.devAddress);
-            Log.d("dataStoreActivity", "size : " + BeaconList.mArrayListBleDevice.size());
-            for (int i = 0; i < BeaconList.mArrayListBleDevice.size(); i++) {
-                if (BeaconList.mArrayListBleDevice.get(i).devAddress == bleDeviceInfo.devAddress) {
-                    BeaconList.mArrayListBleDevice.remove(i);
-                    Log.d("dataStoreActivity", "removed");
-
-                }
-            }
+        }
+        catch (Exception e) {
+            e.getStackTrace();
+        }
+        Log.v("MOUDLE_TEST", "Server Save out");
     }
 
-//    //결과 처리
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        //request코드가 0이고 OK를 선택했고 data에 뭔가가 들어 있다면
-//        if(requestCode == 0 && resultCode == RESULT_OK){
-//            filePath = data.getData();
-//            Log.d("TAG", "uri:" + String.valueOf(filePath));
-//            try {
-//                //Uri 파일을 Bitmap으로 만들어서 ImageView에 집어 넣는다.
-//                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-//                ivPreview.setImageBitmap(bitmap);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
 
-    //upload the file
-    private String uploadFile() {
-        //업로드할 파일이 있으면 수행
-        Log.v("Test","Filepath in uploadFile = " + String.valueOf(filePath));
-        //업로드 진행 Dialog 보이기
-
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setMessage("업로드중...");
-        progressDialog.show();
-
-        //storage
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-
-        //Unique한 파일명을 만들자.
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMHH_mmss");
-        Date now = new Date();
-        String filename = formatter.format(now) + ".png";
-        //storage 주소와 폴더 파일명을 지정해 준다.
-        StorageReference storageRef = storage.getReferenceFromUrl("gs://beaconlocker-51c69.appspot.com/").child("beacon_images/" + filename);
-        storageRef.putFile(filePath)
-                //성공시
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                        progressDialog.dismiss(); //업로드 진행 Dialog 상자 닫기
-                        Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                //실패시
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-//                        progressDialog.dismiss();
-                        Toast.makeText(getApplicationContext(), "업로드 실패!", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                //진행중
-                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-//                        @SuppressWarnings("VisibleForTests")
-//                        double progress = (100 * taskSnapshot.getBytesTransferred()) /  taskSnapshot.getTotalByteCount();
-//                        //dialog에 진행률을 퍼센트로 출력해 준다
-//                        progressDialog.setMessage("Uploaded " + ((int) progress) + "% ...");
-                    }
-                });
-        return "beacon_images/" + filename;
-    }
 
     //TODO:: 모듈화 하기
     protected void showChoosePicDialog() {

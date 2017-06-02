@@ -5,6 +5,7 @@ package com.example.becomebeacon.beaconlocker;
  */
 
 import android.bluetooth.BluetoothDevice;
+import android.net.Uri;
 
 import java.util.Date;
 
@@ -73,7 +74,7 @@ public class BleDeviceInfo {
         this.uid = LoginActivity.getUser().getUid();
         this.userName = LoginActivity.getUser().getDisplayName();
 
-        this.pictureLink = "";
+        this.pictureLink = null;
     }
 
     //Constructor
@@ -101,7 +102,7 @@ public class BleDeviceInfo {
         this.uid = LoginActivity.getUser().getUid();
         this.userName = LoginActivity.getUser().getDisplayName();
 
-        this.pictureLink = "";
+        this.pictureLink = null;
     }
 
 
@@ -137,7 +138,7 @@ public class BleDeviceInfo {
         this.uid = LoginActivity.getUser().getUid();
         this.userName = LoginActivity.getUser().getDisplayName();
 
-        this.pictureLink = "";
+        this.pictureLink = null;
     }
 
     // Measured Power 제외, 거리 1개
@@ -168,7 +169,7 @@ public class BleDeviceInfo {
         this.uid = LoginActivity.getUser().getUid();
         this.userName = LoginActivity.getUser().getDisplayName();
 
-        this.pictureLink = "";
+        this.pictureLink = null;
     }
 
     // Measured Power를 제외한 생성자
@@ -197,7 +198,7 @@ public class BleDeviceInfo {
         this.uid = LoginActivity.getUser().getUid();
         this.userName = LoginActivity.getUser().getDisplayName();
 
-        this.pictureLink = "";
+        this.pictureLink = null;
     }
 
     /*

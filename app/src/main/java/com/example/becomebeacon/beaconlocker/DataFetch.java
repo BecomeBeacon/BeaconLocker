@@ -49,10 +49,6 @@ public class DataFetch {
         if(mUser!=null)
             mUserAddressRef = mDatabase.getReference("users/" + mUser.getUid() + "/beacons");
 
-
-
-        Log.v("Test_Print_Uid", mUser.getUid());
-
         mUserAddressRef
                 .addValueEventListener(new ValueEventListener() {
                     @Override
