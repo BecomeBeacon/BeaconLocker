@@ -1,9 +1,9 @@
 package com.example.becomebeacon.beaconlocker;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -21,21 +21,19 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FileDownloadTask;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-import static com.example.becomebeacon.beaconlocker.R.id.imageView;
+import static com.example.becomebeacon.beaconlocker.R.id.iv_image;
 
 /**
  * Created by 함상혁입니다 on 2017-05-14.
@@ -64,6 +62,9 @@ public class BeaconDetailsActivity extends AppCompatActivity {
 
     public  FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private FirebaseUser mUser;
+
+    private Uri filePath = null;
+    private ProgressDialog progressDialog = null;
 
 
 
@@ -95,7 +96,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
     }
 
     private void initUI() {
-        mImage= (ImageView) findViewById(imageView);
+        mImage= (ImageView) findViewById(R.id.iv_image);
         nickName=(EditText)findViewById(R.id.et_NICKNAME);
         address=(TextView)findViewById(R.id.et_address);
         meter=(TextView)findViewById(R.id.meter);
@@ -141,9 +142,15 @@ public class BeaconDetailsActivity extends AppCompatActivity {
                 item.nickname=nickName.getText().toString();
                 item.limitDistance = Double.valueOf(limitDist.getText().toString());
 
-                dataModify.changeBeacon(item);
-
-                finish();
+                if(filePath != null) {
+                    Log.d("BDA", "if(filePath != null)");
+                    uploadFileAndFinish();
+                }
+                else {
+                    Log.d("BDA","else if(filePath != null)");
+                    dataModify.changeBeacon(item);
+                    finish();
+                }
             }
         });
 
@@ -184,9 +191,14 @@ public class BeaconDetailsActivity extends AppCompatActivity {
     @Override
     public void onDestroy()
     {
+        super.onDestroy();
         Log.d("BDA","BDA destroyed");
         mContext=null;
-        super.onDestroy();
+
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+            progressDialog = null;
+        }
     }
 
     static public BeaconDetailsActivity getBDA()
@@ -236,10 +248,16 @@ public class BeaconDetailsActivity extends AppCompatActivity {
         if (resultCode == MainActivity.RESULT_OK) {
             switch (requestCode) {
                 case TAKE_PICTURE:
-                    cutImage(tempUri); // 사진 마름질하다.
+                    //cutImage(tempUri); // 사진 마름질하다.
+                    filePath = tempUri;
+                    imageToView(filePath);
+                    Log.v("Test", "filepath = " + filePath);
                     break;
                 case CHOOSE_PICTURE:
-                    cutImage(data.getData());
+                    //cutImage(data.getData());
+                    filePath = data.getData();
+                    imageToView(filePath);
+                    Log.v("Test", "filepath = " + filePath);
                     break;
                 case CROP_SMALL_PICTURE:
                     if (data != null) {
@@ -252,24 +270,24 @@ public class BeaconDetailsActivity extends AppCompatActivity {
     /**
      * 사진 마름질하다.
      */
-    protected void cutImage(Uri uri) {
-        if (uri == null) {
-            Log.i("alanjet", "The uri is not exist.");
-        }
-        tempUri = uri;
-        Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.setDataAndType(uri, "image/*");
-        // 설정
-        intent.putExtra("crop", "true");
-        // aspectX aspectY
-        intent.putExtra("aspectX", 1);
-        intent.putExtra("aspectY", 1);
-        // outputX outputY
-        intent.putExtra("outputX", 150);
-        intent.putExtra("outputY", 150);
-        intent.putExtra("return-data", true);
-        startActivityForResult(intent, CROP_SMALL_PICTURE);
-    }
+//    protected void cutImage(Uri uri) {
+//        if (uri == null) {
+//            Log.i("alanjet", "The uri is not exist.");
+//        }
+//        tempUri = uri;
+//        Intent intent = new Intent("com.android.camera.action.CROP");
+//        intent.setDataAndType(uri, "image/*");
+//        // 설정
+//        intent.putExtra("crop", "true");
+//        // aspectX aspectY
+//        intent.putExtra("aspectX", 1);
+//        intent.putExtra("aspectY", 1);
+//        // outputX outputY
+//        intent.putExtra("outputX", 150);
+//        intent.putExtra("outputY", 150);
+//        intent.putExtra("return-data", true);
+//        startActivityForResult(intent, CROP_SMALL_PICTURE);
+//    }
     /**
      * 사진 저장
      */
@@ -279,6 +297,18 @@ public class BeaconDetailsActivity extends AppCompatActivity {
             mBitmap = extras.getParcelable("data");
             //사진은 사각형
             mImage.setImageBitmap(mBitmap);//미리보기...
+        }
+    }
+    private void imageToView(Uri uri) {
+        try {
+            //Uri 파일을 Bitmap으로 만들어서 ImageView에 집어 넣는다.
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+            mImage.setImageBitmap(bitmap);
+            PictureList.pictures.remove(item.devAddress);
+            PictureList.pictures.put(item.devAddress,bitmap);
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -320,6 +350,61 @@ public class BeaconDetailsActivity extends AppCompatActivity {
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
+    }
+
+    //upload the file
+    private void uploadFileAndFinish() {
+        //업로드할 파일이 있으면 수행
+        Log.v("Test","Filepath in uploadFile = " + String.valueOf(filePath));
+        //업로드 진행 Dialog 보이기
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setMessage("업로드중...");
+        progressDialog.show();
+
+        DataModify dataModify = new DataModify();
+        dataModify.deletePicture(item);
+
+        //storage
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+
+        //Unique한 파일명을 만들자.
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMHH_mmss");
+        Date now = new Date();
+        String filename = formatter.format(now) + ".png";
+        //storage 주소와 폴더 파일명을 지정해 준다.
+        StorageReference storageRef = storage.getReferenceFromUrl("gs://beaconlocker-51c69.appspot.com/").child("beacon_images/" + filename);
+        storageRef.putFile(filePath)
+                //성공시
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                        progressDialog.dismiss(); //업로드 진행 Dialog 상자 닫기
+                        Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                //실패시
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+//                        progressDialog.dismiss();
+                        Toast.makeText(getApplicationContext(), "업로드 실패!", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                //진행중
+                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+
+                    }
+                });
+        item.pictureUri = "beacon_images/" + filename;
+        Log.d("BDA", "pictureUri = " + item.pictureUri);
+        dataModify.changeBeacon(item);
+
+        Log.d("BDA", "finish");
+        finish();
     }
 
 

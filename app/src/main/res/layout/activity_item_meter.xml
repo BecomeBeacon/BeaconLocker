@@ -6,7 +6,7 @@
     android:background="#f4f4f4">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/iv_image"
         android:layout_width="match_parent"
         android:layout_height="223dp"/>
 
@@ -21,7 +21,7 @@
         android:text="testNICKNAME"
         android:drawableLeft="@drawable/ic_create"
         android:layout_marginTop="18dp"
-        android:layout_below="@+id/imageView"
+        android:layout_below="@+id/iv_image"
         android:layout_centerHorizontal="true" />
 
     <TextView
@@ -118,7 +118,7 @@
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:background="@drawable/ic_camera"
-        android:layout_alignBottom="@+id/imageView"
+        android:layout_alignBottom="@+id/iv_image"
         android:layout_alignParentEnd="true" />
 
     <TextView
