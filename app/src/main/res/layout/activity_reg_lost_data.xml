@@ -13,7 +13,7 @@
         android:layout_height="150dp"
         android:text = "분실물 등록 완료"
         android:textColor = "#ffffff"
-        android:textSize = "60sp"
+        android:textSize = "40sp"
         android:gravity = "center"
         android:id="@+id/textView3"
         android:paddingTop="60dp"
