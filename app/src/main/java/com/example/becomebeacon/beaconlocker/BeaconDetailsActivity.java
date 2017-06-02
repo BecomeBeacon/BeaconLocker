@@ -249,8 +249,12 @@ public class BeaconDetailsActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == MainActivity.RESULT_OK) {
+            Log.d("BeaconDetailsAct", "버튼 클릭");
             // 임시
             /*
+
+
+
             int result = new PermissionRequester.Builder(BeaconDetailsActivity.this)
                     .setTitle("권한 요청")
                     .setMessage("권한을 요청합니다.")
