@@ -24,6 +24,7 @@ import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
+import com.example.becomebeacon.beaconlocker.database.BeaconLost;
 import com.example.becomebeacon.beaconlocker.database.DbOpenHelper;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -286,9 +287,11 @@ public class BleService extends Service {
             return;
         }
 
+
+
         Log.d("NOTIC","LostItem name : "+name+" ADRRESS : "+devAddress);
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        Intent intent = new Intent(this, RegLostDataActivity.class);
+        Intent intent = new Intent(this, BeaconDetailsActivity.class);
         Intent intent2 = new Intent();
 
         intent.putExtra("NOTI",Notifications.cntNoti);

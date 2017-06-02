@@ -154,13 +154,10 @@ public class MyBeaconsListAdapter extends BaseAdapter {
             public void onClick(View v)
             {
 
-//
-
-
-                DeviceInfoStore.setBleInfo(mBleDeviceInfoArrayList.get(pos));
 
                 Activity mActi=GetMainActivity.getMainActity();
                 Intent intent = new Intent(mActi, BeaconDetailsActivity.class);
+                intent.putExtra("MAC",mBleDeviceInfoArrayList.get(pos).devAddress);
                 mActi.startActivity(intent);
 
 

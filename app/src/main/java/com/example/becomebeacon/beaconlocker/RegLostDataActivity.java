@@ -61,6 +61,7 @@ public class RegLostDataActivity extends AppCompatActivity implements OnMapReady
 //        devInfo.setLongetude(128.609486);
 
         if(noti!=-1) {
+            Log.d("NOTIC","noti : "+noti);
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.cancel(noti);
             Notifications.notifications.remove(devInfo.getDevAddr());
