@@ -81,6 +81,8 @@ public class DataStoreActivity extends AppCompatActivity {
     private Bitmap mBitmap;
     private ProgressDialog progressDialog = null;
 
+    private String picUri;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -210,11 +212,13 @@ public class DataStoreActivity extends AppCompatActivity {
         bleDeviceInfo.setLimitDistance(Double.valueOf(et_Limit_distance.getText().toString()));
 
         if (filePath != null) {
+            picUri = uploadFile();
             StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-            storageRef.child(uploadFile()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            storageRef.child(picUri).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
                     Log.d("DataStoreActivity", uri.toString());
+                    filePath = uri;
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -222,8 +226,8 @@ public class DataStoreActivity extends AppCompatActivity {
                     Log.d("DataStoreActivity", "Pic uri retrivation failed.");
                 }
             });
-            bleDeviceInfo.setPictureUri(uploadFile());
-        } // 여기까지
+            bleDeviceInfo.setPictureUri(filePath.toString());
+        }
             mDatabase
                     .getReference("beacon/")
                     .child(bleDeviceInfo.getDevAddress())
