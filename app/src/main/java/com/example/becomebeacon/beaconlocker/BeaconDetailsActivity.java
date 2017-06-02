@@ -1,14 +1,17 @@
 package com.example.becomebeacon.beaconlocker;
-
+import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -246,6 +249,33 @@ public class BeaconDetailsActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == MainActivity.RESULT_OK) {
+            // 임시
+            /*
+            int result = new PermissionRequester.Builder(BeaconDetailsActivity.this)
+                    .setTitle("권한 요청")
+                    .setMessage("권한을 요청합니다.")
+                    .setPositiveButtonName("네")
+                    .setNegativeButtonName("아니요.")
+                    .create()
+                    .request(Manifest.permission.READ_EXTERNAL_STORAGE, 1000 , new PermissionRequester.OnClickDenyButtonListener() {
+                        @Override
+                        public void onClick(Activity activity) {
+                            Log.d("RESULT", "취소함.");
+                        }
+                    });
+            if (result == PermissionRequester.ALREADY_GRANTED) {
+                Log.d("RESULT", "권한이 이미 존재함.");
+                if (ActivityCompat.checkSelfPermission(BeaconDetailsActivity.this,
+                        Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                    Intent intent = new Intent(Intent, );
+                    startActivity(intent);
+                }
+            }
+            else if(result == PermissionRequester.REQUEST_PERMISSION)
+                Log.d("RESULT", "요청함. 응답을 기다림.");
+            */
+            // 임시 끝
+
             switch (requestCode) {
                 case TAKE_PICTURE:
                     //cutImage(tempUri); // 사진 마름질하다.
