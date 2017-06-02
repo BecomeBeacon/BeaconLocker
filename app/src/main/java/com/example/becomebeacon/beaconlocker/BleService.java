@@ -96,8 +96,8 @@ public class BleService extends Service {
         dbOpenHelper = new DbOpenHelper(getApplicationContext());
         dbOpenHelper.open();
 
+        // 데이터 베이스 테이블 날리고 새로 생성함.
         dbOpenHelper.execSQL("DROP TABLE IF EXISTS lostDevices.lost_devices");
-
         dbOpenHelper.execSQL("CREATE TABLE IF NOT EXISTS lost_devices ( " +
                 "devaddr VARCHAR(32) NOT NULL, " +
                 "latitude DOUBLE NOT NULL, " +
@@ -434,11 +434,16 @@ public class BleService extends Service {
 
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
+                        // 리스너를 통해 DB 레코드가 추가되거나 삭제되면 그냥 테이블 날리고 다시 따온다.
+                        dbOpenHelper.execSQL("DROP TABLE IF EXISTS lostDevices.lost_devices");
                         for(DataSnapshot tempSnapshot : dataSnapshot.getChildren()) {
-
                             LostDevInfo lostDevInfo = tempSnapshot.getValue(LostDevInfo.class);
                             Log.d("SNAP","snapshot : "+tempSnapshot.toString());
-
+                            dbOpenHelper.execSQL("INSERT INTO lost_devices VALUES('" + tempSnapshot.getKey() + "'," +
+                                    lostDevInfo.getLatitude() + "," +
+                                    lostDevInfo.getLongitude() + ", '" +
+                                    lostDevInfo.getLostDate() + "')");
+                            /*
                             if(dbOpenHelper.uniqueTest(tempSnapshot.getKey())) {
                                 dbOpenHelper.execSQL("INSERT INTO lost_devices VALUES('" + tempSnapshot.getKey() + "'," +
                                         lostDevInfo.getLatitude() + "," +
@@ -452,8 +457,7 @@ public class BleService extends Service {
                             else{
                                 Log.d("DATABASE","already exist key : "+lostDevInfo.toString());
                             }
-
-                            Cursor cursor = dbOpenHelper.selectQuery("SELECT devaddr FROM lost_devices");
+                            */
                         }
                     }
 
