@@ -109,6 +109,14 @@ public class BeaconDetailsActivity extends AppCompatActivity {
     }
 
     private void initListeners() {
+        if(item.isLost==false)
+        {
+            findStuff.setEnabled(false);
+        }
+        else
+        {
+            findStuff.setEnabled(true);
+        }
         disconnect.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v)
             {
@@ -168,8 +176,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
         {
             public void onClick(View v)
             {
-                if(item.isLost == true)
-                {
+
                     mDatabase.getReference("beacon/"+ item.devAddress + "/")
                             .child("isLost")
                             .setValue(false);
@@ -177,11 +184,6 @@ public class BeaconDetailsActivity extends AppCompatActivity {
                     mDatabase.getReference("lost_items/").child(item.devAddress).removeValue();
 
                     item.isLost = false;
-                }
-                else
-                {
-                    Toast.makeText(getApplicationContext(), "잃어버린 물건이 아닙니다!!", Toast.LENGTH_LONG).show();
-                }
             }
         });
     }
