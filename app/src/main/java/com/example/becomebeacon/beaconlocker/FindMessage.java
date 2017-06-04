@@ -7,12 +7,10 @@ package com.example.becomebeacon.beaconlocker;
 public class FindMessage {
 
     public String message;
-    public String phoneNumb;
 
     public FindMessage()
     {
         this.message ="";
-        this.phoneNumb ="";
     }
 
 
