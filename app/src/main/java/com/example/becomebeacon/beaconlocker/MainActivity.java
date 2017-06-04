@@ -645,7 +645,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onDestroy() {
-        // TODO Auto-generated method stub
         Log.d("Main","main destory");
         mBleScan.end();
         mHandler.removeMessages(0);
