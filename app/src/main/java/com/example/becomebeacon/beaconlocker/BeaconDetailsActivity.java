@@ -82,6 +82,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
             Log.d("NOTIC","noti : "+noti);
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.cancel(noti);
+            Notifications.notifications.remove(item.devAddress);
 
         }
 
@@ -133,14 +134,21 @@ public class BeaconDetailsActivity extends AppCompatActivity {
             {
                 BeaconList.mItemMap.remove(item.devAddress);
                 Log.d("BDA","size : "+BeaconList.mAssignedItem.size());
-                for(int i=0;i<BeaconList.mAssignedItem.size();i++)
-                {
-                    if(BeaconList.mAssignedItem.get(i).devAddress==item.devAddress) {
+
+                for (int i = 0; i < BeaconList.mAssignedItem.size(); i++) {
+                    Log.d("BDA", "Compare " +BeaconList.mAssignedItem.get(i).devAddress+", "+item.devAddress);
+                    if (BeaconList.mAssignedItem.get(i).devAddress.equals(item.devAddress)) {
                         BeaconList.mAssignedItem.remove(i);
-                        Log.d("BDA","removed");
-                        break;
+                        Log.d("BDA", "removed");
+
+
+                    }
+                    else
+                    {
+                        Log.d("BDA", "not same");
                     }
                 }
+                Log.d("BDA","Array : "+BeaconList.mAssignedItem);
                 dataModify.deleteBeacon(item);
 
                 finish();

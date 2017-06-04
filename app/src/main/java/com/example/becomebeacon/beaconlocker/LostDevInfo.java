@@ -1,5 +1,7 @@
 package com.example.becomebeacon.beaconlocker;
 
+import java.text.SimpleDateFormat;
+
 /**
  * Created by heeseung on 2017-05-23.
  */
@@ -21,6 +23,17 @@ public class LostDevInfo {
         nickNameOfThing= "";
         this.uid = LoginActivity.getUser().getUid();
         this.userName = LoginActivity.getUser().getDisplayName();
+    }
+
+    public LostDevInfo(BleDeviceInfo bdi) {
+        longitude = bdi.longitude;
+        latitude = bdi.latitude;
+        SimpleDateFormat CurDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        lostDate = CurDateFormat.format(bdi.lastDate);
+        devAddr = bdi.devAddress;
+        nickNameOfThing= bdi.nickname;
+        this.uid = bdi.uid;
+        this.userName = bdi.userName;
     }
 
     public String getNickNameOfThing(){return nickNameOfThing;}

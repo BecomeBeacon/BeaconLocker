@@ -43,7 +43,7 @@ public class BluetoothScan {
 
 
 
-    public static FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+
     public static String BEACON_UUID;
     public static  Boolean saveRSSI;
     private static final long SCAN_PERIOD = 1000;       // 10초동안 SCAN 과정을 수행함
@@ -364,15 +364,20 @@ public class BluetoothScan {
 
 
             //잃어버린건지 찾아보자
+            Log.d("LOST","find key : "+item.devAddress+" in the lostmap : "+BeaconList.lostMap);
+            Log.d("LOST","and mylist :"+BeaconList.mItemMap);
             if(BeaconList.lostMap.containsKey(item.devAddress))//잃어버린거임
             {
+                Log.d("LOST",item.devAddress+" is lost item");
                 LostDevInfo ldi= BeaconList.lostMap.get(item.devAddress);
                 if(BeaconList.mItemMap.containsKey(ldi.getDevAddr()))//내꺼
                 {
+                    Log.d("LOST","and it's mine");
                     mBleService.pushFindNotification(ldi,1);
                 }
                 else//다른사람꺼
                 {
+                    Log.d("LOST","and it's other");
                     mBleService.pushFindNotification(ldi,0);
                 }
             }
@@ -431,7 +436,7 @@ public class BluetoothScan {
                     tItem.lastDate=new Date(now);
                 }
 
-                Log.d("SCAN", tItem.devAddress + "dist : " + tItem.distance2 + " isfar? " + tItem.isFar);
+                Log.d("SCAN", tItem.devAddress + "dist : " + tItem.distance2 + " isfar? " + tItem.isFar+" noti : "+Notifications.notifications);
 
 //                if (tItem.isLost)
 //                {
@@ -440,11 +445,11 @@ public class BluetoothScan {
 //
 //
 //                }
-                Log.d("LOST",tItem.devAddress+" isLost : "+tItem.isLost);
+
 
                 if(tItem.isLost)
                 {
-                    Log.d("SCAN", tItem.devAddress+" is lost");
+                    //Log.d("SCAN", tItem.devAddress+" is lost");
 
                 }
                 else if(tItem.isLost!=true&&tItem.limitDistance<tItem.distance2&&tItem.isFar!=true) {
@@ -461,6 +466,7 @@ public class BluetoothScan {
                 }
                 else if(tItem.limitDistance>tItem.distance2)
                 {
+                    Log.d("SCAN","get close");
                     if(Notifications.notifications.containsKey(tItem.devAddress))
                     {
 
@@ -468,7 +474,7 @@ public class BluetoothScan {
                         notificationManager.cancel(Notifications.notifications.get(tItem.devAddress));
                         Log.d("Notic","NotiNum is "+Notifications.notifications.get(tItem.devAddress)+" there is key "+Notifications.notifications.toString());
 
-                        //Notifications.notifications.remove(tItem.devAddress);
+                        Notifications.notifications.remove(tItem.devAddress);
 
 
                     }
