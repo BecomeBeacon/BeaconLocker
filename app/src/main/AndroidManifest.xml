@@ -43,7 +43,14 @@
 
         <activity
             android:name=".BeaconBackHostActivity"
-            android:label="Beacon Locker" />
+            android:label="Beacon Locker">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="callmyapp" android:host="back"/>
+            </intent-filter>
+        </activity>
         <activity
             android:name=".MultiMapActivity"
             android:label="Beacon Locker" />
