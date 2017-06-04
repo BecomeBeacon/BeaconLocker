@@ -27,6 +27,13 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="17dp" />
     <Button
+        android:id="@+id/editMButton"
+        android:layout_width="60dp"
+        android:layout_height="50dp"
+        android:text="EDIT"
+        android:layout_alignBottom="@+id/message"
+        android:layout_alignEnd="@+id/message" />
+    <Button
         android:id="@+id/sendMessageButton"
         android:layout_width="200dp"
         android:layout_height="200dp"
