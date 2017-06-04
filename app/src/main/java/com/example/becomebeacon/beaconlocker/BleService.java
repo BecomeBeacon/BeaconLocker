@@ -61,6 +61,7 @@ public class BleService extends Service {
     boolean mScan;
     private GpsInfo gps;
     private DatabaseReference lostBeaconInfoRef;
+    private DatabaseReference messageInfoRef;
 
     private FirebaseDatabase mDatabase;
     //private DbOpenHelper dbOpenHelper;
@@ -80,6 +81,7 @@ public class BleService extends Service {
         mDatabase = FirebaseDatabase.getInstance();
 
         lostBeaconInfoRef = mDatabase.getReference("lost_items/");
+        messageInfoRef = mDatabase.getReference("users/"+LoginActivity.getUser().getUid()+"/messages");
 
         lostBeaconInfoRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -97,6 +99,26 @@ public class BleService extends Service {
                     }
 
 
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        messageInfoRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d("MSG","i got msg ");
+                for(DataSnapshot addressSnapshot : dataSnapshot.getChildren()) {
+                    FindMessage msg=addressSnapshot.getValue(FindMessage.class);
+                    BeaconList.msgSet.add(msg);
+                    Log.d("MSG","i got msg "+msg.devAddress+","+msg.message);
+                    //noti 날려야함
+                    //DB에 ischeck를 체크해줘야함
                 }
 
             }

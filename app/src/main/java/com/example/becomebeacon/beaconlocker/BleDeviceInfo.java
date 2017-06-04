@@ -15,6 +15,7 @@ public class BleDeviceInfo {
 
     public boolean isCheckLocation;
 
+    public boolean othersSendMsg;
     public BluetoothDevice btDevice;   // Bluetooth Device
     public String proximityUuid;       // UUID
     public String devName;             // Device Name
@@ -50,6 +51,7 @@ public class BleDeviceInfo {
 
     //Constructor
     public BleDeviceInfo() {
+        othersSendMsg=false;
         isCheckLocation=false;
         this.proximityUuid = "";
         this.devName = "";
@@ -80,6 +82,7 @@ public class BleDeviceInfo {
 
     public BleDeviceInfo(LostDevInfo ldi)
     {
+
         this();
         nickname=ldi.getNickNameOfThing();
         devAddress=ldi.getDevAddr();
@@ -93,6 +96,7 @@ public class BleDeviceInfo {
 
     //Constructor
     public BleDeviceInfo(String devAddress, String nickname) {
+        othersSendMsg=false;
         isCheckLocation=false;
         this.proximityUuid = "";
         this.devName = "";
@@ -127,6 +131,7 @@ public class BleDeviceInfo {
                          String devAddress, int major, int minor, int mPower, int rssi,
                          int txPower, double distance)
     {
+        othersSendMsg=false;
         isCheckLocation=false;
         this.btDevice = device;
         this.proximityUuid = proximityUuid;
@@ -161,6 +166,7 @@ public class BleDeviceInfo {
     public BleDeviceInfo(String proximityUuid, String devName,
                          String devAddress, int major, int minor, int txPower, int rssi, double distance)
     {
+        othersSendMsg=false;
         isCheckLocation=false;
         this.isFar=false;
         this.proximityUuid = proximityUuid;
@@ -193,6 +199,7 @@ public class BleDeviceInfo {
     public BleDeviceInfo(String proximityUuid, String devName,
                          String devAddress, int major, int minor, int txPower, int rssi, double distance, double distance2)
     {
+        othersSendMsg=false;
         lastDate="";
         this.isFar=false;
         isCheckLocation=false;
