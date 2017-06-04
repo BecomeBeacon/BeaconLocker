@@ -183,13 +183,13 @@
             android:textSize="18dp" />
 
         <Button
-            android:id="@+id/toMain"
+            android:id="@+id/lostButton"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="1.90"
             android:backgroundTint="#90CAF9"
-            android:drawableTop="@drawable/ic_undo"
-            android:text="메인으로"
+            android:drawableTop="@drawable/ic_warning"
+            android:text="분실 경고"
             android:textColor="@color/common_google_signin_btn_text_dark_default"
             android:textSize="18dp" />
     </LinearLayout>
