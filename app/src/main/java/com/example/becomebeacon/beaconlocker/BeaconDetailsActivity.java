@@ -279,6 +279,15 @@ public class BeaconDetailsActivity extends AppCompatActivity {
                 Notifications.notifications.remove(item.devAddress);
             }
         });
+
+        lostButton.setOnClickListener(new Button.OnClickListener() {
+            public void onClick(View v) {
+                //잃어버림 신고 버튼
+                Intent intent = new Intent(BeaconDetailsActivity.this, RegLostDataActivity.class);
+                intent.putExtra("MAC",item.devAddress);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
