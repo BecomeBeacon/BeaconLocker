@@ -1,16 +1,13 @@
 package com.example.becomebeacon.beaconlocker;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -29,11 +26,9 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.io.File;
 import java.io.IOException;
 
 import static com.example.becomebeacon.beaconlocker.BeaconDetailsActivity.CHOOSE_PICTURE;
@@ -57,7 +52,7 @@ public class DataStoreActivity extends AppCompatActivity {
     private EditText et_Limit_distance;
 
     //storage 관련 변수
-    private Button btChoose;
+    //private Button btChoose;
     private Button btUpload;
     private ImageView ivPreview;
 
@@ -108,12 +103,12 @@ public class DataStoreActivity extends AppCompatActivity {
 
 
         //사진 선택
-        btChoose = (Button) findViewById(R.id.btn_add_image);
+        //btChoose = (Button) findViewById(R.id.btn_add_image);
         ivPreview = (ImageView) findViewById(R.id.iv_image);
 
 
 
-        btChoose.setOnClickListener(new View.OnClickListener() {
+        ivPreview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 uploadMyPictureDialog();
