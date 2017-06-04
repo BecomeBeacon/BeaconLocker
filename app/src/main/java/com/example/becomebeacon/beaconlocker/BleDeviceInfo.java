@@ -30,7 +30,7 @@ public class BleDeviceInfo {
 
     //Device Info
     public KalmanFilter rssiKalmanFileter;
-    public Date lastDate;
+    public String lastDate;
 
     //User info
     public String nickname;
@@ -86,6 +86,7 @@ public class BleDeviceInfo {
         longitude=ldi.getLongitude();
         userName=ldi.getUserName();
         uid=ldi.getUid();
+        lastDate=ldi.getLostDate();
 
     }
 
