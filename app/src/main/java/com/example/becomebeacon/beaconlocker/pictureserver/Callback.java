@@ -1,4 +1,6 @@
-package com.example.becomebeacon.beaconlocker;
+package com.example.becomebeacon.beaconlocker.pictureserver;
+
+import android.content.Intent;
 
 import java.io.Serializable;
 
