@@ -1,79 +1,152 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#f4f4f4">
+    android:background="#f4f4f4"
+    android:weightSum="1">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:layout_weight="0.07">
+
+        <ImageView
+            android:id="@+id/iv_image"
+            android:layout_width="match_parent"
+            android:layout_height="250dp" />
+
+        <Button
+            android:id="@+id/changeImage"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/iv_image"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/ic_camera" />
+    </RelativeLayout>
 
     <ImageView
-        android:id="@+id/iv_image"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/common_google_signin_btn_text_dark_disabled" />
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/common_google_signin_btn_text_dark_disabled" />
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="223dp"/>
+        android:layout_height="260dp"
+        android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/et_NICKNAME"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:layout_column="1"
-        android:layout_row="1"
-        android:inputType="textPersonName"
-        android:text="testNICKNAME"
-        android:drawableLeft="@drawable/ic_create"
-        android:layout_marginTop="18dp"
-        android:layout_below="@+id/iv_image"
-        android:layout_centerHorizontal="true" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp">
 
-    <TextView
-        android:id="@+id/et_address"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="TestAddr"
-        android:layout_marginTop="28dp"
-        android:layout_below="@+id/et_NICKNAME"
-        android:layout_alignParentStart="true" />
+            <TextView
+                android:id="@+id/textView16"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="15dp"
+                android:text="별칭 :"
+                android:textSize="20dp" />
 
-    <EditText
-        android:id="@+id/limit_distance"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:layout_column="1"
-        android:layout_row="1"
-        android:inputType="numberDecimal"
-        android:text="TestAddr"
-        android:drawableLeft="@drawable/ic_create"
-        android:layout_below="@+id/et_address"
-        android:layout_toEndOf="@+id/textView6" />
+            <EditText
+                android:id="@+id/et_NICKNAME"
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_column="1"
+                android:layout_row="1"
+                android:drawableLeft="@drawable/ic_create"
+                android:gravity="center_horizontal"
+                android:inputType="textPersonName"
+                android:text="testNICKNAME" />
+        </RelativeLayout>
 
-    <TextView
-        android:id="@+id/editText2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:gravity="center_horizontal"
-        android:text="거리(m 단위)"
-        android:layout_marginTop="22dp"
-        android:layout_below="@+id/limit_distance"
-        android:layout_alignParentStart="true" />
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@color/common_google_signin_btn_text_dark_disabled" />
 
-    <TextView
-        android:id="@+id/meter"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:gravity="center_horizontal"
-        android:text="40"
-        android:textSize="42sp"
-        android:layout_below="@+id/editText2"
-        android:layout_alignParentStart="true" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp">
+
+            <TextView
+                android:id="@+id/et_address"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="14dp"
+                android:gravity="center_horizontal"
+                android:text="Addr :"
+                android:textSize="20dp" />
+
+            <EditText
+                android:id="@+id/limit_distance"
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:layout_column="1"
+                android:layout_row="1"
+                android:drawableLeft="@drawable/ic_create"
+                android:gravity="center_horizontal"
+                android:inputType="numberDecimal"
+                android:text="TestAddr"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true" />
+
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@color/common_google_signin_btn_text_dark_disabled" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="220dp"
+                android:layout_height="50dp"
+                android:text="한계 거리(m 단위) :"
+                android:textSize="20dp"
+                android:layout_above="@+id/meter"
+                android:layout_centerHorizontal="true" />
+
+            <TextView
+                android:id="@+id/meter"
+                android:layout_width="120dp"
+                android:layout_height="50dp"
+                android:ems="10"
+                android:gravity="center_horizontal"
+                android:text="40"
+                android:textColor="@color/colorPrimary"
+                android:textSize="42sp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true" />
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@color/common_google_signin_btn_text_dark_disabled" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
+        android:layout_weight="0.71"
         android:orientation="horizontal">
 
         <Button
@@ -81,53 +154,44 @@
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="1.94"
-            android:backgroundTint="@color/common_google_signin_btn_text_dark_default"
+            android:backgroundTint="#90CAF9"
             android:drawableTop="@drawable/ic_place"
-            android:text="지도 보기" />
+            android:text="지도 보기"
+            android:textSize="18dp"
+            android:textColor="@color/common_google_signin_btn_text_dark_default"/>
 
         <Button
             android:id="@+id/disconnect"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="2"
-            android:backgroundTint="@color/common_google_signin_btn_text_dark_default"
+            android:backgroundTint="#90CAF9"
             android:drawableTop="@drawable/ic_bluetooth_disabled"
-            android:text="연결 해제" />
+            android:text="연결 해제"
+            android:textSize="18dp"
+            android:textColor="@color/common_google_signin_btn_text_dark_default"/>
 
         <Button
             android:id="@+id/find"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="2"
-            android:backgroundTint="@color/common_google_signin_btn_text_dark_default"
+            android:backgroundTint="#90CAF9"
             android:drawableTop="@drawable/ic_menu_laf"
-            android:text="물건 습득" />
+            android:text="물건 습득"
+            android:textSize="18dp"
+            android:textColor="@color/common_google_signin_btn_text_dark_default"/>
 
         <Button
             android:id="@+id/toMain"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="1.90"
-            android:backgroundTint="@color/common_google_signin_btn_text_dark_default"
+            android:backgroundTint="#90CAF9"
             android:drawableTop="@drawable/ic_undo"
-            android:text="메인으로" />
+            android:text="메인으로"
+            android:textSize="18dp"
+            android:textColor="@color/common_google_signin_btn_text_dark_default"/>
     </LinearLayout>
 
-    <Button
-        android:id="@+id/changeImage"
-        android:layout_width="50dp"
-        android:layout_height="wrap_content"
-        android:background="@drawable/ic_camera"
-        android:layout_alignBottom="@+id/iv_image"
-        android:layout_alignParentEnd="true" />
-
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="한계 거리 :"
-        android:layout_alignBaseline="@+id/limit_distance"
-        android:layout_alignBottom="@+id/limit_distance"
-        android:layout_toStartOf="@+id/et_NICKNAME" />
-
-</RelativeLayout>
+</LinearLayout>
