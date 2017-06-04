@@ -6,22 +6,13 @@ package com.example.becomebeacon.beaconlocker;
 
 public class FindMessage {
 
-    public String Message;
-    public String PhoneNumb;
+    public String message;
+    public String phoneNumb;
 
     public FindMessage()
     {
-        this.Message ="";
-        this.PhoneNumb ="";
-    }
-
-    public void setMessage(String m)
-    {
-        this.Message = m;
-    }
-    public void setPhoneNumb(String m)
-    {
-        this.PhoneNumb = m;
+        this.message ="";
+        this.phoneNumb ="";
     }
 
 
