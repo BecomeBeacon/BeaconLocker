@@ -30,7 +30,7 @@ public class BeaconBackHostActivity extends AppCompatActivity {
     BleDeviceInfo info;
 
     String mac;
-    FindMessage FM;
+    FindMessage fm;
 
 
 
@@ -42,8 +42,10 @@ public class BeaconBackHostActivity extends AppCompatActivity {
         mac = intent.getStringExtra("MAC");
         info = BeaconList.lostMap.get(mac);
 
+
         initUI();
         initListeners();
+        fm=new FindMessage();
 
         mHandler.sendEmptyMessage(0);
 
@@ -63,10 +65,10 @@ public class BeaconBackHostActivity extends AppCompatActivity {
             public void onClick(View v)
             {
 
-                FM.setMessage("로 전화주세요");
+                fm.message="로 전화주세요";
 
-                mDatabase.getReference("users/"+ info.getUid() + "/message/")
-                        .push().setValue(FM);
+                mDatabase.getReference("users/"+ info.getUid()).child("messages")
+                        .setValue(fm);
 
                 Toast.makeText(getApplicationContext(),"메시지 발송 완료",Toast.LENGTH_SHORT).show();
                 //Notifications.notifications.remove(item.devAddress);
