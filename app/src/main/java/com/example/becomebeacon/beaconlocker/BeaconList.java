@@ -2,6 +2,7 @@ package com.example.becomebeacon.beaconlocker;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * Created by 함상혁입니다 on 2017-05-13.
@@ -12,6 +13,7 @@ public class BeaconList {
     //myItem
     static public HashMap<String, BleDeviceInfo> mItemMap=new HashMap<String,BleDeviceInfo>();
     static public HashMap<String, BleDeviceInfo> lostMap=new HashMap<String,BleDeviceInfo>();
+    static public HashSet<FindMessage> msgSet=new HashSet<FindMessage>();
 
 
 
@@ -26,6 +28,7 @@ public class BeaconList {
         lostMap.clear();
         mArrayListBleDevice.clear();
         mAssignedItem.clear();
+        msgSet.clear();
 
     }
 }

@@ -419,6 +419,13 @@ public class BluetoothScan {
                 }
                 else//다른사람꺼
                 {
+                    //bleinfo에 othersSendMsg가 false일때만 NOTI를 띄워야함
+                    //보내고 나면 othersSendMsg를 true로 만들어 줘야한다
+                    //
+                    //
+                    //
+
+                    ///
                     Log.d("LOST","and it's other");
                     mBleService.pushFindNotification(ldi,0);
                 }
