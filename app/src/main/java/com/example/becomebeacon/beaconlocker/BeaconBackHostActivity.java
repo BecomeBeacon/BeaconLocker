@@ -9,6 +9,7 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,10 +24,12 @@ public class BeaconBackHostActivity extends AppCompatActivity {
     static private BeaconBackHostActivity mContext;
     private Button sendMessage;
     private TextView viewRssi;
+    private EditText writeMessage;
     public  FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private FirebaseUser mUser;
 
     String phoneNum;
+    String inputMessage;
     BleDeviceInfo info;
 
     String mac;
@@ -57,6 +60,7 @@ public class BeaconBackHostActivity extends AppCompatActivity {
     private void initUI() {
         sendMessage=(Button)findViewById(R.id.sendMessageButton);
         viewRssi = (TextView)findViewById(R.id.rssiFlow);
+        writeMessage = (EditText) findViewById(R.id.message);
     }
 
     private void initListeners() {
@@ -65,7 +69,7 @@ public class BeaconBackHostActivity extends AppCompatActivity {
             public void onClick(View v)
             {
 
-                fm.message="로 전화주세요";
+                fm.message = inputMessage;
 
                 mDatabase.getReference("users/"+ info.getUid()).child("messages")
                         .push().setValue(fm);
@@ -76,6 +80,7 @@ public class BeaconBackHostActivity extends AppCompatActivity {
             }
         });
 
+        inputMessage = writeMessage.getText().toString();
     }
     private void viewRssiInUser()
     {
