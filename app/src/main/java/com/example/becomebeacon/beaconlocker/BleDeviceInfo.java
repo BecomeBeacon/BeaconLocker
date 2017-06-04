@@ -73,6 +73,7 @@ public class BleDeviceInfo {
         this.longitude = 0;
         this.uid = LoginActivity.getUser().getUid();
         this.userName = LoginActivity.getUser().getDisplayName();
+        lastDate="";
 
         this.pictureLink = null;
     }
@@ -103,6 +104,7 @@ public class BleDeviceInfo {
         this.rssi = 0;
         this.distance = 0;
         this.distance2 = 0;
+        lastDate="";
 
         this.rssiKalmanFileter = new KalmanFilter(0);
 
@@ -135,6 +137,7 @@ public class BleDeviceInfo {
         this.isFar=false;
         this.isLost=false;
 
+        lastDate="";
         this.rssi = rssi;
         this.distance = distance;
         this.timeout = TIME_OUT;
@@ -163,6 +166,7 @@ public class BleDeviceInfo {
         this.proximityUuid = proximityUuid;
         this.devName = devName;
         this.devAddress = devAddress;
+        lastDate="";
         //this.measuredPower = mPower;
         this.txPower = txPower;
         this.limitDistance=Values.basicLimitDistance;
@@ -189,6 +193,7 @@ public class BleDeviceInfo {
     public BleDeviceInfo(String proximityUuid, String devName,
                          String devAddress, int major, int minor, int txPower, int rssi, double distance, double distance2)
     {
+        lastDate="";
         this.isFar=false;
         isCheckLocation=false;
         this.proximityUuid = proximityUuid;
