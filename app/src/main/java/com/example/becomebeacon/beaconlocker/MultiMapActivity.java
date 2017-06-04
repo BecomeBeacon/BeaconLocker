@@ -100,7 +100,6 @@ public class MultiMapActivity extends FragmentActivity
 
     @Override
     public void onDestroy() {
-        // TODO Auto-generated method stub
         Log.d("Service","service destory");
         mHandler.removeMessages(0);
         super.onDestroy();

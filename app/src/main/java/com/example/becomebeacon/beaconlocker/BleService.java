@@ -160,7 +160,6 @@ public class BleService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        // TODO Auto-generated method stub
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -172,7 +171,6 @@ public class BleService extends Service {
 
     @Override
     public void onDestroy() {
-        // TODO Auto-generated method stub
         Log.d("Service","service destory");
         mBleScan.end();
         mHandler.removeMessages(0);
@@ -308,6 +306,52 @@ public class BleService extends Service {
 
 
         Notifications.notifications.put(bdi.devAddress,Notifications.cntNoti);
+        Log.d("NOTIC","NotiNum is "+Notifications.cntNoti+" there is key "+Notifications.notifications.toString());
+
+        notificationManager.notify(Notifications.cntNoti++, noti);
+
+
+//        ////        //소리추가
+//        noti.defaults = Notification.DEFAULT_SOUND;
+//
+//        //알림 소리를 한번만 내도록
+//        noti.flags = Notification.FLAG_ONLY_ALERT_ONCE;
+//
+//        //확인하면 자동으로 알림이 제거 되도록
+//        noti.flags = Notification.FLAG_AUTO_CANCEL;
+//
+//        //토스트 띄우기
+//       Toast.makeText(BleService.this, "비컨 멀어짐", Toast.LENGTH_LONG).show();
+
+
+    }
+
+    public void pushMsgNotification(String msg)
+    {
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        Intent intent = new Intent(this, RegLostDataActivity.class);
+
+        intent.putExtra("NOTI",Notifications.cntNoti);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Notification.Builder builder = new Notification.Builder(this);
+        builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.small_main_logo));
+        builder.setSmallIcon(R.drawable.small_main_logo);
+        builder.setTicker("위치 갱신됨");
+        builder.setContentTitle("위치가 갱신되었습니다");
+        builder.setContentText("남긴 메세지를 확인할까요?");
+        builder.setWhen(System.currentTimeMillis());
+        //builder.setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE);
+        builder.setVibrate(null);
+        builder.setContentIntent(pendingIntent);
+        builder.setAutoCancel(true);
+
+
+        Notification noti = builder.build();
+
+
+//        Notifications.notifications.put(bdi.devAddress,Notifications.cntNoti);
         Log.d("NOTIC","NotiNum is "+Notifications.cntNoti+" there is key "+Notifications.notifications.toString());
 
         notificationManager.notify(Notifications.cntNoti++, noti);
