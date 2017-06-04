@@ -1,14 +1,20 @@
 package com.example.becomebeacon.beaconlocker;
+import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Message;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -22,16 +28,27 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.estimote.sdk.Beacon;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by gwmail on 2017-04-26.
@@ -286,6 +303,56 @@ public class DataStoreActivity extends AppCompatActivity {
 
     //TODO:: 모듈화 하기
     protected void showChoosePicDialog() {
+        int result1 = new PermissionRequester.Builder(DataStoreActivity.this)
+                .setTitle("권한 요청")
+                .setMessage("권한을 요청합니다.")
+                .setPositiveButtonName("네")
+                .setNegativeButtonName("아니요.")
+                .create()
+                .request(Manifest.permission.WRITE_EXTERNAL_STORAGE, 1000 , new PermissionRequester.OnClickDenyButtonListener() {
+                    @Override
+                    public void onClick(Activity activity) {
+                        Log.d("RESULT", "취소함.");
+                    }
+                });
+
+        if (result1 == PermissionRequester.ALREADY_GRANTED) {
+            Log.d("RESULT", "권한이 이미 존재함.");
+            if (ActivityCompat.checkSelfPermission(DataStoreActivity.this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            }
+        }
+        else if(result1 == PermissionRequester.NOT_SUPPORT_VERSION)
+            Log.d("RESULT", "마쉬멜로우 이상 버젼 아님.");
+        else if(result1 == PermissionRequester.REQUEST_PERMISSION) {
+            Log.d("RESULT", "요청함. 응답을 기다림.");
+            int result2 = new PermissionRequester.Builder(DataStoreActivity.this)
+                    .setTitle("권한 요청")
+                    .setMessage("권한을 요청합니다.")
+                    .setPositiveButtonName("네")
+                    .setNegativeButtonName("아니요.")
+                    .create()
+                    .request(Manifest.permission.READ_EXTERNAL_STORAGE, 1000 , new PermissionRequester.OnClickDenyButtonListener() {
+                        @Override
+                        public void onClick(Activity activity) {
+                            Log.d("RESULT", "취소함.");
+                        }
+                    });
+
+            if (result2 == PermissionRequester.ALREADY_GRANTED) {
+                Log.d("RESULT", "권한이 이미 존재함.");
+                if (ActivityCompat.checkSelfPermission(DataStoreActivity.this,
+                        Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                }
+            }
+            else if(result2 == PermissionRequester.NOT_SUPPORT_VERSION)
+                Log.d("RESULT", "마쉬멜로우 이상 버젼 아님.");
+            else if(result2 == PermissionRequester.REQUEST_PERMISSION) {
+                Log.d("RESULT", "요청함. 응답을 기다림.");
+
+            }
+        }
+
         AlertDialog.Builder builder = new AlertDialog.Builder(DataStoreActivity.this);
         builder.setTitle("사진선택");
         String[] items = { "사진 선택하기", "카메라" };
