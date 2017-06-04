@@ -57,6 +57,7 @@ public class BleService extends Service {
     private static final float LOCATION_DISTANCE = 10f;
     boolean mScan;
     private GpsInfo gps;
+    private DatabaseReference lostBeaconInfoRef;
 
     private FirebaseDatabase mDatabase;
     //private DbOpenHelper dbOpenHelper;
@@ -73,6 +74,33 @@ public class BleService extends Service {
     public void onCreate()
     {
         super.onCreate();
+
+        lostBeaconInfoRef = mDatabase.getReference("lost_items/");
+
+        lostBeaconInfoRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot addressSnapshot : dataSnapshot.getChildren()) {
+                    LostDevInfo lostItem = addressSnapshot.getValue(LostDevInfo.class);
+                    if(BeaconList.lostMap.containsKey(lostItem.getDevAddr())) //갱신됨
+                    {
+                        BeaconList.lostMap.remove(lostItem.getDevAddr());
+                        BeaconList.lostMap.put(lostItem.getDevAddr(),lostItem);
+                    }
+                    else //신규 추가
+                    {
+                        BeaconList.lostMap.put(lostItem.getDevAddr(),lostItem);
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         mContext=this;
         Notifications.notifications=new HashMap<String,Integer>();
@@ -194,7 +222,7 @@ public class BleService extends Service {
                     if(dbi.timeout==0)
                     {
                         dbi.isFar=true;
-                        pushNotification(dbi.nickname,dbi.devAddress);
+                        pushNotification(dbi);
                     }
                 }
             }
@@ -207,12 +235,12 @@ public class BleService extends Service {
 
 
 
-    public void pushNotification(String name,String devAddress)
+    public void pushNotification(BleDeviceInfo bdi)
     {
 
-        if(Notifications.notifications.containsKey(devAddress))
+        if(Notifications.notifications.containsKey(bdi.devAddress))
         {
-            Log.d("NOTIC",name+"NOTI is already exist "+Notifications.notifications);
+            Log.d("NOTIC",bdi.nickname+"NOTI is already exist "+Notifications.notifications);
             return;
         }
 
@@ -223,7 +251,7 @@ public class BleService extends Service {
         intent.putExtra("NOTI",Notifications.cntNoti);
         intent2.putExtra("NOTI",Notifications.cntNoti);
 
-        intent.putExtra("MAC",devAddress);
+        intent.putExtra("MAC",bdi.devAddress);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         PendingIntent nothingIntent = PendingIntent.getActivity(this, 0, intent2, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -234,7 +262,7 @@ public class BleService extends Service {
         builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.small_main_logo));
         builder.setSmallIcon(R.drawable.small_main_logo);
         builder.setTicker("멀어짐");
-        builder.setContentTitle(name + "이 멀어졌습니다");
+        builder.setContentTitle(bdi.nickname + "이 멀어졌습니다");
         builder.setContentText("분실물로 등록할까요?");
         builder.setWhen(System.currentTimeMillis());
         //builder.setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE);
@@ -248,7 +276,7 @@ public class BleService extends Service {
         Notification noti = builder.build();
 
 
-        Notifications.notifications.put(devAddress,Notifications.cntNoti);
+        Notifications.notifications.put(bdi.devAddress,Notifications.cntNoti);
         Log.d("NOTIC","NotiNum is "+Notifications.cntNoti+" there is key "+Notifications.notifications.toString());
 
         notificationManager.notify(Notifications.cntNoti++, noti);
@@ -269,17 +297,17 @@ public class BleService extends Service {
 
     }
 
-    public void pushFindNotification(String name,String devAddress)
+    public void pushFindNotification(LostDevInfo ldi,int op)
     {
-        if(Notifications.notifications.containsKey(devAddress))
+        if(Notifications.notifications.containsKey(ldi.getDevAddr()))
         {
-            Log.d("NOTIC",name+"NOTI is already exist "+Notifications.notifications);
+            Log.d("NOTIC",ldi+"NOTI is already exist "+Notifications.notifications);
             return;
         }
 
 
 
-        Log.d("NOTIC","LostItem name : "+name+" ADRRESS : "+devAddress);
+        Log.d("NOTIC","LostItem name : "+ldi.getNickNameOfThing()+" ADRRESS : "+ldi.getDevAddr());
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         Intent intent = new Intent(this, BeaconDetailsActivity.class);
         Intent intent2 = new Intent();
@@ -287,7 +315,7 @@ public class BleService extends Service {
         intent.putExtra("NOTI",Notifications.cntNoti);
         intent2.putExtra("NOTI",Notifications.cntNoti);
 
-        intent.putExtra("MAC",devAddress);
+        intent.putExtra("MAC",ldi.getDevAddr());
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         PendingIntent nothingIntent = PendingIntent.getActivity(this, 0, intent2, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -298,7 +326,7 @@ public class BleService extends Service {
         builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.small_main_logo));
         builder.setSmallIcon(R.drawable.small_main_logo);
         builder.setTicker("감지됨");
-        builder.setContentTitle(name + "이 감지되었습니다");
+        builder.setContentTitle(ldi.getNickNameOfThing() + "이 감지되었습니다");
         builder.setContentText("분실물을 습득하셨나요?");
         builder.setWhen(System.currentTimeMillis());
         //builder.setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE);
@@ -312,7 +340,7 @@ public class BleService extends Service {
         Notification noti = builder.build();
 
 
-        Notifications.notifications.put(devAddress,Notifications.cntNoti);
+        Notifications.notifications.put(ldi.getDevAddr(),Notifications.cntNoti);
         Log.d("NOTIC","NotiNum is "+Notifications.cntNoti+" there is key "+Notifications.notifications.toString());
 
         notificationManager.notify(Notifications.cntNoti++, noti);

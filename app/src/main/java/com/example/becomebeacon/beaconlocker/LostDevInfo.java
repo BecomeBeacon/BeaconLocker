@@ -11,15 +11,21 @@ public class LostDevInfo {
     private String devAddr;
     private String uid;
     private String userName;
+    private String nickNameOfThing;
 
     public LostDevInfo() {
-        double longitude = 0;
-        double latitude = 0;
-        String lostDate = "";
-        String devAddr = "";
+        longitude = 0;
+        latitude = 0;
+        lostDate = "";
+        devAddr = "";
+        nickNameOfThing= "";
         this.uid = LoginActivity.getUser().getUid();
         this.userName = LoginActivity.getUser().getDisplayName();
     }
+
+    public String getNickNameOfThing(){return nickNameOfThing;}
+
+    public void setNickNameOfThing(String nick){nickNameOfThing = nick;}
 
     public double getLongitude() {
         return longitude;

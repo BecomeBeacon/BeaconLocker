@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 
 import com.estimote.sdk.connection.internal.protocols.Operation;
+import com.example.becomebeacon.beaconlocker.database.BeaconLost;
 import com.example.becomebeacon.beaconlocker.database.DbOpenHelper;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -53,7 +54,7 @@ public class BluetoothScan {
 
     private BleDeviceListAdapter mBleDeviceListAdapter;
     private MyBeaconsListAdapter mBeaconsListAdapter;
-    private DatabaseReference lostBeaconInfoRef;
+
 
 
 
@@ -105,7 +106,7 @@ public class BluetoothScan {
         mActivity=GetMainActivity.getMainActity();
         //setting = getSharedPreferences;
         BEACON_UUID = getBeaconUuid();
-        lostBeaconInfoRef = mDatabase.getReference("lost_items/");
+
 
 
         //saveRSSI = setting.getBoolean("saveRSSI", true);
@@ -129,7 +130,7 @@ public class BluetoothScan {
         mItemMap=BeaconList.mItemMap;
         mScannedMap=BeaconList.scannedMap;
 
-        lostBeaconInfoRef = mDatabase.getReference("lost_items/");
+
         mArrayListBleDevice=BeaconList.mArrayListBleDevice;
         mAssignedItem=BeaconList.mAssignedItem;
 
@@ -363,41 +364,18 @@ public class BluetoothScan {
 
 
             //잃어버린건지 찾아보자
-
-            lostBeaconInfoRef.addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    LostDevInfo ldi=dataSnapshot.getValue(LostDevInfo.class);
-                    if(ldi.getDevAddr()==item.devAddress)
-                    {
-                        Log.d("FIRE","IN FIRE "+item.devAddress+" vs "+ldi.getDevAddr());
-                    }
-                    else
-                    {
-                        Log.d("FIRE","NOT IN FIRE "+item.devAddress+" vs "+ldi.getDevAddr());
-                    }
+            if(BeaconList.lostMap.containsKey(item.devAddress))//잃어버린거임
+            {
+                LostDevInfo ldi= BeaconList.lostMap.get(item.devAddress);
+                if(BeaconList.mItemMap.containsKey(ldi.getDevAddr()))//내꺼
+                {
+                    mBleService.pushFindNotification(ldi,1);
                 }
-
-                @Override
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
+                else//다른사람꺼
+                {
+                    mBleService.pushFindNotification(ldi,0);
                 }
-
-                @Override
-                public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                }
-
-                @Override
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
+            }
 
 
 //            if(!dbOpenHelper.uniqueTest(item.devAddress)) //있을때 if문 작동함
@@ -475,7 +453,7 @@ public class BluetoothScan {
 
                     Log.d("Notic","Key"+tItem.devAddress+" too far : distance :"+tItem.distance2+" limit : "+tItem.limitDistance);
 
-                    mBleService.pushNotification(tItem.nickname, tItem.devAddress);
+                    mBleService.pushNotification(tItem);
                     Log.d("Notic","NotiNum : "+Notifications.notifications.get(tItem.devAddress));
                     mItemMap.get(tItem.devAddress).isFar = true;
                         //팝업 내용에따라 isLost 갱신
