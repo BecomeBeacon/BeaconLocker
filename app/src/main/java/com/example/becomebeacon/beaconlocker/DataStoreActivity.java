@@ -29,6 +29,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.estimote.sdk.Beacon;
+import com.example.becomebeacon.beaconlocker.pictureserver.Callback;
+import com.example.becomebeacon.beaconlocker.pictureserver.PictureUpload;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
