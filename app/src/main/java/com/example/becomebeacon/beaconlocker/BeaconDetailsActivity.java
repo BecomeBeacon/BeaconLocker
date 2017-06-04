@@ -55,6 +55,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
     private Button disconnect;
     private Button main;
     private Button changeImage;
+    private Button lostButton;
     static private BeaconDetailsActivity mContext;
     private ImageView ivPreview;
     private Bitmap mBitmap;
@@ -122,6 +123,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
         showMap=(Button)findViewById(R.id.showMap);
         limitDist=(EditText) findViewById(R.id.limit_distance);
         findStuff=(Button)findViewById(R.id.find);
+        lostButton = (Button)findViewById(R.id.lostButton);
     }
 
     private void initListeners() {
