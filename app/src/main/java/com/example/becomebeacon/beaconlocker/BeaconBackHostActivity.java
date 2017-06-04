@@ -57,7 +57,7 @@ public class BeaconBackHostActivity extends AppCompatActivity {
         initUI();
         initListeners();
         fm=new FindMessage();
-
+        fm.devAddress = info.devAddress;
         mHandler.sendEmptyMessage(0);
 
 
@@ -77,7 +77,6 @@ public class BeaconBackHostActivity extends AppCompatActivity {
         sendMessage.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v)
             {
-
                 fm.message = inputMessage;
 
                 mDatabase.getReference("users/"+ info.getUid()).child("messages")
