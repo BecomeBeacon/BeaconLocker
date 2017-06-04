@@ -15,6 +15,8 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.HashMap;
+
 
 public class BeaconBackHostActivity extends AppCompatActivity {
 
@@ -23,11 +25,11 @@ public class BeaconBackHostActivity extends AppCompatActivity {
     private TextView viewRssi;
     public  FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private FirebaseUser mUser;
+
     String phoneNum;
     BleDeviceInfo info;
-    Intent intent = getIntent();
-    String Uuid = intent.getExtras().getString("");
-    String distance = intent.getExtras().getString("");
+
+    String mac;
     FindMessage FM;
 
 
@@ -36,10 +38,17 @@ public class BeaconBackHostActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_back_host);
         mContext=this;
+        Intent intent = getIntent();
+        mac = intent.getStringExtra("MAC");
+        info = BeaconList.lostMap.get(mac);
 
         initUI();
         initListeners();
+
         mHandler.sendEmptyMessage(0);
+
+
+
 
     }
 
@@ -53,13 +62,10 @@ public class BeaconBackHostActivity extends AppCompatActivity {
         sendMessage.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v)
             {
-                TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext().getSystemService(getApplicationContext().TELEPHONY_SERVICE);
-                phoneNum = telephonyManager.getLine1Number();
 
-                FM.setMessage(phoneNum);
                 FM.setMessage("로 전화주세요");
 
-                mDatabase.getReference("users/"+ Uuid + "/message/")
+                mDatabase.getReference("users/"+ info.getUid() + "/message/")
                         .push().setValue(FM);
 
                 Toast.makeText(getApplicationContext(),"메시지 발송 완료",Toast.LENGTH_SHORT).show();

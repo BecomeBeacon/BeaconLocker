@@ -90,52 +90,54 @@ public class DataFetch {
                             //if(!myItemMap.containsKey(myAddress)) {
 
                                 ////////
-                                if(bleDeviceInfo.getPictureUri() != null)
-                                {
-                                    try {
-                                        Log.d("DF", "child = " + bleDeviceInfo.getPictureUri());
-                                        StorageReference storageRef = storage.getReference().child(bleDeviceInfo.getPictureUri());
-                                        // Storage 에서 다운받아 저장시킬 임시파일
-                                        final File imageFile = File.createTempFile("images", "jpg");
-                                        storageRef.getFile(imageFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                                            @Override
-                                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                                // Success Case
-                                                bitmapImage = BitmapFactory.decodeFile(imageFile.getPath());
-                                                Log.d("DF", "bitmapImage.toString();" + bitmapImage.toString());
+                            if(bleDeviceInfo.getPictureUri() != null)
+                            {
+                                try {
+                                    Log.d("DF", "child = " + bleDeviceInfo.getPictureUri());
+                                    StorageReference storageRef = storage.getReference().child(bleDeviceInfo.getPictureUri());
+                                    // Storage 에서 다운받아 저장시킬 임시파일
+                                    final File imageFile = File.createTempFile("images", "jpg");
+                                    storageRef.getFile(imageFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                        @Override
+                                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                                            // Success Case
+                                            bitmapImage = BitmapFactory.decodeFile(imageFile.getPath());
+                                            Log.d("DF", "bitmapImage.toString();" + bitmapImage.toString());
 
-                                                PictureList.pictures.put(bleDeviceInfo.devAddress,bitmapImage);
-                                                Log.d("DF","put complete pictues : "+PictureList.pictures.toString());
-                                                //mImage.setImageBitmap(bitmapImage);
-                                            }
-                                        }).addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                // Fail Case
-                                                e.printStackTrace();
-                                            }
-                                        });
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
+                                            PictureList.pictures.put(bleDeviceInfo.devAddress,bitmapImage);
+                                            Log.d("DF","put complete pictues : "+PictureList.pictures.toString());
+                                            //mImage.setImageBitmap(bitmapImage);
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            // Fail Case
+                                            e.printStackTrace();
+                                        }
+                                    });
+                                } catch (Exception e) {
+                                    e.printStackTrace();
                                 }
-
-                                ////////
-
-                                if(myItemMap.containsKey(myAddress)) {
-                                    Log.d("DF", "갱신");
-                                    myItemMap.remove(myAddress);
-                                }
-                                else
-                                {
-                                    myBleInfo.add(bleDeviceInfo);
-                                    Log.d("DF", "신규");
-                                }
-                                myItemMap.put(myAddress, bleDeviceInfo);
-
                             }
 
+                            ////////
+
+                            if(myItemMap.containsKey(myAddress)) {
+                                Log.d("DF", "갱신");
+                                myItemMap.remove(myAddress);
+                                for (int i = 0; i < BeaconList.mAssignedItem.size(); i++) {
+
+                                    if (BeaconList.mAssignedItem.get(i).devAddress.equals(myAddress)) {
+                                        BeaconList.mAssignedItem.remove(i);
+                                    }
+                                }
+                            }
+                            myBleInfo.add(bleDeviceInfo);
+                            myItemMap.put(myAddress, bleDeviceInfo);
+
                         }
+
+                    }
                    // }
 
                     @Override

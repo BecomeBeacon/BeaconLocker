@@ -70,9 +70,8 @@ public class RegLostDataActivity extends AppCompatActivity implements OnMapReady
 
         SimpleDateFormat CurDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         if(bleDeviceInfo.lastDate!=null) {
-            Log.d("RLDA", "date : " + CurDateFormat.format(bleDeviceInfo.lastDate));
 
-            devInfo.setLostDate(CurDateFormat.format(bleDeviceInfo.lastDate));
+            devInfo.setLostDate(bleDeviceInfo.lastDate);
         }
         else
         {

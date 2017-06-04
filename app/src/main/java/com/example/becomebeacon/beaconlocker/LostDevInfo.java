@@ -29,7 +29,7 @@ public class LostDevInfo {
         longitude = bdi.longitude;
         latitude = bdi.latitude;
         SimpleDateFormat CurDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        lostDate = CurDateFormat.format(bdi.lastDate);
+        lostDate = bdi.lastDate;
         devAddr = bdi.devAddress;
         nickNameOfThing= bdi.nickname;
         this.uid = bdi.uid;
