@@ -27,6 +27,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -43,7 +44,9 @@ public class BluetoothScan {
 
 
 
+    private DatabaseReference lostBeaconInfoRef;
 
+    private FirebaseDatabase mDatabase;
     public static String BEACON_UUID;
     public static  Boolean saveRSSI;
     private static final long SCAN_PERIOD = 1000;       // 10초동안 SCAN 과정을 수행함
@@ -107,6 +110,10 @@ public class BluetoothScan {
         //setting = getSharedPreferences;
         BEACON_UUID = getBeaconUuid();
 
+        mDatabase = FirebaseDatabase.getInstance();
+
+        lostBeaconInfoRef = mDatabase.getReference("beacon/");
+
 
 
         //saveRSSI = setting.getBoolean("saveRSSI", true);
@@ -130,6 +137,9 @@ public class BluetoothScan {
         mItemMap=BeaconList.mItemMap;
         mScannedMap=BeaconList.scannedMap;
 
+        mDatabase = FirebaseDatabase.getInstance();
+
+        lostBeaconInfoRef = mDatabase.getReference("beacon/");
 
         mArrayListBleDevice=BeaconList.mArrayListBleDevice;
         mAssignedItem=BeaconList.mAssignedItem;
@@ -377,22 +387,27 @@ public class BluetoothScan {
                 tItem.distance2 = mBleUtils.getDistance_20150515(KalmanRSSI, item.txPower);
 
                 if (Values.useGPS) {
-                    ///여기서 갱신된 la,lo를 DB에도 갱신해줘야함
-                    //
-                    //
-                    //
-                    //
 
 
-                    ///
 
-
-                    //
                     tItem.setCoordinate(Values.latitude, Values.longitude);
                     Log.d(TAG, "in useGps : lat : " + tItem.latitude + " long : " + tItem.longitude);
                     long now=System.currentTimeMillis();
-                    tItem.lastDate=new Date(now);
+                    SimpleDateFormat CurDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    tItem.lastDate=CurDateFormat.format(new Date(now));
+
+                    ///여기서 갱신된 la,lo를 DB에도 갱신해줘야함
+                    lostBeaconInfoRef.child(item.devAddress).child("longitude")
+                            .setValue(Values.longitude);
+
+                    lostBeaconInfoRef.child(item.devAddress).child("latitude")
+                            .setValue(Values.latitude);
+
+                    lostBeaconInfoRef.child(item.devAddress).child("lastDate")
+                            .setValue(tItem.lastDate);
+
                 }
+
 
 
                 Log.d("LOST",item.devAddress+" is lost item");
@@ -460,7 +475,9 @@ public class BluetoothScan {
                     tItem.setCoordinate(Values.latitude, Values.longitude);
                     Log.d(TAG, "in useGps : lat : " + tItem.latitude + " long : " + tItem.longitude);
                     long now=System.currentTimeMillis();
-                    tItem.lastDate=new Date(now);
+                    SimpleDateFormat CurDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    tItem.lastDate=CurDateFormat.format(new Date(now));
+
                 }
 
                 Log.d("SCAN", tItem.devAddress + "dist : " + tItem.distance2 + " isfar? " + tItem.isFar+" noti : "+Notifications.notifications);
