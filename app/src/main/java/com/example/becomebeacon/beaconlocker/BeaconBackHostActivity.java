@@ -68,7 +68,7 @@ public class BeaconBackHostActivity extends AppCompatActivity {
                 fm.message="로 전화주세요";
 
                 mDatabase.getReference("users/"+ info.getUid()).child("messages")
-                        .setValue(fm);
+                        .push().setValue(fm);
 
                 Toast.makeText(getApplicationContext(),"메시지 발송 완료",Toast.LENGTH_SHORT).show();
                 //Notifications.notifications.remove(item.devAddress);
