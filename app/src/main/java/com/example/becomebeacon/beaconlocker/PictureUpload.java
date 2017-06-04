@@ -25,10 +25,10 @@ public class PictureUpload {
     private String mPicUri;
     private BleDeviceInfo mBleDeviceInfo;
 
-    private CallBack successCallback;
-    private CallBack failCallback;
+    private Callback successCallback;
+    private Callback failCallback;
 
-    public PictureUpload(CallBack successCallback, CallBack failCallback) {
+    public PictureUpload(Callback successCallback, Callback failCallback) {
         mStorage = FirebaseStorage.getInstance();
         mDatabase = FirebaseDatabase.getInstance();
 

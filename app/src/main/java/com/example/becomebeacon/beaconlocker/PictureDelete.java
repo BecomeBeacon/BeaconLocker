@@ -15,12 +15,12 @@ public class PictureDelete {
     private FirebaseStorage mStorage;
     private FirebaseDatabase mDatabase;
 
-    private CallBack successCallback;
-    private CallBack failCallback;
+    private Callback successCallback;
+    private Callback failCallback;
 
     private BleDeviceInfo mBleDeviceInfo;
 
-    public PictureDelete(CallBack successCallback, CallBack failCallback) {
+    public PictureDelete(Callback successCallback, Callback failCallback) {
         mStorage = FirebaseStorage.getInstance();
         mDatabase = FirebaseDatabase.getInstance();
 

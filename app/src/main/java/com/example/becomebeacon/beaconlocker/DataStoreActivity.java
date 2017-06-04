@@ -195,7 +195,7 @@ public class DataStoreActivity extends AppCompatActivity {
 
         //사진이 있는 경우
         if (filePath != null) {
-            PictureUpload pictureUpload = new PictureUpload(new CallBack() {
+            PictureUpload pictureUpload = new PictureUpload(new Callback() {
                 @Override
                 public void callBackMethod(Object obj) {
                     //Upload 성공시
@@ -205,7 +205,7 @@ public class DataStoreActivity extends AppCompatActivity {
                     progressDialog.dismiss();
                     Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
                 }
-            }, new CallBack() {
+            }, new Callback() {
                 @Override
                 public void callBackMethod(Object obj) {
                     //Upload 실패시

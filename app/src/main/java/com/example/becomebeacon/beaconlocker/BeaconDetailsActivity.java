@@ -166,12 +166,12 @@ public class BeaconDetailsActivity extends AppCompatActivity {
                     progressDialog.show();
 
                     Log.d("PictureModify", "Picture Modify");
-                    PictureDelete pictureDelete = new PictureDelete(new CallBack() {
+                    PictureDelete pictureDelete = new PictureDelete(new Callback() {
                         @Override
                         public void callBackMethod(Object obj) {
                             //기존 사진 삭제 성공 시
                             item = (BleDeviceInfo)obj;
-                            PictureUpload pictureUpload = new PictureUpload(new CallBack() {
+                            PictureUpload pictureUpload = new PictureUpload(new Callback() {
                                 @Override
                                 public void callBackMethod(Object obj) {
                                     //사진 재 업로드 성공 시
@@ -181,7 +181,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
                                     progressDialog.dismiss();
                                     finish();
                                 }
-                            }, new CallBack() {
+                            }, new Callback() {
                                 @Override
                                 public void callBackMethod(Object obj) {
                                     //사진 재 업로드 실패 시
@@ -192,7 +192,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
 
                             pictureUpload.uploadPicture(item, filePath);
                         }
-                    }, new CallBack() {
+                    }, new Callback() {
                         @Override
                         public void callBackMethod(Object obj) {
                             //기존 사진 삭제 실패 시
