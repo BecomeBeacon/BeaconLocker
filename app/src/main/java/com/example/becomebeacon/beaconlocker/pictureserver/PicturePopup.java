@@ -23,9 +23,9 @@ import java.io.IOException;
 public class PicturePopup {
     private Context mContext;
 
-    private static final int CHOOSE_PICTURE = 0;
-    private static final int TAKE_PICTURE = 1;
-    private static final int CROP_SMALL_PICTURE = 2;
+    public static final int CHOOSE_PICTURE = 0;
+    public static final int TAKE_PICTURE = 1;
+    public static final int CROP_SMALL_PICTURE = 2;
 
     private Uri tempUri;
     private Uri filePath;
@@ -51,7 +51,7 @@ public class PicturePopup {
                         break;
                     case TAKE_PICTURE: // 카메라
                         Intent openCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        Uri tempUri = Uri.fromFile(new File(Environment.getExternalStorageDirectory(), "temp_image.png"));
+                        tempUri = Uri.fromFile(new File(Environment.getExternalStorageDirectory(), "temp_image.png"));
                         // 카메라 찍은사진은 SD에 저장
                         openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, tempUri);
                         takePictureCallback.callBackMethod(openCameraIntent);
@@ -65,29 +65,21 @@ public class PicturePopup {
     public void pictureActivityForResult(int requestCode, Intent data, Callback ImageToViewCallback) {
         switch (requestCode) {
             case TAKE_PICTURE:
-//                cutImage(tempUri);        //사진 Cut 후 받아오기
                 ImageToViewCallback.callBackMethod(tempUri);
                 break;
             case CHOOSE_PICTURE:
-//                cutImage(data.getData()); //사진 Cut 후 받아오기
-                filePath = data.getData();
-                ImageToViewCallback.callBackMethod(filePath);
+                tempUri = data.getData();
+                ImageToViewCallback.callBackMethod(tempUri);
                 break;
-//            case CROP_SMALL_PICTURE:
-//                if (data != null) {
-//                    setImageToView(data); // 사진은 미리보기
-//                }
-//                break;
         }
     }
 
-        protected void cutImage(Uri uri) {
-        if (uri == null) {
+    public void cutImage(Callback cropSmallPictureCallback) {
+        if (tempUri == null) {
             Log.i("alanjet", "The uri is not exist.");
         }
-        tempUri = uri;
         Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.setDataAndType(uri, "image/*");
+        intent.setDataAndType(tempUri, "image/*");
         // 설정
         intent.putExtra("crop", "true");
         // aspectX aspectY
@@ -97,9 +89,10 @@ public class PicturePopup {
         intent.putExtra("outputX", 150);
         intent.putExtra("outputY", 150);
         intent.putExtra("return-data", true);
-//        // temp Uri 에 저장
-//        Intent.putExtra(MediaStore.EXTRA_OUTPUT, tempUri);
-//        startActivityForResult(intent, CROP_SMALL_PICTURE);
+        // temp Uri 에 저장
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, tempUri);
+
+        cropSmallPictureCallback.callBackMethod(intent);
     }
 
 //    protected void setImageToView(Intent data, Callback ) {

@@ -33,11 +33,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.io.File;
 import java.io.IOException;
 
-import static com.example.becomebeacon.beaconlocker.BeaconDetailsActivity.CHOOSE_PICTURE;
-import static com.example.becomebeacon.beaconlocker.BeaconDetailsActivity.TAKE_PICTURE;
+import static com.example.becomebeacon.beaconlocker.pictureserver.PicturePopup.CHOOSE_PICTURE;
+import static com.example.becomebeacon.beaconlocker.pictureserver.PicturePopup.CROP_SMALL_PICTURE;
+import static com.example.becomebeacon.beaconlocker.pictureserver.PicturePopup.TAKE_PICTURE;
 
 /**
  * Created by gwmail on 2017-04-26.
@@ -75,8 +75,6 @@ public class DataStoreActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_item);
         mBleDeviceInfo=DeviceInfoStore.getBleInfo();
 
-
-
         //툴바 세팅
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_additem);
         setSupportActionBar(toolbar);
@@ -104,14 +102,9 @@ public class DataStoreActivity extends AppCompatActivity {
             Log.d("DSA","check 2");
             et_Address.setText(mBleDeviceInfo.devAddress);
         }
-
-
-
         //사진 선택
         btChoose = (Button) findViewById(R.id.btn_add_image);
         ivPreview = (ImageView) findViewById(R.id.iv_image);
-
-
 
         btChoose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -217,8 +210,6 @@ public class DataStoreActivity extends AppCompatActivity {
         for (int i = 0; i < BeaconList.mArrayListBleDevice.size(); i++) {
             if (BeaconList.mArrayListBleDevice.get(i).devAddress == mBleDeviceInfo.devAddress) {
                 BeaconList.mArrayListBleDevice.remove(i);
-                Log.d("dataStoreActivity", "removed");
-
             }
         }
     }
@@ -236,7 +227,6 @@ public class DataStoreActivity extends AppCompatActivity {
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            Log.v("MOUDLE_TEST", "Server Save Success");
                             Toast.makeText(getApplicationContext(), "서버에 저장되었습니다.", Toast.LENGTH_LONG).show();
                             progressDialog.dismiss();
                             finish();
@@ -245,7 +235,6 @@ public class DataStoreActivity extends AppCompatActivity {
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Log.v("MOUDLE_TEST", "Server SaveFail");
                             e.getStackTrace();
                             Toast.makeText(getApplicationContext(), "DB 저장에 실패하였습니다. 다시 시도해주세요.", Toast.LENGTH_LONG).show();
                             progressDialog.dismiss();
@@ -255,7 +244,6 @@ public class DataStoreActivity extends AppCompatActivity {
         catch (Exception e) {
             e.getStackTrace();
         }
-        Log.v("MOUDLE_TEST", "Server Save out");
     }
 
     ////////////////사진 팝업 및 저장 관련 메소드 ////////////////////
@@ -282,98 +270,35 @@ public class DataStoreActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == DataStoreActivity.RESULT_OK) {
-            picturePopup.pictureActivityForResult(requestCode, data, new Callback() {
-                @Override
-                public void callBackMethod(Object obj) {
+            switch (requestCode) {
+                case CHOOSE_PICTURE:
+                case TAKE_PICTURE:
+                    //사진을 가져옴
+                    picturePopup.pictureActivityForResult(requestCode, data, new Callback() {
+                        @Override
+                        public void callBackMethod(Object obj) {
+                            //중간처리 완료
+                            filePath = (Uri)obj;
+                            picturePopup.cutImage(new Callback() {
+                                @Override
+                                public void callBackMethod(Object obj) {
+                                    //사진 크롭 완료
+                                    startActivityForResult((Intent)obj, CROP_SMALL_PICTURE);
+                                }
+                            });
+                        }
+                    });
+                    break;
+                case CROP_SMALL_PICTURE:
                     try {
-                        filePath = (Uri)obj;
                         //Uri 파일을 Bitmap으로 만들어서 ImageView에 집어 넣는다.
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                         ivPreview.setImageBitmap(bitmap);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                }
-            });
+                    break;
+            }
         }
     }
-
-
-//
-//    //TODO:: 모듈화 하기
-//    protected void showChoosePicDialog() {
-//        AlertDialog.Builder builder = new AlertDialog.Builder(DataStoreActivity.this);
-//        builder.setTitle("사진선택");
-//        String[] items = { "사진 선택하기", "카메라" };
-//        builder.setNegativeButton("취소", null);
-//        builder.setItems(items, new DialogInterface.OnClickListener() {
-//
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                switch (which) {
-//                    case CHOOSE_PICTURE: // 사진 선택
-//                        Intent openAlbumIntent = new Intent(
-//                                Intent.ACTION_GET_CONTENT);
-//                        openAlbumIntent.setType("image/*");
-//                        //startActivityForResult사용한다.
-//                        startActivityForResult(openAlbumIntent, CHOOSE_PICTURE);
-//                        break;
-//                    case TAKE_PICTURE: // 카메라
-//                        Intent openCameraIntent = new Intent(
-//                                MediaStore.ACTION_IMAGE_CAPTURE);
-//                        tempUri = Uri.fromFile(new File(Environment
-//                                .getExternalStorageDirectory(), "temp_image.png"));
-//                        // 카메라 찍은사진은 SD에 저장
-//                        openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, tempUri);
-//                        startActivityForResult(openCameraIntent, TAKE_PICTURE);
-//                        break;
-//                }
-//            }
-//        });
-//        builder.show();
-//    }
-
-
-    /**
-     * 사진 마름질하다.
-     */
-//    protected void cutImage(Uri uri) {
-//        if (uri == null) {
-//            Log.i("alanjet", "The uri is not exist.");
-//        }
-//        tempUri = uri;
-//        Intent intent = new Intent("com.android.camera.action.CROP");
-//        intent.setDataAndType(uri, "image/*");
-//        // 설정
-//        intent.putExtra("crop", "true");
-//        // aspectX aspectY
-//        intent.putExtra("aspectX", 1);
-//        intent.putExtra("aspectY", 1);
-//        // outputX outputY
-//        intent.putExtra("outputX", 150);
-//        intent.putExtra("outputY", 150);
-//        intent.putExtra("return-data", true);
-//        startActivityForResult(intent, CROP_SMALL_PICTURE);
-//    }
-    /**
-     * 사진 저장
-     */
-    protected void setImageToView(Intent data) {
-        Bundle extras = data.getExtras();
-        if (extras != null) {
-            mBitmap = extras.getParcelable("data");
-            //사진은 사각형
-            ivPreview.setImageBitmap(mBitmap);//미리보기...
-        }
-    }
-
-//    private void imageToView(Uri uri) {
-//        try {
-//            //Uri 파일을 Bitmap으로 만들어서 ImageView에 집어 넣는다.
-//            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-//            ivPreview.setImageBitmap(bitmap);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
 }
