@@ -57,6 +57,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
     private Button findStuff;
     private EditText limitDist;
     private Button disconnect;
+    private Button main;
     private Button changeImage;
     private Button lostButton;
     static private BeaconDetailsActivity mContext;
@@ -135,6 +136,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
         address=(TextView)findViewById(R.id.et_address);
         meter=(TextView)findViewById(R.id.meter);
         disconnect=(Button)findViewById(R.id.disconnect);
+
         changeImage=(Button)findViewById(R.id.changeImage);
         showMap=(Button)findViewById(R.id.showMap);
         limitDist=(EditText) findViewById(R.id.limit_distance);
@@ -255,10 +257,11 @@ public class BeaconDetailsActivity extends AppCompatActivity {
         showMap.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v)
             {
-                Intent intent = new Intent(getApplicationContext(), MapActivity.class);
+                Intent intent = new Intent(getApplicationContext(), MultiMapActivity.class);
                 Log.d("BDA","lat : "+item.latitude+" long : "+item.longitude);
                 intent.putExtra("LAT",item.latitude);
                 intent.putExtra("LON",item.longitude);
+                intent.putExtra("DATE",item.lastDate);
                 startActivity(intent);
             }
         });

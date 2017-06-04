@@ -42,6 +42,9 @@ public class MultiMapActivity extends FragmentActivity
     private GpsInfo gps;
     double lat;
     double lon;
+    double inlat=0;
+    double inlon=0;
+    String lData;
     public  FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference mUserAddressRef = mDatabase.getReference("/lost_items/");
     private FirebaseUser mUser;
@@ -61,7 +64,9 @@ public class MultiMapActivity extends FragmentActivity
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
+        inlat = intent.getDoubleExtra("LAT",0);
+        inlon = intent.getDoubleExtra("LON",0);
+        lData = intent.getStringExtra("DATE");
     }
 
     public void getCurrentLocation() {
@@ -84,7 +89,13 @@ public class MultiMapActivity extends FragmentActivity
         //좌표값 세팅
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(LOST)); // 지정 좌표로 카메라 무브
         googleMap.animateCamera(CameraUpdateFactory.zoomTo(16)); // 0~20(1:세계,5:대륙,10:도시,15:거리)
-        FindLostItem();
+        if(inlat==0) {
+            FindLostItem();
+        }
+        else
+        {
+            onAddMarker(inlat,inlon,lData);
+        }
     }
 
     @Override

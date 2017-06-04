@@ -1,6 +1,7 @@
 package com.example.becomebeacon.beaconlocker;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -42,8 +43,14 @@ public class BeaconBackHostActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_back_host);
         mContext=this;
+
         Intent intent = getIntent();
         mac = intent.getStringExtra("MAC");
+        if(mac==null)
+        {
+            Uri uriData = getIntent().getData();
+            mac = uriData.getQueryParameter("beaconID");
+        }
         info = BeaconList.lostMap.get(mac);
 
 
@@ -75,6 +82,8 @@ public class BeaconBackHostActivity extends AppCompatActivity {
 
                 mDatabase.getReference("users/"+ info.getUid()).child("messages")
                         .push().setValue(fm);
+
+                BeaconList.lostMap.get(info.devAddress).othersSendMsg=true;
 
                 Toast.makeText(getApplicationContext(),"메시지 발송 완료",Toast.LENGTH_SHORT).show();
                 //Notifications.notifications.remove(item.devAddress);

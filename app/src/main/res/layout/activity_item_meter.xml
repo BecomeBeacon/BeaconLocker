@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -17,13 +17,19 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="220dp"
-        android:layout_weight="0.07">
+        android:layout_height="200dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_weight="0.07"
+        android:layout_above="@+id/linearLayout3">
 
         <ImageView
             android:id="@+id/iv_image"
             android:layout_width="match_parent"
-            android:layout_height="250dp" />
+            android:layout_height="200dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true" />
 
         <Button
             android:id="@+id/changeImage"
@@ -34,20 +40,13 @@
             android:background="@drawable/ic_camera" />
     </RelativeLayout>
 
-    <ImageView
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@color/common_google_signin_btn_text_dark_disabled" />
-
-    <ImageView
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@color/common_google_signin_btn_text_dark_disabled" />
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="260dp"
-        android:orientation="vertical">
+        android:layout_height="250dp"
+        android:layout_above="@+id/linearLayout2"
+        android:layout_alignParentStart="true"
+        android:orientation="vertical"
+        android:id="@+id/linearLayout3">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -101,14 +100,14 @@
                 android:id="@+id/limit_distance"
                 android:layout_width="200dp"
                 android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
                 android:layout_column="1"
                 android:layout_row="1"
                 android:drawableLeft="@drawable/ic_create"
                 android:gravity="center_horizontal"
                 android:inputType="numberDecimal"
-                android:text="TestAddr"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true" />
+                android:text="TestAddr" />
 
         </RelativeLayout>
 
@@ -125,22 +124,22 @@
                 android:id="@+id/textView6"
                 android:layout_width="220dp"
                 android:layout_height="50dp"
-                android:text="한계 거리(m 단위) :"
-                android:textSize="20dp"
                 android:layout_above="@+id/meter"
-                android:layout_centerHorizontal="true" />
+                android:layout_centerHorizontal="true"
+                android:text="한계 거리(m 단위) :"
+                android:textSize="20dp" />
 
             <TextView
                 android:id="@+id/meter"
                 android:layout_width="120dp"
                 android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
                 android:ems="10"
                 android:gravity="center_horizontal"
                 android:text="40"
                 android:textColor="@color/colorPrimary"
-                android:textSize="42sp"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true" />
+                android:textSize="42sp" />
         </RelativeLayout>
 
         <ImageView
@@ -156,7 +155,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:layout_weight="0.71"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:id="@+id/linearLayout2">
 
         <Button
             android:id="@+id/showMap"
@@ -203,4 +203,4 @@
             android:textSize="18dp" />
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>
