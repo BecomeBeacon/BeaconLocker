@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -25,21 +24,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import static com.example.becomebeacon.beaconlocker.R.id.iv_image;
 
 /**
  * Created by 함상혁입니다 on 2017-05-14.
@@ -90,6 +79,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
             Log.d("NOTIC","noti : "+noti);
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.cancel(noti);
+            Notifications.notifications.remove(item.devAddress);
 
         }
 
@@ -141,14 +131,21 @@ public class BeaconDetailsActivity extends AppCompatActivity {
             {
                 BeaconList.mItemMap.remove(item.devAddress);
                 Log.d("BDA","size : "+BeaconList.mAssignedItem.size());
-                for(int i=0;i<BeaconList.mAssignedItem.size();i++)
-                {
-                    if(BeaconList.mAssignedItem.get(i).devAddress==item.devAddress) {
+
+                for (int i = 0; i < BeaconList.mAssignedItem.size(); i++) {
+                    Log.d("BDA", "Compare " +BeaconList.mAssignedItem.get(i).devAddress+", "+item.devAddress);
+                    if (BeaconList.mAssignedItem.get(i).devAddress.equals(item.devAddress)) {
                         BeaconList.mAssignedItem.remove(i);
-                        Log.d("BDA","removed");
-                        break;
+                        Log.d("BDA", "removed");
+
+
+                    }
+                    else
+                    {
+                        Log.d("BDA", "not same");
                     }
                 }
+                Log.d("BDA","Array : "+BeaconList.mAssignedItem);
                 dataModify.deleteBeacon(item);
 
                 finish();
@@ -169,12 +166,12 @@ public class BeaconDetailsActivity extends AppCompatActivity {
                     progressDialog.show();
 
                     Log.d("PictureModify", "Picture Modify");
-                    PictureDelete pictureDelete = new PictureDelete(new Callback() {
+                    PictureDelete pictureDelete = new PictureDelete(new CallBack() {
                         @Override
                         public void callBackMethod(Object obj) {
                             //기존 사진 삭제 성공 시
                             item = (BleDeviceInfo)obj;
-                            PictureUpload pictureUpload = new PictureUpload(new Callback() {
+                            PictureUpload pictureUpload = new PictureUpload(new CallBack() {
                                 @Override
                                 public void callBackMethod(Object obj) {
                                     //사진 재 업로드 성공 시
@@ -184,7 +181,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
                                     progressDialog.dismiss();
                                     finish();
                                 }
-                            }, new Callback() {
+                            }, new CallBack() {
                                 @Override
                                 public void callBackMethod(Object obj) {
                                     //사진 재 업로드 실패 시
@@ -195,7 +192,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
 
                             pictureUpload.uploadPicture(item, filePath);
                         }
-                    }, new Callback() {
+                    }, new CallBack() {
                         @Override
                         public void callBackMethod(Object obj) {
                             //기존 사진 삭제 실패 시

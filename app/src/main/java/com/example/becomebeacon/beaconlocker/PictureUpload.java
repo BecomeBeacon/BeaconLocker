@@ -1,10 +1,8 @@
 package com.example.becomebeacon.beaconlocker;
 
-import android.app.ProgressDialog;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -27,10 +25,10 @@ public class PictureUpload {
     private String mPicUri;
     private BleDeviceInfo mBleDeviceInfo;
 
-    private Callback successCallback;
-    private Callback failCallback;
+    private CallBack successCallback;
+    private CallBack failCallback;
 
-    public PictureUpload(Callback successCallback, Callback failCallback) {
+    public PictureUpload(CallBack successCallback, CallBack failCallback) {
         mStorage = FirebaseStorage.getInstance();
         mDatabase = FirebaseDatabase.getInstance();
 

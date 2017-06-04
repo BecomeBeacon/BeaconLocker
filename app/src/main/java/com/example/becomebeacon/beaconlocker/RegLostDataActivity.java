@@ -94,18 +94,11 @@ public class RegLostDataActivity extends AppCompatActivity implements OnMapReady
                 .child("isFar")
                 .setValue(true); // isFar 속성값 변경
 
+
+
         mDatabase
                 .getReference("lost_items/" + devInfo.getDevAddr() + "/")
-                .child("lastdate")
-                .setValue(devInfo.getLostDate());
-        mDatabase
-                .getReference("lost_items/" + devInfo.getDevAddr() + "/")
-                .child("latitude")
-                .setValue(devInfo.getLatitude());
-        mDatabase
-                .getReference("lost_items/" + devInfo.getDevAddr() + "/")
-                .child("longitude")
-                .setValue(devInfo.getLongitude());
+                .setValue(devInfo);
 
         lostPos = new LatLng(devInfo.getLatitude(),devInfo.getLongitude());
         cp = new CameraPosition.Builder().target((lostPos)).zoom(17).build();
