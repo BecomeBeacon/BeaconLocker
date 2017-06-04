@@ -9,14 +9,18 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -53,7 +57,6 @@ public class BeaconDetailsActivity extends AppCompatActivity {
     private Button findStuff;
     private EditText limitDist;
     private Button disconnect;
-    private Button main;
     private Button changeImage;
     private Button lostButton;
     static private BeaconDetailsActivity mContext;
@@ -76,6 +79,20 @@ public class BeaconDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_meter);
         mContext=this;
+
+        //툴바 세팅
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_additem);
+        setSupportActionBar(toolbar);
+
+        toolbar.setTitle(R.string.app_name);
+        toolbar.setSubtitle("상세정보");
+
+        toolbar.setTitleTextColor(Color.WHITE);
+        toolbar.setSubtitleTextColor(ContextCompat.getColor(BeaconDetailsActivity.this, R.color.colorSubtitle));
+
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         Intent intent=getIntent();
         String da=intent.getStringExtra("MAC");
@@ -118,12 +135,79 @@ public class BeaconDetailsActivity extends AppCompatActivity {
         address=(TextView)findViewById(R.id.et_address);
         meter=(TextView)findViewById(R.id.meter);
         disconnect=(Button)findViewById(R.id.disconnect);
-        main=(Button)findViewById(R.id.toMain);
         changeImage=(Button)findViewById(R.id.changeImage);
         showMap=(Button)findViewById(R.id.showMap);
         limitDist=(EditText) findViewById(R.id.limit_distance);
         findStuff=(Button)findViewById(R.id.find);
         lostButton = (Button)findViewById(R.id.lostButton);
+    }
+
+    //툴바세팅
+    @Override
+    public boolean onOptionsItemSelected(android.view.MenuItem item) {
+        switch(item.getItemId()) {
+            case android.R.id.home:
+                toMainMethod();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void toMainMethod() {
+        item.nickname = nickName.getText().toString();
+        item.limitDistance = Double.valueOf(limitDist.getText().toString());
+
+        //사진이 수정됐으면
+        if (filePath != null) {
+            progressDialog = new ProgressDialog(BeaconDetailsActivity.this);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setMessage("업로드중...");
+            progressDialog.show();
+
+            Log.d("PictureModify", "Picture Modify");
+            PictureDelete pictureDelete = new PictureDelete(new Callback() {
+                @Override
+                public void callBackMethod(Object obj) {
+                    //기존 사진 삭제 성공 시
+                    item = (BleDeviceInfo) obj;
+                    PictureUpload pictureUpload = new PictureUpload(new Callback() {
+                        @Override
+                        public void callBackMethod(Object obj) {
+                            //사진 재 업로드 성공 시
+                            Log.d("PictureModify", "Picture Re-Upload Success");
+                            item = (BleDeviceInfo) obj;
+                            dataModify.changeBeacon(item);
+                            progressDialog.dismiss();
+                            finish();
+                        }
+                    }, new Callback() {
+                        @Override
+                        public void callBackMethod(Object obj) {
+                            //사진 재 업로드 실패 시
+                            Log.d("PictureModify", "Picture Re-Upload Fail");
+                            progressDialog.dismiss();
+                        }
+                    });
+
+                    pictureUpload.uploadPicture(item, filePath);
+                }
+            }, new Callback() {
+                @Override
+                public void callBackMethod(Object obj) {
+                    //기존 사진 삭제 실패 시
+                    Log.d("PictureModify", "Picture Delete Fail");
+                    progressDialog.dismiss();
+                }
+            });
+
+            pictureDelete.deletePicture(item);
+        }
+        //수정 없으면 다른 데이터만 수정
+        else {
+            Log.d("BDA", "else if(filePath != null)");
+            dataModify.changeBeacon(item);
+            finish();
+        }
     }
 
     private void initListeners() {
@@ -158,66 +242,6 @@ public class BeaconDetailsActivity extends AppCompatActivity {
                 dataModify.deleteBeacon(item);
 
                 finish();
-            }
-        });
-
-        main.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v)
-            {
-                item.nickname=nickName.getText().toString();
-                item.limitDistance = Double.valueOf(limitDist.getText().toString());
-
-                //사진이 수정됐으면
-                if(filePath != null) {
-                    progressDialog = new ProgressDialog(BeaconDetailsActivity.this);
-                    progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                    progressDialog.setMessage("업로드중...");
-                    progressDialog.show();
-
-                    Log.d("PictureModify", "Picture Modify");
-                    PictureDelete pictureDelete = new PictureDelete(new Callback() {
-                        @Override
-                        public void callBackMethod(Object obj) {
-                            //기존 사진 삭제 성공 시
-                            item = (BleDeviceInfo)obj;
-                            PictureUpload pictureUpload = new PictureUpload(new Callback() {
-                                @Override
-                                public void callBackMethod(Object obj) {
-                                    //사진 재 업로드 성공 시
-                                    Log.d("PictureModify", "Picture Re-Upload Success");
-                                    item = (BleDeviceInfo)obj;
-                                    dataModify.changeBeacon(item);
-                                    progressDialog.dismiss();
-                                    finish();
-                                }
-                            }, new Callback() {
-                                @Override
-                                public void callBackMethod(Object obj) {
-                                    //사진 재 업로드 실패 시
-                                    Log.d("PictureModify", "Picture Re-Upload Fail");
-                                    progressDialog.dismiss();
-                                }
-                            });
-
-                            pictureUpload.uploadPicture(item, filePath);
-                        }
-                    }, new Callback() {
-                        @Override
-                        public void callBackMethod(Object obj) {
-                            //기존 사진 삭제 실패 시
-                            Log.d("PictureModify", "Picture Delete Fail");
-                            progressDialog.dismiss();
-                        }
-                    });
-
-                    pictureDelete.deletePicture(item);
-                }
-                //수정 없으면 다른 데이터만 수정
-                else {
-                    Log.d("BDA","else if(filePath != null)");
-                    dataModify.changeBeacon(item);
-                    finish();
-                }
             }
         });
 
