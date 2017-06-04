@@ -83,6 +83,8 @@ public class BeaconBackHostActivity extends AppCompatActivity {
                 mDatabase.getReference("users/"+ info.getUid()).child("messages")
                         .push().setValue(fm);
 
+                BeaconList.lostMap.get(info.devAddress).othersSendMsg=true;
+
                 Toast.makeText(getApplicationContext(),"메시지 발송 완료",Toast.LENGTH_SHORT).show();
                 //Notifications.notifications.remove(item.devAddress);
 

@@ -42,8 +42,8 @@ public class MultiMapActivity extends FragmentActivity
     private GpsInfo gps;
     double lat;
     double lon;
-    double inlat;
-    double inlon;
+    double inlat=0;
+    double inlon=0;
     String lData;
     public  FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference mUserAddressRef = mDatabase.getReference("/lost_items/");
