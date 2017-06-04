@@ -1,7 +1,8 @@
-package com.example.becomebeacon.beaconlocker;
+package com.example.becomebeacon.beaconlocker.pictureserver;
 
 import android.support.annotation.NonNull;
 
+import com.example.becomebeacon.beaconlocker.BleDeviceInfo;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.FirebaseDatabase;

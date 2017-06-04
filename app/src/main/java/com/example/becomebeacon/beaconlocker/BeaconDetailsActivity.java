@@ -24,6 +24,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.becomebeacon.beaconlocker.pictureserver.Callback;
+import com.example.becomebeacon.beaconlocker.pictureserver.PictureDelete;
+import com.example.becomebeacon.beaconlocker.pictureserver.PictureUpload;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 

@@ -98,12 +98,12 @@
             android:id="@+id/textView12"
             android:layout_width="300dp"
             android:layout_height="35dp"
+            android:layout_alignStart="@+id/et_NICKNAME"
+            android:layout_below="@+id/et_NICKNAME"
             android:layout_marginTop="23dp"
             android:text="떨어진 거리와 알람(m 단위)"
             android:textSize="20dp"
-            android:textStyle="bold"
-            android:layout_below="@+id/et_NICKNAME"
-            android:layout_alignStart="@+id/et_NICKNAME" />
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/et_Limit_distance"
