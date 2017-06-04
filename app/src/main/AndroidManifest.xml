@@ -62,7 +62,17 @@
         <activity
             android:name=".DataStoreActivity"
             android:label="Beacon Locker" />
-        <activity android:name=".RegLostDataActivity"></activity>
+        <activity android:name=".RegLostDataActivity"/>
+
+        <activity android:name=".BeaconBackHostActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="callMyApp" android:host="back"/>
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>
