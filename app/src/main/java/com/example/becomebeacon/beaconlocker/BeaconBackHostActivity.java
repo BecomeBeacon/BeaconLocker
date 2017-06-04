@@ -62,10 +62,7 @@ public class BeaconBackHostActivity extends AppCompatActivity {
         sendMessage.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v)
             {
-                TelephonyManager telephonyManager = (TelephonyManager) getApplicationContext().getSystemService(getApplicationContext().TELEPHONY_SERVICE);
-                phoneNum = telephonyManager.getLine1Number();
 
-                FM.setMessage(phoneNum);
                 FM.setMessage("로 전화주세요");
 
                 mDatabase.getReference("users/"+ info.getUid() + "/message/")
