@@ -117,7 +117,7 @@ public class BleService extends Service {
                     FindMessage msg=addressSnapshot.getValue(FindMessage.class);
                     BeaconList.msgSet.add(msg);
                     Log.d("MSG","i got msg "+msg.devAddress+","+msg.message);
-                    //TODO:noti 날려야함
+                    pushMsgNotification(BeaconList.mItemMap.get(msg.devAddress),msg);
                     //DB에 ischeck를 체크해줘야함
                 }
 
@@ -326,21 +326,25 @@ public class BleService extends Service {
 
     }
 
-    public void pushMsgNotification(String msg)
+    public void pushMsgNotification(BleDeviceInfo bdi, FindMessage msg)
     {
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        Intent intent = new Intent(this, RegLostDataActivity.class);
+        Intent intent = new Intent(this, ReadMessageActivity.class);
+
+        BeaconList.msgList.add(msg);
+        int messageNumber = BeaconList.msgList.size()-1;
 
         intent.putExtra("NOTI",Notifications.cntNoti);
+        intent.putExtra("MyMessageIndex",messageNumber);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Notification.Builder builder = new Notification.Builder(this);
         builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.small_main_logo));
         builder.setSmallIcon(R.drawable.small_main_logo);
-        builder.setTicker("위치 갱신됨");
-        builder.setContentTitle("위치가 갱신되었습니다");
-        builder.setContentText("남긴 메세지를 확인할까요?");
+        builder.setTicker("누군가가" + bdi.getNickname() + "를 찾았습니다.");
+        builder.setContentTitle("누군가가" + bdi.getNickname() + "를 찾았습니다.");
+        builder.setContentText("메세지 : " + msg.message);
         builder.setWhen(System.currentTimeMillis());
         //builder.setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE);
         builder.setVibrate(null);

@@ -14,6 +14,7 @@ public class BeaconList {
     static public HashMap<String, BleDeviceInfo> mItemMap=new HashMap<String,BleDeviceInfo>();
     static public HashMap<String, BleDeviceInfo> lostMap=new HashMap<String,BleDeviceInfo>();
     static public HashSet<FindMessage> msgSet=new HashSet<FindMessage>();
+    static public ArrayList<FindMessage> msgList=new ArrayList<FindMessage>();
 
 
 
