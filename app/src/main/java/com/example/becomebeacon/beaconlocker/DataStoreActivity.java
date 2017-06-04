@@ -1,22 +1,13 @@
 package com.example.becomebeacon.beaconlocker;
-import android.Manifest;
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Message;
-import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -28,29 +19,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.estimote.sdk.Beacon;
 import com.example.becomebeacon.beaconlocker.pictureserver.Callback;
+import com.example.becomebeacon.beaconlocker.pictureserver.PicturePopup;
 import com.example.becomebeacon.beaconlocker.pictureserver.PictureUpload;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
-import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+
+import static com.example.becomebeacon.beaconlocker.pictureserver.PicturePopup.CHOOSE_PICTURE;
+import static com.example.becomebeacon.beaconlocker.pictureserver.PicturePopup.CROP_SMALL_PICTURE;
+import static com.example.becomebeacon.beaconlocker.pictureserver.PicturePopup.TAKE_PICTURE;
 
 /**
  * Created by gwmail on 2017-04-26.
@@ -68,32 +51,25 @@ public class DataStoreActivity extends AppCompatActivity {
     private TextView et_Address;
     private EditText et_Nickname;
     private EditText et_Limit_distance;
-    //private TextView et_Picture;
-    //private EditText et_Islost;
-    //private EditText et_LATITUDE;
-    //private EditText et_LONGITUDE;
 
     //storage 관련 변수
-    private Button btChoose;
+    //private Button btChoose;
     private Button btUpload;
     private ImageView ivPreview;
 
     private Uri filePath;
 
-    private static final int CHOOSE_PICTURE = 0;
-    private static final int TAKE_PICTURE = 1;
-    private static final int CROP_SMALL_PICTURE = 2;
     private static Uri tempUri;
     private Bitmap mBitmap;
     private ProgressDialog progressDialog = null;
+
+    private PicturePopup picturePopup;
 
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
         mBleDeviceInfo=DeviceInfoStore.getBleInfo();
-
-
 
         //툴바 세팅
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_additem);
@@ -117,39 +93,21 @@ public class DataStoreActivity extends AppCompatActivity {
         et_Address = (TextView) findViewById(R.id.et_address);
         et_Nickname = (EditText) findViewById(R.id.et_NICKNAME);
         et_Limit_distance = (EditText) findViewById(R.id.et_Limit_distance);
-        //et_Picture = (TextView) findViewById(R.id.et_PICTURE);
-        //et_LATITUDE = (EditText) findViewById(R.id.et_LATITUDE);
-        //et_LONGITUDE = (EditText) findViewById(R.id.et_LONGITUDE);
 
-        //mUserAddressRef = mDatabase.getReference("users/"+mUser.getUid()+"/beacons");
-        //TODO :: 인증 실패시 조치
-        //if(mFirebaseUser == null) {
-        //startActivity(new Intent(MainActivity.this, LoginActivity.class));
-        //finish();
-        //return;
-        //}
         if(et_Address!=null&&mBleDeviceInfo!=null) {
             Log.d("DSA","check 2");
             et_Address.setText(mBleDeviceInfo.devAddress);
         }
-
-
-
         //사진 선택
-        btChoose = (Button) findViewById(R.id.btn_add_image);
+        //btChoose = (Button) findViewById(R.id.btn_add_image);
         ivPreview = (ImageView) findViewById(R.id.iv_image);
 
 
 
-        btChoose.setOnClickListener(new View.OnClickListener() {
+        ivPreview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //이미지를 선택
-                showChoosePicDialog();
-//                Intent intent = new Intent();
-//                intent.setType("image/*");
-//                intent.setAction(Intent.ACTION_GET_CONTENT);
-//                startActivityForResult(Intent.createChooser(intent, "이미지를 선택하세요."), 0);
+                uploadMyPictureDialog();
             }
         });
         Log.v("DSA","Filepath first = " + String.valueOf(filePath));
@@ -183,11 +141,6 @@ public class DataStoreActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void initData() {
-        et_Address.setText("");
-        et_Nickname.setText("");
     }
 
     private void saveData() {
@@ -255,18 +208,11 @@ public class DataStoreActivity extends AppCompatActivity {
         for (int i = 0; i < BeaconList.mArrayListBleDevice.size(); i++) {
             if (BeaconList.mArrayListBleDevice.get(i).devAddress == mBleDeviceInfo.devAddress) {
                 BeaconList.mArrayListBleDevice.remove(i);
-                Log.d("dataStoreActivity", "removed");
-
             }
         }
     }
 
     private void databaseStore() {
-        Log.d("MODULE_TEST", "dbStore");
-        if(mBleDeviceInfo.pictureLink != null) {
-            Log.d("MODULE_TEST", mBleDeviceInfo.getPictureLink());
-        }
-        Log.d("MODULE_TEST", mBleDeviceInfo.toString());
         progressDialog = new ProgressDialog(this);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setMessage("DB 게시중...");
@@ -279,7 +225,6 @@ public class DataStoreActivity extends AppCompatActivity {
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            Log.v("MOUDLE_TEST", "Server Save Success");
                             Toast.makeText(getApplicationContext(), "서버에 저장되었습니다.", Toast.LENGTH_LONG).show();
                             progressDialog.dismiss();
                             finish();
@@ -288,7 +233,6 @@ public class DataStoreActivity extends AppCompatActivity {
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Log.v("MOUDLE_TEST", "Server SaveFail");
                             e.getStackTrace();
                             Toast.makeText(getApplicationContext(), "DB 저장에 실패하였습니다. 다시 시도해주세요.", Toast.LENGTH_LONG).show();
                             progressDialog.dismiss();
@@ -298,158 +242,61 @@ public class DataStoreActivity extends AppCompatActivity {
         catch (Exception e) {
             e.getStackTrace();
         }
-        Log.v("MOUDLE_TEST", "Server Save out");
     }
 
-
-
-    //TODO:: 모듈화 하기
-    protected void showChoosePicDialog() {
-        int result1 = new PermissionRequester.Builder(DataStoreActivity.this)
-                .setTitle("권한 요청")
-                .setMessage("권한을 요청합니다.")
-                .setPositiveButtonName("네")
-                .setNegativeButtonName("아니요.")
-                .create()
-                .request(Manifest.permission.WRITE_EXTERNAL_STORAGE, 1000 , new PermissionRequester.OnClickDenyButtonListener() {
-                    @Override
-                    public void onClick(Activity activity) {
-                        Log.d("RESULT", "취소함.");
-                    }
-                });
-
-        if (result1 == PermissionRequester.ALREADY_GRANTED) {
-            Log.d("RESULT", "권한이 이미 존재함.");
-            if (ActivityCompat.checkSelfPermission(DataStoreActivity.this,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            }
-        }
-        else if(result1 == PermissionRequester.NOT_SUPPORT_VERSION)
-            Log.d("RESULT", "마쉬멜로우 이상 버젼 아님.");
-        else if(result1 == PermissionRequester.REQUEST_PERMISSION) {
-            Log.d("RESULT", "요청함. 응답을 기다림.");
-            int result2 = new PermissionRequester.Builder(DataStoreActivity.this)
-                    .setTitle("권한 요청")
-                    .setMessage("권한을 요청합니다.")
-                    .setPositiveButtonName("네")
-                    .setNegativeButtonName("아니요.")
-                    .create()
-                    .request(Manifest.permission.READ_EXTERNAL_STORAGE, 1000 , new PermissionRequester.OnClickDenyButtonListener() {
-                        @Override
-                        public void onClick(Activity activity) {
-                            Log.d("RESULT", "취소함.");
-                        }
-                    });
-
-            if (result2 == PermissionRequester.ALREADY_GRANTED) {
-                Log.d("RESULT", "권한이 이미 존재함.");
-                if (ActivityCompat.checkSelfPermission(DataStoreActivity.this,
-                        Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                }
-            }
-            else if(result2 == PermissionRequester.NOT_SUPPORT_VERSION)
-                Log.d("RESULT", "마쉬멜로우 이상 버젼 아님.");
-            else if(result2 == PermissionRequester.REQUEST_PERMISSION) {
-                Log.d("RESULT", "요청함. 응답을 기다림.");
-
-            }
-        }
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(DataStoreActivity.this);
-        builder.setTitle("사진선택");
-        String[] items = { "사진 선택하기", "카메라" };
-        builder.setNegativeButton("취소", null);
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-
+    ////////////////사진 팝업 및 저장 관련 메소드 ////////////////////
+    private void uploadMyPictureDialog() {
+        //이미지를 선택
+        picturePopup = new PicturePopup(DataStoreActivity.this);
+        picturePopup.showChoosePicDialog(new Callback() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case CHOOSE_PICTURE: // 사진 선택
-                        Intent openAlbumIntent = new Intent(
-                                Intent.ACTION_GET_CONTENT);
-                        openAlbumIntent.setType("image/*");
-                        //startActivityForResult사용한다.
-                        startActivityForResult(openAlbumIntent, CHOOSE_PICTURE);
-                        break;
-                    case TAKE_PICTURE: // 카메라
-                        Intent openCameraIntent = new Intent(
-                                MediaStore.ACTION_IMAGE_CAPTURE);
-                        tempUri = Uri.fromFile(new File(Environment
-                                .getExternalStorageDirectory(), "temp_image.png"));
-                        // 카메라 찍은사진은 SD에 저장
-                        openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, tempUri);
-                        startActivityForResult(openCameraIntent, TAKE_PICTURE);
-                        break;
-                }
+            public void callBackMethod(Object obj) {
+                //사진 선택
+                startActivityForResult((Intent)obj, CHOOSE_PICTURE);
+            }
+        }, new Callback() {
+            @Override
+            public void callBackMethod(Object obj) {
+                //사진 촬영
+                startActivityForResult((Intent)obj, TAKE_PICTURE);
             }
         });
-        builder.show();
     }
+
+    //Picture Intent 생성 후 Result 처리
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == MainActivity.RESULT_OK) {
+        if (resultCode == DataStoreActivity.RESULT_OK) {
             switch (requestCode) {
-                case TAKE_PICTURE:
-                    //cutImage(tempUri); // 사진 마름질하다.
-                    filePath = tempUri;
-                    imageToView(filePath);
-                    Log.v("Test", "filepath = " + filePath);
-                    break;
                 case CHOOSE_PICTURE:
-                    //cutImage(data.getData());
-                    filePath = data.getData();
-                    imageToView(filePath);
-                    Log.v("Test", "filepath = " + filePath);
+                case TAKE_PICTURE:
+                    //사진을 가져옴
+                    picturePopup.pictureActivityForResult(requestCode, data, new Callback() {
+                        @Override
+                        public void callBackMethod(Object obj) {
+                            //중간처리 완료
+                            filePath = (Uri)obj;
+                            picturePopup.cutImage(new Callback() {
+                                @Override
+                                public void callBackMethod(Object obj) {
+                                    //사진 크롭 완료
+                                    startActivityForResult((Intent)obj, CROP_SMALL_PICTURE);
+                                }
+                            });
+                        }
+                    });
                     break;
                 case CROP_SMALL_PICTURE:
-                    if (data != null) {
-                        setImageToView(data); // 사진은 미리보기
+                    try {
+                        //Uri 파일을 Bitmap으로 만들어서 ImageView에 집어 넣는다.
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                        ivPreview.setImageBitmap(bitmap);
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                     break;
             }
-        }
-    }
-    /**
-     * 사진 마름질하다.
-     */
-    protected void cutImage(Uri uri) {
-        if (uri == null) {
-            Log.i("alanjet", "The uri is not exist.");
-        }
-        tempUri = uri;
-        Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.setDataAndType(uri, "image/*");
-        // 설정
-        intent.putExtra("crop", "true");
-        // aspectX aspectY
-        intent.putExtra("aspectX", 1);
-        intent.putExtra("aspectY", 1);
-        // outputX outputY
-        intent.putExtra("outputX", 150);
-        intent.putExtra("outputY", 150);
-        intent.putExtra("return-data", true);
-        startActivityForResult(intent, CROP_SMALL_PICTURE);
-    }
-    /**
-     * 사진 저장
-     */
-    protected void setImageToView(Intent data) {
-        Bundle extras = data.getExtras();
-        if (extras != null) {
-            mBitmap = extras.getParcelable("data");
-            //사진은 사각형
-            ivPreview.setImageBitmap(mBitmap);//미리보기...
-        }
-    }
-
-    private void imageToView(Uri uri) {
-        try {
-            //Uri 파일을 Bitmap으로 만들어서 ImageView에 집어 넣는다.
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-            ivPreview.setImageBitmap(bitmap);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 }
