@@ -73,8 +73,4 @@ public class DataModify {
         mDatabaseRef.child("beacon/").child(bleDeviceInfo.devAddress).removeValue();
         mDatabaseRef.child("users").child(mUser.getUid()).child("beacons").child(bleDeviceInfo.devAddress).removeValue();
     }
-
-    public void deletePicture(BleDeviceInfo bleDeviceInfo) {
-        mStorageRef.child(bleDeviceInfo.getPictureUri()).delete();
-    }
 }

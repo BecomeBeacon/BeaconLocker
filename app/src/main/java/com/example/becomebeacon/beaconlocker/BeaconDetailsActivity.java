@@ -161,10 +161,52 @@ public class BeaconDetailsActivity extends AppCompatActivity {
                 item.nickname=nickName.getText().toString();
                 item.limitDistance = Double.valueOf(limitDist.getText().toString());
 
+                //사진이 수정됐으면
                 if(filePath != null) {
-                    Log.d("BDA", "if(filePath != null)");
-                    uploadFileAndFinish();
+                    progressDialog = new ProgressDialog(BeaconDetailsActivity.this);
+                    progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                    progressDialog.setMessage("업로드중...");
+                    progressDialog.show();
+
+                    Log.d("PictureModify", "Picture Modify");
+                    PictureDelete pictureDelete = new PictureDelete(new Callback() {
+                        @Override
+                        public void callBackMethod(Object obj) {
+                            //기존 사진 삭제 성공 시
+                            item = (BleDeviceInfo)obj;
+                            PictureUpload pictureUpload = new PictureUpload(new Callback() {
+                                @Override
+                                public void callBackMethod(Object obj) {
+                                    //사진 재 업로드 성공 시
+                                    Log.d("PictureModify", "Picture Re-Upload Success");
+                                    item = (BleDeviceInfo)obj;
+                                    dataModify.changeBeacon(item);
+                                    progressDialog.dismiss();
+                                    finish();
+                                }
+                            }, new Callback() {
+                                @Override
+                                public void callBackMethod(Object obj) {
+                                    //사진 재 업로드 실패 시
+                                    Log.d("PictureModify", "Picture Re-Upload Fail");
+                                    progressDialog.dismiss();
+                                }
+                            });
+
+                            pictureUpload.uploadPicture(item, filePath);
+                        }
+                    }, new Callback() {
+                        @Override
+                        public void callBackMethod(Object obj) {
+                            //기존 사진 삭제 실패 시
+                            Log.d("PictureModify", "Picture Delete Fail");
+                            progressDialog.dismiss();
+                        }
+                    });
+
+                    pictureDelete.deletePicture(item);
                 }
+                //수정 없으면 다른 데이터만 수정
                 else {
                     Log.d("BDA","else if(filePath != null)");
                     dataModify.changeBeacon(item);
@@ -268,51 +310,49 @@ public class BeaconDetailsActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == MainActivity.RESULT_OK) {
-            // 임시
-            /*
+            Log.d("BeaconDetailsAct", "버튼 클릭");
             int result = new PermissionRequester.Builder(BeaconDetailsActivity.this)
                     .setTitle("권한 요청")
                     .setMessage("권한을 요청합니다.")
                     .setPositiveButtonName("네")
                     .setNegativeButtonName("아니요.")
                     .create()
-                    .request(Manifest.permission.READ_EXTERNAL_STORAGE, 1000 , new PermissionRequester.OnClickDenyButtonListener() {
+                    .request(Manifest.permission.CALL_PHONE, 1000 , new PermissionRequester.OnClickDenyButtonListener() {
                         @Override
                         public void onClick(Activity activity) {
                             Log.d("RESULT", "취소함.");
                         }
                     });
+
             if (result == PermissionRequester.ALREADY_GRANTED) {
                 Log.d("RESULT", "권한이 이미 존재함.");
                 if (ActivityCompat.checkSelfPermission(BeaconDetailsActivity.this,
-                        Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    Intent intent = new Intent(Intent, );
-                    startActivity(intent);
+                        Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
                 }
             }
-            else if(result == PermissionRequester.REQUEST_PERMISSION)
+            else if(result == PermissionRequester.NOT_SUPPORT_VERSION)
+                Log.d("RESULT", "마쉬멜로우 이상 버젼 아님.");
+            else if(result == PermissionRequester.REQUEST_PERMISSION) {
                 Log.d("RESULT", "요청함. 응답을 기다림.");
-            */
-            // 임시 끝
-
-            switch (requestCode) {
-                case TAKE_PICTURE:
-                    //cutImage(tempUri); // 사진 마름질하다.
-                    filePath = tempUri;
-                    imageToView(filePath);
-                    Log.v("Test", "filepath = " + filePath);
-                    break;
-                case CHOOSE_PICTURE:
-                    //cutImage(data.getData());
-                    filePath = data.getData();
-                    imageToView(filePath);
-                    Log.v("Test", "filepath = " + filePath);
-                    break;
-                case CROP_SMALL_PICTURE:
-                    if (data != null) {
-                        setImageToView(data); // 사진은 미리보기
-                    }
-                    break;
+                switch (requestCode) {
+                    case TAKE_PICTURE:
+                        //cutImage(tempUri); // 사진 마름질하다.
+                        filePath = tempUri;
+                        imageToView(filePath);
+                        Log.v("Test", "filepath = " + filePath);
+                        break;
+                    case CHOOSE_PICTURE:
+                        //cutImage(data.getData());
+                        filePath = data.getData();
+                        imageToView(filePath);
+                        Log.v("Test", "filepath = " + filePath);
+                        break;
+                    case CROP_SMALL_PICTURE:
+                        if (data != null) {
+                            setImageToView(data); // 사진은 미리보기
+                        }
+                        break;
+                }
             }
         }
     }
@@ -365,96 +405,5 @@ public class BeaconDetailsActivity extends AppCompatActivity {
         Bitmap bitmapImage=PictureList.pictures.get(item.devAddress);
 
         mImage.setImageBitmap(bitmapImage);
-//        FirebaseStorage storage = FirebaseStorage.getInstance();
-//        StorageReference storageRef = storage.getReferenceFromUrl("gs://beaconlocker-51c69.appspot.com/");
-//        Log.v("Test_Uri1", "URI = " + item.pictureUri);
-//        Toast.makeText(BeaconDetailsActivity.this,item.pictureUri,Toast.LENGTH_SHORT).show();
-//        try {
-//            storageRef = storage.getReferenceFromUrl("gs://beaconlocker-51c69.appspot.com/").child(item.pictureUri);
-//        }
-//        catch (Exception e) {
-//            Toast.makeText(BeaconDetailsActivity.this,item.pictureUri,Toast.LENGTH_SHORT).show();
-//            Log.v("Test_Uri2", "URI = " + item.pictureUri);
-//        }
-//
-//        try {
-//            // Storage 에서 다운받아 저장시킬 임시파일
-//            final File imageFile = File.createTempFile("images", "jpg");
-//            storageRef.getFile(imageFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-//                @Override
-//                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-//                    // Success Case
-//                    Bitmap bitmapImage = BitmapFactory.decodeFile(imageFile.getPath());
-//                    mImage.setImageBitmap(bitmapImage);
-//                    Toast.makeText(getApplicationContext(), "Success !!", Toast.LENGTH_LONG).show();
-//                }
-//            }).addOnFailureListener(new OnFailureListener() {
-//                @Override
-//                public void onFailure(@NonNull Exception e) {
-//                    // Fail Case
-//                    e.printStackTrace();
-//                    Toast.makeText(getApplicationContext(), "Fail !!", Toast.LENGTH_LONG).show();
-//                }
-//            });
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
     }
-
-    //upload the file
-    private void uploadFileAndFinish() {
-        //업로드할 파일이 있으면 수행
-        Log.v("Test","Filepath in uploadFile = " + String.valueOf(filePath));
-        //업로드 진행 Dialog 보이기
-
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setMessage("업로드중...");
-        progressDialog.show();
-
-        DataModify dataModify = new DataModify();
-        dataModify.deletePicture(item);
-
-        //storage
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-
-        //Unique한 파일명을 만들자.
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMHH_mmss");
-        Date now = new Date();
-        String filename = formatter.format(now) + ".png";
-        //storage 주소와 폴더 파일명을 지정해 준다.
-        StorageReference storageRef = storage.getReferenceFromUrl("gs://beaconlocker-51c69.appspot.com/").child("beacon_images/" + filename);
-        storageRef.putFile(filePath)
-                //성공시
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                        progressDialog.dismiss(); //업로드 진행 Dialog 상자 닫기
-                        Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                //실패시
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-//                        progressDialog.dismiss();
-                        Toast.makeText(getApplicationContext(), "업로드 실패!", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                //진행중
-                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-
-                    }
-                });
-        item.pictureUri = "beacon_images/" + filename;
-        Log.d("BDA", "pictureUri = " + item.pictureUri);
-        dataModify.changeBeacon(item);
-
-        Log.d("BDA", "finish");
-        finish();
-    }
-
-
 }

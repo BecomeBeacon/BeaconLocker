@@ -51,12 +51,12 @@ public class PermissionRequester {
              * PackageManager.PERMISSION_GRANTED : 권한이 있음.
              */
             int permissionCheck = ContextCompat.checkSelfPermission(context, permission);
- 
+
             /*
              * 해당 권한이 없을 경우 처리 방법
              */
             if (permissionCheck == PackageManager.PERMISSION_DENIED) {
- 
+
                 /*
                  * 권한을 취득할 때 사용자로부터 확인을 받아야 하는지 확인
                  * 여기서 true가 나올 경우는 해당 앱에서 한번이라도 권한을 Deny한 경우일 때 말고는 없음.
@@ -64,7 +64,7 @@ public class PermissionRequester {
                  * Marshmellow 버젼 이상부터 사용가능함.
                  */
                 if (context.shouldShowRequestPermissionRationale(permission)) {
- 
+
                     /*
                      * 권한 취득해야 하는 이유를 Dialog 등을 통해서 알린다.
                      */
@@ -179,5 +179,4 @@ public class PermissionRequester {
         public void onClick(Activity activity);
 
     }
-
 }

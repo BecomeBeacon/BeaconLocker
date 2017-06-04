@@ -59,7 +59,8 @@ public class BleService extends Service {
     private GpsInfo gps;
 
     private FirebaseDatabase mDatabase;
-    private DbOpenHelper dbOpenHelper;
+    //private DbOpenHelper dbOpenHelper;
+    //DB 비활성화
 
 //    NotificationManager Notifi_M;
 //    Notification Notifi ;
@@ -92,8 +93,13 @@ public class BleService extends Service {
 
         mDatabase = FirebaseDatabase.getInstance();
 
+        /* DB 비활성화
+        dbOpenHelper = new DbOpenHelper(getApplicationContext());
+        dbOpenHelper.open();
 
 
+        pullLostDevices();
+        */
     }
 
 
