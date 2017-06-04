@@ -88,16 +88,14 @@ public class BleService extends Service {
                     LostDevInfo lostItem = addressSnapshot.getValue(LostDevInfo.class);
                     if(BeaconList.lostMap.containsKey(lostItem.getDevAddr())) //갱신됨
                     {
-                        Log.d("LOST","update lost item : "+lostItem.getDevAddr());
                         BeaconList.lostMap.remove(lostItem.getDevAddr());
-                        BeaconList.lostMap.put(lostItem.getDevAddr(),lostItem);
+                        BeaconList.lostMap.put(lostItem.getDevAddr(),new BleDeviceInfo(lostItem));
                     }
                     else //신규 추가
                     {
-                        Log.d("LOST","new lost item : "+lostItem.getDevAddr());
-                        BeaconList.lostMap.put(lostItem.getDevAddr(),lostItem);
+                        BeaconList.lostMap.put(lostItem.getDevAddr(),new BleDeviceInfo(lostItem));
                     }
-                    Log.d("LOST","LOSTLIST : "+BeaconList.lostMap);
+
 
                 }
 

@@ -368,8 +368,35 @@ public class BluetoothScan {
             Log.d("LOST","and mylist :"+BeaconList.mItemMap);
             if(BeaconList.lostMap.containsKey(item.devAddress))//잃어버린거임
             {
+                BleDeviceInfo tItem = BeaconList.lostMap.get(item.devAddress);
+
+
+                tItem.rssi = (int) tItem.rssiKalmanFileter.update(item.rssi);
+                KalmanRSSI = tItem.rssi;
+                tItem.distance = mBleUtils.getDistance(KalmanRSSI, item.txPower);
+                tItem.distance2 = mBleUtils.getDistance_20150515(KalmanRSSI, item.txPower);
+
+                if (Values.useGPS) {
+                    ///여기서 갱신된 la,lo를 DB에도 갱신해줘야함
+                    //
+                    //
+                    //
+                    //
+
+
+                    ///
+
+
+                    //
+                    tItem.setCoordinate(Values.latitude, Values.longitude);
+                    Log.d(TAG, "in useGps : lat : " + tItem.latitude + " long : " + tItem.longitude);
+                    long now=System.currentTimeMillis();
+                    tItem.lastDate=new Date(now);
+                }
+
+
                 Log.d("LOST",item.devAddress+" is lost item");
-                LostDevInfo ldi= BeaconList.lostMap.get(item.devAddress);
+                LostDevInfo ldi= new LostDevInfo(BeaconList.lostMap.get(item.devAddress));
                 if(BeaconList.mItemMap.containsKey(ldi.getDevAddr()))//내꺼
                 {
                     Log.d("LOST","and it's mine");
