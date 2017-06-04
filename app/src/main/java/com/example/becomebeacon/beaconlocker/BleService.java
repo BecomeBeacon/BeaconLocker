@@ -117,7 +117,7 @@ public class BleService extends Service {
                     FindMessage msg=addressSnapshot.getValue(FindMessage.class);
                     BeaconList.msgSet.add(msg);
                     Log.d("MSG","i got msg "+msg.devAddress+","+msg.message);
-                    //noti 날려야함
+                    //TODO:noti 날려야함
                     //DB에 ischeck를 체크해줘야함
                 }
 

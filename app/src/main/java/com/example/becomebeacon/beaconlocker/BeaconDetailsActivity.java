@@ -257,7 +257,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
         showMap.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v)
             {
-                Intent intent = new Intent(getApplicationContext(), MapActivity.class);
+                Intent intent = new Intent(getApplicationContext(), MultiMapActivity.class);
                 Log.d("BDA","lat : "+item.latitude+" long : "+item.longitude);
                 intent.putExtra("LAT",item.latitude);
                 intent.putExtra("LON",item.longitude);

@@ -1,6 +1,7 @@
 package com.example.becomebeacon.beaconlocker;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -42,8 +43,14 @@ public class BeaconBackHostActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_back_host);
         mContext=this;
+
         Intent intent = getIntent();
         mac = intent.getStringExtra("MAC");
+        if(mac==null)
+        {
+            Uri uriData = getIntent().getData();
+            mac = uriData.getQueryParameter("beaconID");
+        }
         info = BeaconList.lostMap.get(mac);
 
 

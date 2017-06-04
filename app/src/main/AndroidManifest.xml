@@ -42,9 +42,6 @@
             android:value="AIzaSyBiSqQMWvOqr3d6BUAx5MkM3Xp0i83ODl0" />
 
         <activity
-            android:name=".MapActivity"
-            android:label="Beacon Locker" />
-        <activity
             android:name=".BeaconBackHostActivity"
             android:label="Beacon Locker">
             <intent-filter>
