@@ -118,7 +118,6 @@ public class BeaconDetailsActivity extends AppCompatActivity {
         address=(TextView)findViewById(R.id.et_address);
         meter=(TextView)findViewById(R.id.meter);
         disconnect=(Button)findViewById(R.id.disconnect);
-        main=(Button)findViewById(R.id.toMain);
         changeImage=(Button)findViewById(R.id.changeImage);
         showMap=(Button)findViewById(R.id.showMap);
         limitDist=(EditText) findViewById(R.id.limit_distance);
