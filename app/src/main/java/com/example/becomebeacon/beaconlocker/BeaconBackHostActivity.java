@@ -14,10 +14,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
 
-public class BeaconBackHost extends AppCompatActivity {
+public class BeaconBackHostActivity extends AppCompatActivity {
 
 
-    static private BeaconBackHost mContext;
+    static private BeaconBackHostActivity mContext;
     private Button getPhoneNumb;
     private TextView viewRssi;
     public  FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();

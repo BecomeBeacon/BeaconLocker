@@ -324,13 +324,13 @@ public class BleService extends Service {
         Intent intent ,intent2;
 
         if(op == 1) {
-            FIND_OTHERS_NOTI="사용자님의 "+ldi.getNickNameOfThing() + "이 감지되었습니다";
+            FIND_OTHERS_NOTI="당신의 "+ldi.getNickNameOfThing() + "이 감지되었습니다";
             intent = new Intent(this, BeaconDetailsActivity.class);
         }
         else if(op==0)
         {
             FIND_OTHERS_NOTI=ldi.getUserName()+"님의 "+ldi.getNickNameOfThing()+"이 감지되었습니다";
-            intent = new Intent(this, BeaconDetailsActivity.class);
+            intent = new Intent(this, BeaconBackHostActivity.class);
         }
         else
         {
