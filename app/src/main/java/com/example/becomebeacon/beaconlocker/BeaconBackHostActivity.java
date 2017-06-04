@@ -25,11 +25,11 @@ public class BeaconBackHostActivity extends AppCompatActivity {
     private TextView viewRssi;
     public  FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private FirebaseUser mUser;
-    BeaconList BL;
+
     String phoneNum;
     BleDeviceInfo info;
-    Intent intent = getIntent();
-    String mac = intent.getExtras().getString("MAC");
+
+    String mac;
     FindMessage FM;
 
 
@@ -38,7 +38,9 @@ public class BeaconBackHostActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_back_host);
         mContext=this;
-        info = BL.lostMap.get(mac);
+        Intent intent = getIntent();
+        mac = intent.getStringExtra("MAC");
+        info = BeaconList.lostMap.get(mac);
 
         initUI();
         initListeners();
