@@ -77,6 +77,18 @@ public class BleDeviceInfo {
         this.pictureLink = null;
     }
 
+    public BleDeviceInfo(LostDevInfo ldi)
+    {
+        this();
+        nickname=ldi.getNickNameOfThing();
+        devAddress=ldi.getDevAddr();
+        latitude=ldi.getLatitude();
+        longitude=ldi.getLongitude();
+        userName=ldi.getUserName();
+        uid=ldi.getUid();
+
+    }
+
     //Constructor
     public BleDeviceInfo(String devAddress, String nickname) {
         isCheckLocation=false;

@@ -11,7 +11,8 @@ public class BeaconList {
     static public HashMap<String, BleDeviceInfo> scannedMap=new HashMap<String,BleDeviceInfo>();
     //myItem
     static public HashMap<String, BleDeviceInfo> mItemMap=new HashMap<String,BleDeviceInfo>();
-    static public HashMap<String, LostDevInfo> lostMap=new HashMap<String,LostDevInfo>();
+    static public HashMap<String, BleDeviceInfo> lostMap=new HashMap<String,BleDeviceInfo>();
+
 
 
 
@@ -25,5 +26,6 @@ public class BeaconList {
         lostMap.clear();
         mArrayListBleDevice.clear();
         mAssignedItem.clear();
+
     }
 }
