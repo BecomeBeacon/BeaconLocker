@@ -25,6 +25,7 @@ public class BeaconBackHostActivity extends AppCompatActivity {
     private Button sendMessage;
     private TextView viewRssi;
     private EditText writeMessage;
+    private Button Editbutton;
     public  FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private FirebaseUser mUser;
 
@@ -61,6 +62,7 @@ public class BeaconBackHostActivity extends AppCompatActivity {
         sendMessage=(Button)findViewById(R.id.sendMessageButton);
         viewRssi = (TextView)findViewById(R.id.rssiFlow);
         writeMessage = (EditText) findViewById(R.id.message);
+        Editbutton = (Button)findViewById(R.id.editMButton);
     }
 
     private void initListeners() {
@@ -79,8 +81,13 @@ public class BeaconBackHostActivity extends AppCompatActivity {
 
             }
         });
+        Editbutton.setOnClickListener(new Button.OnClickListener() {
+            public void onClick(View v)
+            {
+                inputMessage = writeMessage.getText().toString();
+            }
+        });
 
-        inputMessage = writeMessage.getText().toString();
     }
     private void viewRssiInUser()
     {
