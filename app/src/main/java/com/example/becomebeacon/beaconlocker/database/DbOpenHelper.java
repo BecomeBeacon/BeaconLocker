@@ -65,6 +65,18 @@ public class DbOpenHelper {
             return false;
     }
 
+    public void dropAndCreateTable()
+    {
+        mDB.execSQL("DROP TABLE IF EXISTS lostDevices.lost_devices");
+        mDB.execSQL("CREATE TABLE IF NOT EXISTS lost_devices ( " +
+                "devaddr VARCHAR(32) NOT NULL, " +
+                "latitude DOUBLE NOT NULL, " +
+                "longitude DOUBLE NOT NULL, " +
+                "lastdate VARCHAR(32) NOT NULL, " +
+                "PRIMARY KEY (devaddr));"
+        );
+    }
+
     public Cursor selectQuery(String query){
         return mDB.rawQuery(query, null);
     }

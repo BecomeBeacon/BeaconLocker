@@ -46,7 +46,6 @@ import static android.content.ContentValues.TAG;
 
 public class BleService extends Service {
 
-
     public static BleService mContext;
     private String TAG="BLESERVICE";
     BluetoothScan mBleScan;
@@ -93,20 +92,8 @@ public class BleService extends Service {
 
         mDatabase = FirebaseDatabase.getInstance();
 
-        dbOpenHelper = new DbOpenHelper(getApplicationContext());
-        dbOpenHelper.open();
 
-        // 데이터 베이스 테이블 날리고 새로 생성함.
-        dbOpenHelper.execSQL("DROP TABLE IF EXISTS lostDevices.lost_devices");
-        dbOpenHelper.execSQL("CREATE TABLE IF NOT EXISTS lost_devices ( " +
-                "devaddr VARCHAR(32) NOT NULL, " +
-                "latitude DOUBLE NOT NULL, " +
-                "longitude DOUBLE NOT NULL, " +
-                "lastdate VARCHAR(32) NOT NULL, " +
-                "PRIMARY KEY (devaddr));"
-        );
 
-        pullLostDevices();
     }
 
 
@@ -427,64 +414,7 @@ public class BleService extends Service {
         return false;
     }
 
-    public void pullLostDevices() {
 
-        mDatabase.getReference("lost_items/")
-                .addValueEventListener(new ValueEventListener() {
-
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        // 리스너를 통해 DB 레코드가 추가되거나 삭제되면 그냥 테이블 날리고 다시 따온다.
-                        dbOpenHelper.execSQL("DROP TABLE IF EXISTS lostDevices.lost_devices");
-                        for(DataSnapshot tempSnapshot : dataSnapshot.getChildren()) {
-                            LostDevInfo lostDevInfo = tempSnapshot.getValue(LostDevInfo.class);
-                            Log.d("SNAP","snapshot : "+tempSnapshot.toString());
-                            dbOpenHelper.execSQL("INSERT INTO lost_devices VALUES('" + tempSnapshot.getKey() + "'," +
-                                    lostDevInfo.getLatitude() + "," +
-                                    lostDevInfo.getLongitude() + ", '" +
-                                    lostDevInfo.getLostDate() + "')");
-                            /*
-                            if(dbOpenHelper.uniqueTest(tempSnapshot.getKey())) {
-                                dbOpenHelper.execSQL("INSERT INTO lost_devices VALUES('" + tempSnapshot.getKey() + "'," +
-                                        lostDevInfo.getLatitude() + "," +
-                                        lostDevInfo.getLongitude() + ", '" +
-                                        lostDevInfo.getLostDate() + "')"
-                                );
-                                Log.d("DATABASE", ""+lostDevInfo.getLatitude());
-                                Log.d("DATABASE", ""+lostDevInfo.getLongitude());
-                                Log.d("DATABASE", ""+lostDevInfo.getLostDate());
-                            }
-                            else{
-                                Log.d("DATABASE","already exist key : "+lostDevInfo.toString());
-                            }
-                            */
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-//        mDatabaseRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                for(DataSnapshot temp:dataSnapshot.getChildren()) {
-//                    dbOpenHelper.insert(temp.getKey(), Double.valueOf(temp.child("longitude").getKey()),
-//                            Double.valueOf(temp.child("latitude").getKey()), temp.child("lastdate").getKey());
-//
-//                    Log.d("LDPS", "temp.getKey = " + temp.getKey());
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError error) {
-//                // Failed to read value
-//                Log.w(TAG, "Failed to read value.", error.toException());
-//
-//            }
-//        });
-    }
 
 
 

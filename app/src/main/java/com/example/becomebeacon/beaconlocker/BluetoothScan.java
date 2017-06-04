@@ -20,6 +20,11 @@ import android.widget.Toast;
 
 import com.estimote.sdk.connection.internal.protocols.Operation;
 import com.example.becomebeacon.beaconlocker.database.DbOpenHelper;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,8 +42,8 @@ public class BluetoothScan {
 
 
 
-
-    public static String BEACON_UUID;       // changsu
+    public static FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+    public static String BEACON_UUID;
     public static  Boolean saveRSSI;
     private static final long SCAN_PERIOD = 1000;       // 10초동안 SCAN 과정을 수행함
 
@@ -48,6 +53,7 @@ public class BluetoothScan {
 
     private BleDeviceListAdapter mBleDeviceListAdapter;
     private MyBeaconsListAdapter mBeaconsListAdapter;
+    private DatabaseReference lostBeaconInfoRef;
 
 
 
@@ -99,6 +105,7 @@ public class BluetoothScan {
         mActivity=GetMainActivity.getMainActity();
         //setting = getSharedPreferences;
         BEACON_UUID = getBeaconUuid();
+        lostBeaconInfoRef = mDatabase.getReference("lost_items/");
 
 
         //saveRSSI = setting.getBoolean("saveRSSI", true);
@@ -122,6 +129,7 @@ public class BluetoothScan {
         mItemMap=BeaconList.mItemMap;
         mScannedMap=BeaconList.scannedMap;
 
+        lostBeaconInfoRef = mDatabase.getReference("lost_items/");
         mArrayListBleDevice=BeaconList.mArrayListBleDevice;
         mAssignedItem=BeaconList.mAssignedItem;
 
@@ -265,7 +273,7 @@ public class BluetoothScan {
         }
     }
 
-    public void updateBleDeviceList(BleDeviceInfo item)
+    public void updateBleDeviceList(final BleDeviceInfo item)
     {
         int index = 0;
         boolean foundItem = false;
@@ -353,32 +361,67 @@ public class BluetoothScan {
             Log.d("SCAN","Tracking...: "+item.devAddress);
             Log.d("SCAN","mItem : "+mItemMap.toString());
 
-            DbOpenHelper dbOpenHelper = new DbOpenHelper(BleService.mContext.getApplicationContext());
 
-            dbOpenHelper.open();
+            //잃어버린건지 찾아보자
 
-            if(!dbOpenHelper.uniqueTest(item.devAddress)) //있을때 if문 작동함
-            {
-                BleDeviceInfo bdi;
-                //내꺼
-                if(mItemMap.containsKey(item.devAddress))
-                {
-                    bdi=mItemMap.get(item.devAddress);
-                    if(bdi.isLost) {
-                        Log.d("DATABASE", "Key" + item.devAddress + " LostItem ");
-                        mBleService.pushFindNotification(bdi.nickname, bdi.devAddress);
+            lostBeaconInfoRef.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    LostDevInfo ldi=dataSnapshot.getValue(LostDevInfo.class);
+                    if(ldi.getDevAddr()==item.devAddress)
+                    {
+                        Log.d("FIRE","IN FIRE "+item.devAddress+" vs "+ldi.getDevAddr());
+                    }
+                    else
+                    {
+                        Log.d("FIRE","NOT IN FIRE "+item.devAddress+" vs "+ldi.getDevAddr());
                     }
                 }
-                else {
-                    Log.d("DATABASE", "address :" + item.devAddress + "is Not mine : " + mItemMap);
-                    //다른사람
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
                 }
 
-            }
-            else
-            {
-                Log.d("DATABASE",item.devAddress+" is not in DB : ");
-            }
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+
+//            if(!dbOpenHelper.uniqueTest(item.devAddress)) //있을때 if문 작동함
+//            {
+//                BleDeviceInfo bdi;
+//                //내꺼
+//                if(mItemMap.containsKey(item.devAddress))
+//                {
+//                    bdi=mItemMap.get(item.devAddress);
+//                    if(bdi.isLost) {
+//                        Log.d("DATABASE", "Key" + item.devAddress + " LostItem ");
+//                        mBleService.pushFindNotification(bdi.nickname, bdi.devAddress);
+//                    }
+//                }
+//                else {
+//                    Log.d("DATABASE", "address :" + item.devAddress + "is Not mine : " + mItemMap);
+//                    //다른사람
+//                }
+//
+//            }
+//            else
+//            {
+//                Log.d("DATABASE",item.devAddress+" is not in DB : ");
+//            }
 
             if(mItemMap.containsKey(item.devAddress)) {
                 if (BeaconList.scannedMap.containsKey(item.devAddress)) {
