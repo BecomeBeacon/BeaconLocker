@@ -83,6 +83,45 @@ public class BleService extends Service {
         lostBeaconInfoRef = mDatabase.getReference("lost_items/");
         messageInfoRef = mDatabase.getReference("users/"+LoginActivity.getUser().getUid()+"/messages");
 
+
+
+
+        mContext=this;
+        Notifications.notifications=new HashMap<String,Integer>();
+        if(isServiceRunningCheck()) {
+            Log.d("BLESERVICE","already exist");
+            stopSelf();
+        }
+        Log.d("BLESERVICE","service start");
+
+        //Notifi_M = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+        mBleScan =new BluetoothScan(this);
+        Notifications.cntNoti=0;
+
+        mAssignedItem = BeaconList.mAssignedItem;
+        mScan=false;
+        mHandler.sendEmptyMessage(0);
+        mTimeOut.sendEmptyMessage(0);
+
+        mDatabase = FirebaseDatabase.getInstance();
+
+        /* DB 비활성화
+        dbOpenHelper = new DbOpenHelper(getApplicationContext());
+        dbOpenHelper.open();
+
+
+        pullLostDevices();
+        */
+    }
+
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    public void addDBListener()
+    {
         lostBeaconInfoRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -117,7 +156,10 @@ public class BleService extends Service {
                     FindMessage msg=addressSnapshot.getValue(FindMessage.class);
                     BeaconList.msgSet.add(msg);
                     Log.d("MSG","i got msg "+msg.devAddress+","+msg.message);
-                    pushMsgNotification(BeaconList.mItemMap.get(msg.devAddress),msg);
+                    if(msg.isChecked==false)
+                        pushMsgNotification(BeaconList.mItemMap.get(msg.devAddress),msg);
+                    msg.isChecked=true;
+                    messageInfoRef.child(addressSnapshot.getKey()).child("isChecked").setValue(true);
                     //DB에 ischeck를 체크해줘야함
                 }
 
@@ -128,39 +170,6 @@ public class BleService extends Service {
 
             }
         });
-
-        mContext=this;
-        Notifications.notifications=new HashMap<String,Integer>();
-        if(isServiceRunningCheck()) {
-            Log.d("BLESERVICE","already exist");
-            stopSelf();
-        }
-        Log.d("BLESERVICE","service start");
-
-        //Notifi_M = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-        mBleScan =new BluetoothScan(this);
-        Notifications.cntNoti=0;
-
-        mAssignedItem = BeaconList.mAssignedItem;
-        mScan=false;
-        mHandler.sendEmptyMessage(0);
-        mTimeOut.sendEmptyMessage(0);
-
-        mDatabase = FirebaseDatabase.getInstance();
-
-        /* DB 비활성화
-        dbOpenHelper = new DbOpenHelper(getApplicationContext());
-        dbOpenHelper.open();
-
-
-        pullLostDevices();
-        */
-    }
-
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        return super.onStartCommand(intent, flags, startId);
     }
 
 

@@ -30,4 +30,6 @@ public class ReadMessageActivity extends AppCompatActivity {
         Button goUpperMessage = (Button)findViewById(R.id.button_goUpperMessage);
         Button goLowerMessage = (Button)findViewById(R.id.button_goLowerMessage);
     }
+
+
 }

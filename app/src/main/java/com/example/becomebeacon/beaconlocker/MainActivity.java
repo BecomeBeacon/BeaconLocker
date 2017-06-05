@@ -223,6 +223,7 @@ public class MainActivity extends AppCompatActivity
         mainProgressDialog.setMessage("목록을 불러오는 중...");
         mainProgressDialog.show();
 
+        Notifications.clear();
         BeaconList.refresh();
 
         mBleUtils=new BleUtils();

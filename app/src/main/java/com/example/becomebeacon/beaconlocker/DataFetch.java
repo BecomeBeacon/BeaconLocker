@@ -60,6 +60,7 @@ public class DataFetch {
                             findBeaconByAddress(myBeaconOnUser.address);
                         }
                         GetMainActivity.getMainActity().mainProgressDialog.dismiss();
+                        BleService.mContext.addDBListener();
                     }
 
                     @Override

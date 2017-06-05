@@ -73,8 +73,10 @@ public class BleDeviceInfo {
 
         this.latitude = 0;
         this.longitude = 0;
-        this.uid = LoginActivity.getUser().getUid();
-        this.userName = LoginActivity.getUser().getDisplayName();
+        if(LoginActivity.getUser()!=null) {
+            this.uid = LoginActivity.getUser().getUid();
+            this.userName = LoginActivity.getUser().getDisplayName();
+        }
         lastDate="";
 
         this.pictureLink = null;
