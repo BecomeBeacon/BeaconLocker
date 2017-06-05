@@ -90,6 +90,7 @@ public class BeaconBackHostActivity extends AppCompatActivity {
         sendMessage.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v)
             {
+                inputMessage = writeMessage.getText().toString();
                 fm.message = inputMessage;
 
                 mDatabase.getReference("users/"+ info.getUid()).child("messages")
@@ -105,10 +106,10 @@ public class BeaconBackHostActivity extends AppCompatActivity {
         Editbutton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v)
             {
-                inputMessage = writeMessage.getText().toString();
+
             }
         });
-
+        finish();
     }
 
     private void viewImage()
@@ -127,7 +128,6 @@ public class BeaconBackHostActivity extends AppCompatActivity {
                         public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                             // Success Case
                             bitmapImage = BitmapFactory.decodeFile(imageFile.getPath());
-                            PictureList.pictures.put(info.devAddress, bitmapImage);
                             //mImage.setImageBitmap(bitmapImage);
                         }
                     }).addOnFailureListener(new OnFailureListener() {
