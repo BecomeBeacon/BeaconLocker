@@ -31,18 +31,19 @@ public class PictureDelete {
 
     public void deletePicture(BleDeviceInfo bleDeviceInfo) {
         mBleDeviceInfo = bleDeviceInfo;
-        mStorage.getReference().child(mBleDeviceInfo.getPictureUri()).delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        successCallback.callBackMethod(mBleDeviceInfo);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        failCallback.callBackMethod(e);
-                    }
-                });
+        if(mBleDeviceInfo.getPictureUri()!=null)
+            mStorage.getReference().child(mBleDeviceInfo.getPictureUri()).delete()
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            successCallback.callBackMethod(mBleDeviceInfo);
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            failCallback.callBackMethod(e);
+                        }
+                    });
     }
 }
