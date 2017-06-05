@@ -151,11 +151,12 @@ public class BleService extends Service {
         messageInfoRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d("MSG","i got msg ");
+
                 for(DataSnapshot addressSnapshot : dataSnapshot.getChildren()) {
                     FindMessage msg=addressSnapshot.getValue(FindMessage.class);
-                    BeaconList.msgSet.add(msg);
+                    BeaconList.msgList.add(msg);
                     Log.d("MSG","i got msg "+msg.devAddress+","+msg.message);
+                    Log.d("MSG","message list : "+BeaconList.msgList);
                     if(msg.isChecked==false)
                         pushMsgNotification(BeaconList.mItemMap.get(msg.devAddress),msg);
                     msg.isChecked=true;

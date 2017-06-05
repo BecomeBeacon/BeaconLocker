@@ -17,5 +17,9 @@ public class FindMessage {
         isChecked=false;
     }
 
+    public String toString()
+    {
+        return "message: "+message+" ischecked :"+isChecked;
+    }
 
 }
