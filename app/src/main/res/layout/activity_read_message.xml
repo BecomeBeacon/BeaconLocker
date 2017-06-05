@@ -4,28 +4,28 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/textView17"
+        android:id="@+id/myMessageView"
         android:layout_width="250dp"
         android:layout_height="180dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:text="message"
-        android:textSize="20dp"/>
+        android:textSize="18dp"/>
 
     <Button
-        android:id="@+id/button8"
+        android:id="@+id/button_goUpperMessage"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_above="@+id/textView17"
+        android:layout_above="@+id/myMessageView"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="14dp"
         android:background="@drawable/ic_arrow_upward" />
 
     <Button
-        android:id="@+id/button9"
+        android:id="@+id/button_goLowerMessage"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_below="@+id/textView17"
+        android:layout_below="@+id/myMessageView"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="18dp"
         android:background="@drawable/ic_arrow_downward"/>

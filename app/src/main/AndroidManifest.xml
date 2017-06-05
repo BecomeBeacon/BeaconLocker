@@ -45,10 +45,14 @@
             android:name=".BeaconBackHostActivity"
             android:label="Beacon Locker">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="callmyapp" android:host="back"/>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="back"
+                    android:scheme="callmyapp" />
             </intent-filter>
         </activity>
         <activity
@@ -66,10 +70,8 @@
         <activity
             android:name=".DataStoreActivity"
             android:label="Beacon Locker" />
-        <activity android:name=".RegLostDataActivity"/>
-
-
-
+        <activity android:name=".RegLostDataActivity" />
+        <activity android:name=".ReadMessageActivity"></activity>
     </application>
 
 </manifest>
