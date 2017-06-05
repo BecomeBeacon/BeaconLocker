@@ -1,22 +1,32 @@
 package com.example.becomebeacon.beaconlocker;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
 import java.util.HashMap;
 
 
@@ -29,6 +39,8 @@ public class BeaconBackHostActivity extends AppCompatActivity {
     private Button Editbutton;
     public  FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private FirebaseUser mUser;
+    public Bitmap bitmapImage;
+    public FirebaseStorage storage = FirebaseStorage.getInstance();
 
     String phoneNum;
     String inputMessage;
@@ -56,6 +68,7 @@ public class BeaconBackHostActivity extends AppCompatActivity {
 
         initUI();
         initListeners();
+        viewImage();
         fm=new FindMessage();
         fm.devAddress = info.devAddress;
         mHandler.sendEmptyMessage(0);
@@ -97,6 +110,38 @@ public class BeaconBackHostActivity extends AppCompatActivity {
         });
 
     }
+
+    private void viewImage()
+    {
+        if(info.getPictureUri() != null)
+        {
+            try {
+                StorageReference storageRef = storage.getReference().child(info.getPictureUri());
+                // Storage 에서 다운받아 저장시킬 임시파일
+                final File imageFile = File.createTempFile("images", "jpg");
+                storageRef.getFile(imageFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        // Success Case
+                        bitmapImage = BitmapFactory.decodeFile(imageFile.getPath());
+                        PictureList.pictures.put(info.devAddress,bitmapImage);
+                        //mImage.setImageBitmap(bitmapImage);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Fail Case
+                        e.printStackTrace();
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        ImageView image = (ImageView) findViewById(R.id.lost_device_image);
+        image.setImageBitmap(bitmapImage);
+    }
+
     private void viewRssiInUser()
     {
 
