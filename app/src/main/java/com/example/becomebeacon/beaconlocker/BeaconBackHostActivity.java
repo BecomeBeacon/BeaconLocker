@@ -36,7 +36,6 @@ public class BeaconBackHostActivity extends AppCompatActivity {
     private Button sendMessage;
     private TextView viewRssi;
     private EditText writeMessage;
-    private Button Editbutton;
     public  FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private FirebaseUser mUser;
     public Bitmap bitmapImage;
@@ -82,7 +81,6 @@ public class BeaconBackHostActivity extends AppCompatActivity {
         sendMessage=(Button)findViewById(R.id.sendMessageButton);
         viewRssi = (TextView)findViewById(R.id.rssiFlow);
         writeMessage = (EditText) findViewById(R.id.message);
-        Editbutton = (Button)findViewById(R.id.editMButton);
     }
 
     private void initListeners() {
@@ -100,16 +98,11 @@ public class BeaconBackHostActivity extends AppCompatActivity {
 
                 Toast.makeText(getApplicationContext(),"메시지 발송 완료",Toast.LENGTH_SHORT).show();
                 //Notifications.notifications.remove(item.devAddress);
+                finish();
 
             }
         });
-        Editbutton.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v)
-            {
 
-            }
-        });
-        finish();
     }
 
     private void viewImage()

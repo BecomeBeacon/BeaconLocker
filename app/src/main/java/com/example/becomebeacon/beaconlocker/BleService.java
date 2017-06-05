@@ -155,15 +155,15 @@ public class BleService extends Service {
                 for(DataSnapshot addressSnapshot : dataSnapshot.getChildren()) {
                     FindMessage msg=addressSnapshot.getValue(FindMessage.class);
                     msg.keyValue=addressSnapshot.getKey();
-                    BeaconList.msgMap.put(addressSnapshot.getKey(),msg);
+                    if(!BeaconList.msgMap.containsKey(addressSnapshot.getKey()))
+                        BeaconList.msgMap.put(addressSnapshot.getKey(),msg);
                     Log.d("MSG","i got msg "+msg.devAddress+","+msg.message);
                     Log.d("MSG","message list : "+BeaconList.msgMap);
                     if(msg.isChecked==false)
                         pushMsgNotification(BeaconList.mItemMap.get(msg.devAddress),msg);
                     msg.keyValue=addressSnapshot.getKey();
                     msg.isChecked=true;
-                    messageInfoRef.child(addressSnapshot.getKey()).child("isChecked").setValue(true);
-                    messageInfoRef.child(addressSnapshot.getKey()).child("keyValue").setValue(msg.keyValue);
+                    messageInfoRef.child(addressSnapshot.getKey()).setValue(msg);
                     //DB에 ischeck를 체크해줘야함
                 }
 

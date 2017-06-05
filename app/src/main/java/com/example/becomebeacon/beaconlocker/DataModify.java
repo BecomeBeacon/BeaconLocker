@@ -71,6 +71,7 @@ public class DataModify {
 
         }
         mDatabaseRef.child("beacon/").child(bleDeviceInfo.devAddress).removeValue();
+        Log.d("RMA", "DataModify" + mDatabaseRef.child("beacon/").child(bleDeviceInfo.devAddress));
         mDatabaseRef.child("users").child(mUser.getUid()).child("beacons").child(bleDeviceInfo.devAddress).removeValue();
     }
 }
