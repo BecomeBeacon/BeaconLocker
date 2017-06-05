@@ -330,14 +330,14 @@ public class MainActivity extends AppCompatActivity
            }
         });
 
-        //TODO : fab - test용 버튼 (db저장메뉴)
-        FloatingActionButton fab_test = (FloatingActionButton) findViewById(R.id.fab_test);
-        fab_test.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                stopBleService();
-            }
-        });
+//        //TODO : fab - test용 버튼 (db저장메뉴)
+//        FloatingActionButton fab_test = (FloatingActionButton) findViewById(R.id.fab_test);
+//        fab_test.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                stopBleService();
+//            }
+//        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -514,6 +514,9 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_machine) {
+            //내 메세지함 실행
+            Intent intent = new Intent(this, ReadMessageActivity.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_laf) {
             double lat, lng;
