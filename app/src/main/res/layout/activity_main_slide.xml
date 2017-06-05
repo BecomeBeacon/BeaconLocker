@@ -23,18 +23,18 @@
     <include layout="@layout/activity_main_content"
         android:id="@+id/include" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="76dp"
-        android:layout_height="76dp"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:tint="@color/common_google_signin_btn_text_dark_default"
-        app:backgroundTint="@color/colorButton"
-        app:srcCompat="@drawable/ic_button_add" />
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/fab_test"-->
+        <!--android:layout_width="76dp"-->
+        <!--android:layout_height="76dp"-->
+        <!--android:layout_gravity="bottom|end"-->
+        <!--android:layout_margin="@dimen/fab_margin"-->
+        <!--android:tint="@color/common_google_signin_btn_text_dark_default"-->
+        <!--app:backgroundTint="@color/colorButton"-->
+        <!--app:srcCompat="@drawable/ic_button_add" />-->
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_test"
+        android:id="@+id/fab"
         android:layout_width="76dp"
         android:layout_height="76dp"
         android:layout_gravity="top|right"
@@ -43,6 +43,6 @@
         app:backgroundTint="@color/colorButton"
         app:layout_anchor="@+id/include"
         app:layout_anchorGravity="bottom|left"
-        app:srcCompat="@drawable/ic_button_person" />
+        app:srcCompat="@drawable/ic_button_add" />
 
 </android.support.design.widget.CoordinatorLayout>
