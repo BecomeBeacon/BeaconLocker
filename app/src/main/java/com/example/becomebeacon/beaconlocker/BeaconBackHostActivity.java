@@ -116,27 +116,31 @@ public class BeaconBackHostActivity extends AppCompatActivity {
         if(info.getPictureUri() != null)
         {
             try {
-                StorageReference storageRef = storage.getReference().child(info.getPictureUri());
-                // Storage 에서 다운받아 저장시킬 임시파일
-                final File imageFile = File.createTempFile("images", "jpg");
-                storageRef.getFile(imageFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        // Success Case
-                        bitmapImage = BitmapFactory.decodeFile(imageFile.getPath());
-                        PictureList.pictures.put(info.devAddress,bitmapImage);
-                        //mImage.setImageBitmap(bitmapImage);
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        // Fail Case
-                        e.printStackTrace();
-                    }
-                });
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+                if (info.getPictureUri() == "null") {
+
+                } else {
+                    StorageReference storageRef = storage.getReference().child(info.getPictureUri());
+                    // Storage 에서 다운받아 저장시킬 임시파일
+                    final File imageFile = File.createTempFile("images", "jpg");
+                    storageRef.getFile(imageFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                            // Success Case
+                            bitmapImage = BitmapFactory.decodeFile(imageFile.getPath());
+                            PictureList.pictures.put(info.devAddress, bitmapImage);
+                            //mImage.setImageBitmap(bitmapImage);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            // Fail Case
+                            e.printStackTrace();
+                        }
+                    });
+                }
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
         }
         ImageView image = (ImageView) findViewById(R.id.lost_device_image);
         image.setImageBitmap(bitmapImage);
