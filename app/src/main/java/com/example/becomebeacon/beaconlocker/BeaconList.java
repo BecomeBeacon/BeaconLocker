@@ -13,7 +13,7 @@ public class BeaconList {
     //myItem
     static public HashMap<String, BleDeviceInfo> mItemMap=new HashMap<String,BleDeviceInfo>();
     static public HashMap<String, BleDeviceInfo> lostMap=new HashMap<String,BleDeviceInfo>();
-    static public ArrayList<FindMessage> msgList=new ArrayList<FindMessage>();
+    static public HashMap<String,FindMessage> msgMap=new HashMap<String,FindMessage>();
 
 
 
@@ -28,7 +28,7 @@ public class BeaconList {
         lostMap.clear();
         mArrayListBleDevice.clear();
         mAssignedItem.clear();
-        msgList.clear();
+        msgMap.clear();
 
     }
 }

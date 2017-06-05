@@ -154,13 +154,16 @@ public class BleService extends Service {
 
                 for(DataSnapshot addressSnapshot : dataSnapshot.getChildren()) {
                     FindMessage msg=addressSnapshot.getValue(FindMessage.class);
-                    BeaconList.msgList.add(msg);
+                    msg.keyValue=addressSnapshot.getKey();
+                    BeaconList.msgMap.put(addressSnapshot.getKey(),msg);
                     Log.d("MSG","i got msg "+msg.devAddress+","+msg.message);
-                    Log.d("MSG","message list : "+BeaconList.msgList);
+                    Log.d("MSG","message list : "+BeaconList.msgMap);
                     if(msg.isChecked==false)
                         pushMsgNotification(BeaconList.mItemMap.get(msg.devAddress),msg);
+                    msg.keyValue=addressSnapshot.getKey();
                     msg.isChecked=true;
                     messageInfoRef.child(addressSnapshot.getKey()).child("isChecked").setValue(true);
+                    messageInfoRef.child(addressSnapshot.getKey()).child("keyValue").setValue(msg.keyValue);
                     //DB에 ischeck를 체크해줘야함
                 }
 
@@ -341,11 +344,11 @@ public class BleService extends Service {
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         Intent intent = new Intent(this, ReadMessageActivity.class);
 
-        BeaconList.msgList.add(msg);
-        int messageNumber = BeaconList.msgList.size()-1;
+        BeaconList.msgMap.put(msg.keyValue,msg);
+        String messageKey = msg.keyValue;
 
         intent.putExtra("NOTI",Notifications.cntNoti);
-        intent.putExtra("MyMessageIndex",messageNumber);
+        intent.putExtra("MyMessageKey",messageKey);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 

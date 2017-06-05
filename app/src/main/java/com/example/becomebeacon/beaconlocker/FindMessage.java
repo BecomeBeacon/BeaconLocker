@@ -9,12 +9,14 @@ public class FindMessage {
     public String message;
     public String devAddress;
     public boolean isChecked;
+    public String keyValue;
 
     public FindMessage()
     {
         this.message ="";
         this.devAddress ="";
         isChecked=false;
+        keyValue="";
     }
 
     public String toString()
