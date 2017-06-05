@@ -15,6 +15,7 @@ public class ReadMessageActivity extends AppCompatActivity {
     TextView myMessageView;
     Button goUpperMessage;
     Button goLowerMessage;
+    Button deleteMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +34,7 @@ public class ReadMessageActivity extends AppCompatActivity {
         myMessageView = (TextView)findViewById(R.id.myMessageView);
         goUpperMessage = (Button)findViewById(R.id.button_goUpperMessage);
         goLowerMessage = (Button)findViewById(R.id.button_goLowerMessage);
+        deleteMessage = (Button)findViewById(R.id.button_deleteMessage);
     }
 
     private void initListeners() {
@@ -46,6 +48,12 @@ public class ReadMessageActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 setGoLowerMessagege();
+            }
+        });
+        deleteMessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setDeleteMessage();
             }
         });
     }
@@ -80,5 +88,12 @@ public class ReadMessageActivity extends AppCompatActivity {
         displayMyMessage();
     }
 
+    private void setDeleteMessage() {
+        BeaconList.msgList.remove(mMessageIndex--);
+        //TODO:파베에서 삭제
+        //
 
+        displayMyMessage();
+        Toast.makeText(ReadMessageActivity.this, "메세지가 삭제됐습니다.", Toast.LENGTH_LONG).show();
+    }
 }
