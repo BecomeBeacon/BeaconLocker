@@ -82,6 +82,7 @@
                 android:layout_marginTop="12dp"
                 android:text="분실물과의 거리(m 단위) :"
                 android:textSize="20dp"
+                android:textColor="@color/colorPrimary"
                 android:gravity="center_horizontal"/>
 
             <TextView
