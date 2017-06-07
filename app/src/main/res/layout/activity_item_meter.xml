@@ -152,7 +152,7 @@
                 android:layout_height="50dp"
                 android:layout_above="@+id/meter"
                 android:layout_centerHorizontal="true"
-                android:text="거리(m 단위) :"
+                android:text="분실물과의 거리(m 단위) :"
                 android:gravity="center_horizontal"
                 android:textSize="20dp" />
 
