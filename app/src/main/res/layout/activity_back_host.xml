@@ -5,57 +5,129 @@
     android:layout_height="match_parent"
     android:background="#f4f4f4">
 
-    <ImageView
-        android:id="@+id/lost_device_image"
-        android:layout_width="200dp"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="200dp"
-        app:srcCompat="@mipmap/ic_launcher_round"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="18dp"
+        android:id="@+id/relativeLayout4"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
-    <TextView
-        android:id="@+id/rssiFlow"
-        android:layout_width="160dp"
-        android:layout_height="40dp"
-        android:textSize="15dp"
-        android:textColor="@color/colorPrimary"
-        android:layout_below="@+id/distanceText"
-        android:layout_alignStart="@+id/distanceText" />
-    <TextView
-        android:id="@+id/distanceText"
-        android:layout_width="160dp"
-        android:layout_height="20dp"
-        android:text = "분실물과의 거리"
-        android:textSize="20dp"
-        android:layout_below="@+id/lost_device_image"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="17dp" />
-    <EditText
-        android:id="@+id/message"
-        android:layout_width="258dp"
-        android:layout_height="49dp"
-        android:layout_column="1"
-        android:layout_row="1"
-        android:drawableLeft="@drawable/ic_create"
-        android:inputType="textPersonName"
-        android:text=""
-        android:textSize="15sp"
-        android:layout_marginBottom="32dp"
-        android:layout_above="@+id/sendMessageButton"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentStart="true">
 
-    <Button
-        android:id="@+id/sendMessageButton"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="50dp"
-        android:background="#90CAF9"
-        android:text="메시지 전송"
-        android:textColor="@color/common_google_signin_btn_text_dark_default"
-        android:textSize="14dp"/>
+        <ImageView
+            android:id="@+id/lost_device_image"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="18dp"
+            app:srcCompat="@mipmap/ic_launcher_round" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout4"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/relativeLayout4"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@color/common_google_signin_btn_text_dark_disabled" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp">
+
+            <TextView
+                android:id="@+id/textView16"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="15dp"
+                android:text="별칭 :"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/text_bd_name"
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_column="1"
+                android:layout_row="1"
+                android:gravity="center_horizontal"
+                android:inputType="textPersonName"
+                android:text="testNICKNAME"
+                android:textSize="20dp" />
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@color/common_google_signin_btn_text_dark_disabled" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="130dp">
+
+            <TextView
+                android:id="@+id/distanceText"
+                android:layout_width="220dp"
+                android:layout_height="50dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="12dp"
+                android:text="분실물과의 거리(m 단위) :"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/rssiFlow"
+                android:layout_width="120dp"
+                android:layout_height="50dp"
+                android:layout_below="@+id/distanceText"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/colorPrimary"
+                android:textSize="40dp"
+                android:gravity="center_horizontal"/>
+
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/linearLayout4">
+
+        <EditText
+            android:id="@+id/message"
+            android:layout_width="258dp"
+            android:layout_height="49dp"
+            android:layout_column="1"
+            android:layout_row="1"
+            android:drawableLeft="@drawable/ic_create"
+            android:inputType="textPersonName"
+            android:text=""
+            android:textSize="15sp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp" />
+
+        <Button
+            android:id="@+id/sendMessageButton"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="34dp"
+            android:background="#90CAF9"
+            android:text="메시지 전송"
+            android:textColor="@color/common_google_signin_btn_text_dark_default"
+            android:textSize="14dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
 
 </RelativeLayout>

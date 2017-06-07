@@ -39,7 +39,6 @@
         android:layout_height="76dp"
         android:layout_gravity="top|right"
         android:layout_margin="@dimen/fab_margin"
-        android:tint="@color/common_google_signin_btn_text_dark_default"
         app:srcCompat="@drawable/fab_scan"
         app:backgroundTint="@color/colorButton"
         app:layout_anchor="@+id/include"

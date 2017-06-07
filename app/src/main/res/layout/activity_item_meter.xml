@@ -95,7 +95,8 @@
                 android:layout_marginStart="14dp"
                 android:gravity="center_horizontal"
                 android:text="Addr :"
-                android:textSize="20dp" />
+                android:textSize="20dp"
+                android:layout_toStartOf="@+id/limit_distance" />
 
             <EditText
                 android:id="@+id/limit_distance"
