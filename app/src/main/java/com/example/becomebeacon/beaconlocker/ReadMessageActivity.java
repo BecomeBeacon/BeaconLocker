@@ -26,7 +26,7 @@ public class ReadMessageActivity extends AppCompatActivity {
     private int mMessageIndex;
     private FirebaseUser mUser = LoginActivity.getUser();
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
-    private DatabaseReference mDatabaseRef = mDatabase.getReference("users/"+mUser.getUid()+"/message/");
+    private DatabaseReference mDatabaseRef = mDatabase.getReference("users/"+mUser.getUid()+"/messages/");
 
     private ArrayList<FindMessage> msgList;
     //Layout 멤버변수
@@ -79,7 +79,7 @@ public class ReadMessageActivity extends AppCompatActivity {
     public int initMsg(int op)
     {
         int idx = 0;
-        msgList = new ArrayList<FindMessage>(BeaconList.msgMap.values());
+        msgList = new ArrayList<>(BeaconList.msgMap.values());
 
         Iterator<FindMessage> iter=msgList.iterator();
 
@@ -139,22 +139,27 @@ public class ReadMessageActivity extends AppCompatActivity {
     }
 
     private void displayMyMessage() {
-        try {
-            if (mMessageIndex < 0) {
-                mMessageIndex = 0;
-                makeMessage();
-                Toast.makeText(ReadMessageActivity.this, "상위 메세지가 없습니다", Toast.LENGTH_SHORT).show();
-            } else if (mMessageIndex >= msgList.size()) {
-                mMessageIndex = msgList.size() - 1;
-                makeMessage();
-                Toast.makeText(ReadMessageActivity.this, "하위 메세지가 없습니다", Toast.LENGTH_SHORT).show();
-            } else {
-                makeMessage();
-            }
-        }
-        catch (Exception e) {
-            e.getStackTrace();
+        if(msgList.size() == 0) {
+            myMessageView.setText("메세지가 없습니다");
             Toast.makeText(ReadMessageActivity.this, "메세지가 없습니다", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            try {
+                if (mMessageIndex < 0) {
+                    mMessageIndex = 0;
+                    makeMessage();
+                    Toast.makeText(ReadMessageActivity.this, "상위 메세지가 없습니다", Toast.LENGTH_SHORT).show();
+                } else if (mMessageIndex >= msgList.size()) {
+                    mMessageIndex = msgList.size() - 1;
+                    makeMessage();
+                    Toast.makeText(ReadMessageActivity.this, "하위 메세지가 없습니다", Toast.LENGTH_SHORT).show();
+                } else {
+                    makeMessage();
+                }
+            } catch (Exception e) {
+                e.getStackTrace();
+                Toast.makeText(ReadMessageActivity.this, "메세지가 없습니다", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -186,8 +191,8 @@ public class ReadMessageActivity extends AppCompatActivity {
         BeaconList.msgMap.remove(msgList.get(mMessageIndex).keyValue);
         msgList.remove(mMessageIndex--);
 
-        displayMyMessage();
         Toast.makeText(ReadMessageActivity.this, "메세지가 삭제됐습니다.", Toast.LENGTH_SHORT).show();
+        displayMyMessage();
     }
 
     @Override
