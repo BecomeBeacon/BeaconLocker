@@ -46,10 +46,13 @@ import static android.content.ContentValues.TAG;
 
 public class BleService extends Service {
 
+    public boolean checkZeroPoint;
     public static BleService mContext;
     private String TAG="BLESERVICE";
-    BluetoothScan mBleScan;
-    Location loc;
+    private BluetoothScan mBleScan;
+    private Location loc;
+    private int myPoint ;
+    private String myPointKey=null;
 
     private String FIND_OTHERS_NOTI;
     private final String FIND_NOTI_SUB="분실물을 습득하셨나요?";
@@ -77,8 +80,11 @@ public class BleService extends Service {
     @Override
     public void onCreate()
     {
+
         super.onCreate();
         mDatabase = FirebaseDatabase.getInstance();
+
+        checkZeroPoint=true;
 
         lostBeaconInfoRef = mDatabase.getReference("lost_items/");
         messageInfoRef = mDatabase.getReference("users/"+LoginActivity.getUser().getUid()+"/messages");
@@ -87,7 +93,7 @@ public class BleService extends Service {
 
 
         mContext=this;
-        Notifications.notifications=new HashMap<String,Integer>();
+        Notifications.clear();
         if(isServiceRunningCheck()) {
             Log.d("BLESERVICE","already exist");
             stopSelf();
@@ -102,6 +108,7 @@ public class BleService extends Service {
         mScan=false;
         mHandler.sendEmptyMessage(0);
         mTimeOut.sendEmptyMessage(0);
+        myPoint=0;
 
         mDatabase = FirebaseDatabase.getInstance();
 
@@ -152,21 +159,89 @@ public class BleService extends Service {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
+                int addTotal=0;
+
                 for(DataSnapshot addressSnapshot : dataSnapshot.getChildren()) {
                     FindMessage msg=addressSnapshot.getValue(FindMessage.class);
                     msg.keyValue=addressSnapshot.getKey();
-                    if(!BeaconList.msgMap.containsKey(addressSnapshot.getKey()))
-                        BeaconList.msgMap.put(addressSnapshot.getKey(),msg);
+
+                    if(msg.isPoint)
+                    {
+                        if(msg.point<0) {//point 주는 msg는 음수로 온다
+                            addTotal -= msg.point;
+                            messageInfoRef.child(msg.keyValue).removeValue();
+
+                        }
+                        else {
+                            checkZeroPoint = false;
+                            myPoint = msg.point;
+                            myPointKey=addressSnapshot.getKey();
+                        }
+                        msg.isChecked=true;
+
+
+
+                        //Point msg는 받고 삭제해야한다
+
+
+
+
+                    }
+                    else
+                    {
+                        if(msg.isChecked==false)
+                            pushMsgNotification(BeaconList.mItemMap.get(msg.devAddress),msg);
+
+                        if(!BeaconList.msgMap.containsKey(addressSnapshot.getKey()))
+                            BeaconList.msgMap.put(addressSnapshot.getKey(),msg);
+
+                        msg.isChecked=true;
+                        messageInfoRef.child(addressSnapshot.getKey()).setValue(msg);
+
+
+                        if(BeaconList.rewardMap.containsKey(msg.devAddress))
+                        {
+                            BeaconList.rewardMap.remove(msg.devAddress);
+                        }
+
+                        BeaconList.rewardMap.put(msg.devAddress,msg.sendUid);
+                        Log.d("POINT","put reward for"+msg.devAddress+ ":"+msg.sendUid);
+                    }
+
+
+
                     Log.d("MSG","i got msg "+msg.devAddress+","+msg.message);
                     Log.d("MSG","message list : "+BeaconList.msgMap);
-                    if(msg.isChecked==false)
-                        pushMsgNotification(BeaconList.mItemMap.get(msg.devAddress),msg);
-                    msg.keyValue=addressSnapshot.getKey();
-                    msg.isChecked=true;
-                    messageInfoRef.child(addressSnapshot.getKey()).setValue(msg);
+
+
+
+
+
+
+
                     //DB에 ischeck를 체크해줘야함
                 }
 
+                if(checkZeroPoint)
+                {
+                    FindMessage fm=new FindMessage();
+                    fm.isPoint=true;
+                    fm.point=addTotal;
+
+                    messageInfoRef.push().setValue(fm);
+                    checkZeroPoint=false;
+                    myPoint=addTotal;
+
+                }
+                else
+                {
+
+                    myPoint+=addTotal;
+
+                    //내 점수 setText 해줘야함 ㄹㅇ루
+                }
+
+                Log.d("POINT","1: MyPoint is "+myPoint);
             }
 
             @Override
@@ -190,6 +265,10 @@ public class BleService extends Service {
         mTimeOut.removeMessages(0);
         super.onDestroy();
 
+        if(myPointKey!=null)
+            messageInfoRef.child(myPointKey).child("point").setValue(myPoint);
+
+        Log.d("POINT","Destroy: MyPoint is "+myPoint);
 
 
 
@@ -257,7 +336,7 @@ public class BleService extends Service {
                 {
                     BleDeviceInfo dbi=BeaconList.mAssignedItem.get(i);
                     dbi.timeout--;
-                    if(dbi.timeout==0)
+                    if(dbi.isLost!=true&&dbi.timeout==0)
                     {
                         dbi.isFar=true;
                         pushNotification(dbi);
@@ -276,7 +355,7 @@ public class BleService extends Service {
     public void pushNotification(BleDeviceInfo bdi)
     {
 
-        if(Notifications.notifications.containsKey(bdi.devAddress))
+        if(Notifications.notifications.containsKey(bdi.devAddress+Values.NOTI_FAR))
         {
             Log.d("NOTIC",bdi.nickname+"NOTI is already exist "+Notifications.notifications);
             return;
@@ -318,7 +397,8 @@ public class BleService extends Service {
         Notification noti = builder.build();
 
 
-        Notifications.notifications.put(bdi.devAddress,Notifications.cntNoti);
+
+        Notifications.notifications.put(bdi.devAddress+Values.NOTI_FAR,Notifications.cntNoti);
         Log.d("NOTIC","NotiNum is "+Notifications.cntNoti+" there is key "+Notifications.notifications.toString());
 
         notificationManager.notify(Notifications.cntNoti++, noti);
@@ -341,6 +421,7 @@ public class BleService extends Service {
 
     public void pushMsgNotification(BleDeviceInfo bdi, FindMessage msg)
     {
+        Log.d("POINT","noti come");
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         Intent intent = new Intent(this, ReadMessageActivity.class);
 
@@ -391,10 +472,13 @@ public class BleService extends Service {
 
     public void pushFindNotification(LostDevInfo ldi,int op)
     {
-        if(Notifications.notifications.containsKey(ldi.getDevAddr()))
+        if(Notifications.notifications.containsKey(ldi.getDevAddr()+Values.NOTI_I_FIND))
         {
             Log.d("NOTIC",ldi+"NOTI is already exist "+Notifications.notifications);
             return;
+        }else
+        {
+            Log.d("NOTIC",ldi.getDevAddr()+" is not in "+Notifications.notifications.keySet());
         }
 
 
@@ -448,7 +532,7 @@ public class BleService extends Service {
         Notification noti = builder.build();
 
 
-        Notifications.notifications.put(ldi.getDevAddr(), Notifications.cntNoti);
+        Notifications.notifications.put(ldi.getDevAddr()+Values.NOTI_I_FIND, Notifications.cntNoti);
         Log.d("NOTIC", "NotiNum is " + Notifications.cntNoti + " there is key " + Notifications.notifications.toString());
 
         notificationManager.notify(Notifications.cntNoti++, noti);

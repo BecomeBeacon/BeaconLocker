@@ -1,5 +1,7 @@
 package com.example.becomebeacon.beaconlocker;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
@@ -57,6 +59,14 @@ public class ReadMessageActivity extends AppCompatActivity {
         Intent intent=getIntent();
         mMessageKey = intent.getStringExtra("MyMessageKey");
 
+        int notiNum=intent.getIntExtra("NOTI",-1);
+
+        if(notiNum!=-1) {
+            Log.d("NOTIC","noti : "+notiNum);
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel(notiNum);
+        }
+
         int op=1;
         if(mMessageKey==null)
             op=0;
@@ -87,6 +97,10 @@ public class ReadMessageActivity extends AppCompatActivity {
         {
             FindMessage fm=iter.next();
             if(!BeaconList.mItemMap.containsKey(fm.devAddress))
+            {
+                iter.remove();
+            }
+            else if(fm.isPoint)
             {
                 iter.remove();
             }
