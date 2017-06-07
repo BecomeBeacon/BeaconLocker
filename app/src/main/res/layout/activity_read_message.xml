@@ -41,12 +41,9 @@
 
     <Button
         android:id="@+id/button_deleteMessage"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignBaseline="@+id/button_goLowerMessage"
-        android:layout_alignBottom="@+id/button_goLowerMessage"
-        android:layout_alignEnd="@+id/myMessageView"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:background="@drawable/ic_delete_forever"
-        android:textColor="@color/common_google_signin_btn_text_dark_default"
-        android:textSize="14dp" />
+        android:layout_above="@+id/button_goLowerMessage"
+        android:layout_toEndOf="@+id/myMessageView" />
 </RelativeLayout>
