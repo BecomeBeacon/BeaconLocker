@@ -1,11 +1,14 @@
 package com.example.becomebeacon.beaconlocker;
 
+import android.*;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
@@ -15,6 +18,7 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -227,6 +231,31 @@ public class MainActivity extends AppCompatActivity
         mainProgressDialog.show();
 
         initUI();
+
+        int result1 = new PermissionRequester.Builder(MainActivity.this)
+                .setTitle("권한 요청")
+                .setMessage("권한을 요청합니다.")
+                .setPositiveButtonName("네")
+                .setNegativeButtonName("아니요.")
+                .create()
+                .request(android.Manifest.permission.ACCESS_FINE_LOCATION, 1000 , new PermissionRequester.OnClickDenyButtonListener() {
+                    @Override
+                    public void onClick(Activity activity) {
+                        Log.d("RESULT", "취소함.");
+                    }
+                });
+
+        if (result1 == PermissionRequester.ALREADY_GRANTED) {
+            Log.d("RESULT", "권한이 이미 존재함.");
+            if (ActivityCompat.checkSelfPermission(MainActivity.this,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            }
+        }
+        else if(result1 == PermissionRequester.NOT_SUPPORT_VERSION)
+            Log.d("RESULT", "마쉬멜로우 이상 버젼 아님.");
+        else if(result1 == PermissionRequester.REQUEST_PERMISSION)
+            Log.d("RESULT", "요청함. 응답을 기다림.");
+
 
         //툴바 세팅
         toolbar = (Toolbar) findViewById(R.id.toolbar);

@@ -127,7 +127,10 @@ public class RegLostDataActivity extends AppCompatActivity implements OnMapReady
     @Override
     public void onMapReady(GoogleMap map) {
         MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(lostPos);
+        GpsInfo lostPosContents= new GpsInfo(GetMainActivity.getMainActity(),GetMainActivity.getMainActity());
+        lostPosContents.getLocation();
+
+        markerOptions.position(new LatLng(lostPosContents.lat,lostPosContents.lon));
         markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker));
         map.addMarker(markerOptions);
         map.getUiSettings().setScrollGesturesEnabled(false);
