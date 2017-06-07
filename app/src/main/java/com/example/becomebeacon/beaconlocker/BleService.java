@@ -156,14 +156,16 @@ public class BleService extends Service {
         });
 
         messageInfoRef.addValueEventListener(new ValueEventListener() {
+
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
+                Log.d("POINT","something changed");
                 int addTotal=0;
 
                 for(DataSnapshot addressSnapshot : dataSnapshot.getChildren()) {
                     FindMessage msg=addressSnapshot.getValue(FindMessage.class);
                     msg.keyValue=addressSnapshot.getKey();
+                    Log.d("POINT","key values is "+msg.keyValue+" : "+msg.point);
 
                     if(msg.isPoint)
                     {
@@ -171,10 +173,12 @@ public class BleService extends Service {
                             addTotal -= msg.point;
                             messageInfoRef.child(msg.keyValue).removeValue();
 
+
                         }
                         else {
                             checkZeroPoint = false;
-                            myPoint = msg.point;
+                            if(myPoint<msg.point)
+                                myPoint = msg.point;
                             myPointKey=addressSnapshot.getKey();
                         }
                         msg.isChecked=true;
@@ -189,15 +193,18 @@ public class BleService extends Service {
                     }
                     else
                     {
-                        if(msg.isChecked==false)
-                            pushMsgNotification(BeaconList.mItemMap.get(msg.devAddress),msg);
+                        if(msg.isChecked==false) {
+                            if(BeaconList.mItemMap.containsKey(msg.devAddress))
+                                pushMsgNotification(BeaconList.mItemMap.get(msg.devAddress), msg);
 
+                        }
                         if(!BeaconList.msgMap.containsKey(addressSnapshot.getKey()))
                             BeaconList.msgMap.put(addressSnapshot.getKey(),msg);
 
                         msg.isChecked=true;
                         messageInfoRef.child(addressSnapshot.getKey()).setValue(msg);
 
+                        Log.d("Point","change : "+msg.toString());
 
                         if(BeaconList.rewardMap.containsKey(msg.devAddress))
                         {
@@ -229,6 +236,7 @@ public class BleService extends Service {
                     fm.point=addTotal;
 
                     messageInfoRef.push().setValue(fm);
+                    Log.d("Point","change : "+fm.point);
                     checkZeroPoint=false;
                     myPoint=addTotal;
 
@@ -267,6 +275,7 @@ public class BleService extends Service {
 
         if(myPointKey!=null)
             messageInfoRef.child(myPointKey).child("point").setValue(myPoint);
+
 
         Log.d("POINT","Destroy: MyPoint is "+myPoint);
 
