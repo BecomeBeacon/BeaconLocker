@@ -42,6 +42,7 @@ public class BeaconBackHostActivity extends AppCompatActivity {
     public Bitmap bitmapImage;
     public FirebaseStorage storage = FirebaseStorage.getInstance();
     private ImageView ivPreview;
+    private TextView text_bd_name;
 
     String phoneNum;
     String inputMessage;
@@ -73,6 +74,7 @@ public class BeaconBackHostActivity extends AppCompatActivity {
         fm=new FindMessage();
         fm.devAddress = info.devAddress;
         mHandler.sendEmptyMessage(0);
+        text_bd_name.setText(info.getNickname());
 
 
 
@@ -84,6 +86,7 @@ public class BeaconBackHostActivity extends AppCompatActivity {
         viewRssi = (TextView)findViewById(R.id.rssiFlow);
         writeMessage = (EditText) findViewById(R.id.message);
         ivPreview = (ImageView) findViewById(R.id.lost_device_image);
+        text_bd_name = (TextView) findViewById(R.id.text_bd_name);
     }
 
     private void initListeners() {
