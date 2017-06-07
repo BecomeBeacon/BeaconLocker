@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity
     private FirebaseAuth mAuth;
     private TextView mEmail;
     private TextView mName;
+    private TextView mPoint;
     private GoogleApiClient mGoogleApiClient;
     private Intent bleService;
 
@@ -251,8 +252,7 @@ public class MainActivity extends AppCompatActivity
 
         GetMainActivity.setMA(this);
 
-        bleService= new Intent(this,BleService.class);
-        startService(bleService);
+
         if(myBeacons==null||scannedBeacons==null)
         {
             Log.d("sss","cannot find listview");
@@ -290,7 +290,7 @@ public class MainActivity extends AppCompatActivity
         myBeacons=(ListView)findViewById(R.id.ble_list);
         myBeacons.setAdapter(mBeaconsListAdapter);
 
-        mBleScan =new BluetoothScan(this,mBleDeviceListAdapter,mBeaconsListAdapter);
+
 
         mAuth=LoginActivity.getAuth();
         mUser=LoginActivity.getUser();
@@ -382,6 +382,7 @@ public class MainActivity extends AppCompatActivity
         View headerLayout = navigationView.getHeaderView(0);
         mEmail=(TextView)headerLayout.findViewById(R.id.slide_user_email);
         mName=(TextView)headerLayout.findViewById(R.id.slide_user_name);
+        mPoint=(TextView)headerLayout.findViewById(R.id.PointView);
 
 
 
@@ -395,8 +396,17 @@ public class MainActivity extends AppCompatActivity
             mName.setText(mUser.getDisplayName());
         }
 
+        mBleScan =new BluetoothScan(this,mBleDeviceListAdapter,mBeaconsListAdapter);
+        bleService= new Intent(this,BleService.class);
+        startService(bleService);
+
         //이미지 파일 썩션
 
+    }
+
+    public void setPoint(int p)
+    {
+        mPoint.setText(BleService.myPoint);
     }
 
     private void initUI() {
