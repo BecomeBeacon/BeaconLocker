@@ -1,5 +1,7 @@
 package com.example.becomebeacon.beaconlocker;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,7 +11,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -57,6 +58,14 @@ public class BeaconBackHostActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         mac = intent.getStringExtra("MAC");
+        int noti= intent.getIntExtra("NOTI",-1);
+        if(noti!=-1) {
+            Log.d("NOTIC","noti : "+noti);
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel(noti);
+            Notifications.notifications.remove(mac+Values.NOTI_I_FIND);
+
+        }
         if(mac==null)
         {
             Uri uriData = getIntent().getData();
@@ -90,6 +99,7 @@ public class BeaconBackHostActivity extends AppCompatActivity {
             {
                 inputMessage = writeMessage.getText().toString();
                 fm.message = inputMessage;
+
 
                 mDatabase.getReference("users/"+ info.getUid()).child("messages")
                         .push().setValue(fm);

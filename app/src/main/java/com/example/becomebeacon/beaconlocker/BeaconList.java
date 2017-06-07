@@ -13,7 +13,8 @@ public class BeaconList {
     //myItem
     static public HashMap<String, BleDeviceInfo> mItemMap=new HashMap<String,BleDeviceInfo>();
     static public HashMap<String, BleDeviceInfo> lostMap=new HashMap<String,BleDeviceInfo>();
-    static public HashMap<String,FindMessage> msgMap=new HashMap<String,FindMessage>();
+    static public HashMap<String,FindMessage> msgMap=new HashMap<String,FindMessage>(); //Key 값은 Message Key값
+    static public HashMap<String, String> rewardMap=new HashMap<>(); //Key값은 MAC값 Value는 uid값
 
 
 
@@ -29,6 +30,7 @@ public class BeaconList {
         mArrayListBleDevice.clear();
         mAssignedItem.clear();
         msgMap.clear();
+        rewardMap.clear();
 
     }
 }

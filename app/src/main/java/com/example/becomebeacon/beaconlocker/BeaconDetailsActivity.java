@@ -1,8 +1,6 @@
 package com.example.becomebeacon.beaconlocker;
 
 import android.app.NotificationManager;
-import android.Manifest;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -33,6 +31,7 @@ import com.example.becomebeacon.beaconlocker.pictureserver.PictureDelete;
 import com.example.becomebeacon.beaconlocker.pictureserver.PicturePopup;
 import com.example.becomebeacon.beaconlocker.pictureserver.PictureUpload;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.File;
@@ -105,7 +104,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
             Log.d("NOTIC","noti : "+noti);
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.cancel(noti);
-            Notifications.notifications.remove(item.devAddress);
+            Notifications.notifications.remove(item.devAddress+Values.NOTI_I_FIND);
 
         }
 
@@ -216,10 +215,12 @@ public class BeaconDetailsActivity extends AppCompatActivity {
         if(item.isLost==false)
         {
             findStuff.setEnabled(false);
+            lostButton.setEnabled(true);
         }
         else
         {
             findStuff.setEnabled(true);
+            lostButton.setEnabled(false);
         }
         disconnect.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v)
@@ -275,11 +276,19 @@ public class BeaconDetailsActivity extends AppCompatActivity {
                             .setValue(false);
 
                 mDatabase.getReference("lost_items/").child(item.devAddress).removeValue();
+                if(BeaconList.rewardMap.containsKey(item.devAddress)) {
+                    FindMessage fm=new FindMessage();
+                    fm.isPoint=true;
+                    fm.point=-Values.REWARD_POINT;
+                    mDatabase.getReference("users/" + BeaconList.rewardMap.get(item.devAddress)).child("messages")
+                            .push().setValue(fm);
+                    Log.d("POINT","success send point message");
+                }
 
                 item.isLost = false;
                 Toast.makeText(getApplicationContext(),"찾음 ㅅㄱ",Toast.LENGTH_SHORT).show();
                 findStuff.setEnabled(false);
-                Notifications.notifications.remove(item.devAddress);
+                Notifications.notifications.remove(item.devAddress+Values.NOTI_I_FIND);
             }
         });
 

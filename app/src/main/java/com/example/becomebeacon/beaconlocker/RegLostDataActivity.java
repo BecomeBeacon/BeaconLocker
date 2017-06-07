@@ -67,7 +67,7 @@ public class RegLostDataActivity extends AppCompatActivity implements OnMapReady
             Log.d("NOTIC","noti : "+noti);
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.cancel(noti);
-            Notifications.notifications.remove(devInfo.getDevAddr());
+            Notifications.notifications.remove(devInfo.getDevAddr()+Values.NOTI_FAR);
         }
 
         SimpleDateFormat CurDateFormat = new SimpleDateFormat("yyyy-MM-dd");
