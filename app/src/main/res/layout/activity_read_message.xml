@@ -41,8 +41,8 @@
 
     <Button
         android:id="@+id/button_deleteMessage"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_alignBaseline="@+id/button_goLowerMessage"
         android:layout_alignBottom="@+id/button_goLowerMessage"
         android:layout_alignEnd="@+id/myMessageView"
