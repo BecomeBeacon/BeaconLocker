@@ -109,16 +109,16 @@ public class BeaconBackHostActivity extends AppCompatActivity {
     }
 
     private void viewImage() {
-        if(info.getPictureUri() != null)
-        {
-            final ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            progressDialog.setMessage("사진을 불러오는 중...");
-            progressDialog.show();
-            try {
-                if (info.getPictureUri() == "") {
+        if (info.getPictureUri() != null) {
+            if (info.getPictureUri() == "") {
 
-                } else {
+            } else {
+                final ProgressDialog progressDialog = new ProgressDialog(this);
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog.setMessage("사진을 불러오는 중...");
+                progressDialog.show();
+
+                try {
                     StorageReference storageRef = storage.getReference().child(info.getPictureUri());
                     // Storage 에서 다운받아 저장시킬 임시파일
                     final File imageFile = File.createTempFile("images", "jpg");
@@ -138,11 +138,11 @@ public class BeaconBackHostActivity extends AppCompatActivity {
                             progressDialog.dismiss();
                         }
                     });
-                }
-                } catch(Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                     progressDialog.dismiss();
                 }
+            }
         }
     }
 

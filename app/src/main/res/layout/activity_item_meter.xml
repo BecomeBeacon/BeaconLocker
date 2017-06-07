@@ -18,10 +18,9 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
         android:layout_weight="0.07"
-        android:layout_above="@+id/linearLayout3">
+        android:layout_below="@+id/toolbar_additem"
+        android:layout_alignParentStart="true">
 
         <ImageView
             android:id="@+id/iv_image"
@@ -29,7 +28,7 @@
             android:layout_height="180dp"
             android:background="@mipmap/ic_launcher_round"
             android:clickable="false"
-            android:layout_alignParentBottom="true"
+            android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true" />
 
         <Button
@@ -37,7 +36,7 @@
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:background="@drawable/ic_camera"
-            android:layout_alignParentBottom="true"
+            android:layout_alignBottom="@+id/iv_image"
             android:layout_alignEnd="@+id/iv_image" />
     </RelativeLayout>
 
@@ -54,14 +53,14 @@
             android:layout_height="70dp">
 
             <TextView
-                android:id="@+id/textView16"
-                android:layout_width="100dp"
+                android:layout_width="150dp"
                 android:layout_height="50dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentStart="true"
                 android:layout_marginStart="15dp"
+                android:gravity="center_vertical"
                 android:text="별칭 :"
-                android:textSize="20dp" />
+                android:textSize="20sp" />
 
             <EditText
                 android:id="@+id/et_NICKNAME"
@@ -87,15 +86,14 @@
             android:layout_height="70dp">
 
             <TextView
-                android:id="@+id/et_address"
-                android:layout_width="100dp"
+                android:layout_width="150dp"
                 android:layout_height="50dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentStart="true"
                 android:layout_marginStart="14dp"
-                android:gravity="center_horizontal"
-                android:text="Addr :"
-                android:textSize="20dp" />
+                android:gravity="center_vertical"
+                android:text="한계 거리(m) :"
+                android:textSize="20sp" />
 
             <EditText
                 android:id="@+id/limit_distance"
@@ -108,7 +106,7 @@
                 android:drawableLeft="@drawable/ic_create"
                 android:gravity="center_horizontal"
                 android:inputType="numberDecimal"
-                android:text="TestAddr" />
+                android:text="LimitDistance" />
 
         </RelativeLayout>
 
@@ -122,25 +120,30 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/textView6"
-                android:layout_width="220dp"
+                android:layout_width="100dp"
                 android:layout_height="50dp"
+                android:gravity="center_horizontal"
+                android:textColor="@color/colorPrimary"
+                android:maxLines="1"
+                android:text="현재 거리 (m)"
+                android:textSize="20sp"
                 android:layout_above="@+id/meter"
-                android:layout_centerHorizontal="true"
-                android:text="한계 거리(m 단위) :"
-                android:textSize="20dp" />
+                android:layout_centerHorizontal="true" />
 
             <TextView
                 android:id="@+id/meter"
                 android:layout_width="120dp"
                 android:layout_height="50dp"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
                 android:ems="10"
                 android:gravity="center_horizontal"
                 android:text="40"
+                android:maxLines="1"
                 android:textColor="@color/colorPrimary"
-                android:textSize="42sp" />
+                android:textSize="42sp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="19dp" />
+
         </RelativeLayout>
 
         <ImageView
@@ -152,10 +155,9 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="80dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_weight="0.71"
         android:orientation="horizontal"
         android:id="@+id/linearLayout2">
 
@@ -167,8 +169,9 @@
             android:backgroundTint="#90CAF9"
             android:drawableTop="@drawable/ic_place"
             android:text="지도 보기"
+            android:maxLines="1"
             android:textColor="@color/common_google_signin_btn_text_dark_default"
-            android:textSize="18dp" />
+            android:textSize="15sp" />
 
         <Button
             android:id="@+id/disconnect"
@@ -178,8 +181,9 @@
             android:backgroundTint="#90CAF9"
             android:drawableTop="@drawable/ic_bluetooth_disabled"
             android:text="연결 해제"
+            android:maxLines="1"
             android:textColor="@color/common_google_signin_btn_text_dark_default"
-            android:textSize="18dp" />
+            android:textSize="15sp" />
 
         <Button
             android:id="@+id/find"
@@ -189,8 +193,9 @@
             android:backgroundTint="#90CAF9"
             android:drawableTop="@drawable/ic_menu_laf"
             android:text="물건 습득"
+            android:maxLines="1"
             android:textColor="@color/common_google_signin_btn_text_dark_default"
-            android:textSize="18dp" />
+            android:textSize="15sp" />
 
         <Button
             android:id="@+id/lostButton"
@@ -200,8 +205,9 @@
             android:backgroundTint="#90CAF9"
             android:drawableTop="@drawable/ic_warning"
             android:text="분실 경고"
+            android:maxLines="1"
             android:textColor="@color/common_google_signin_btn_text_dark_default"
-            android:textSize="18dp" />
+            android:textSize="15sp" />
     </LinearLayout>
 
 </RelativeLayout>
