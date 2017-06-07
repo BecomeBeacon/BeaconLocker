@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +15,7 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,10 +58,6 @@ public class MainActivity extends AppCompatActivity
 
     private LayoutInflater layoutInflater;
 
-
-
-
-
     private ListView myBeacons;
     private ListView scannedBeacons;
     private TextView emptyListText;
@@ -72,6 +70,8 @@ public class MainActivity extends AppCompatActivity
     private GoogleApiClient mGoogleApiClient;
     private Intent bleService;
 
+    private Toolbar toolbar;
+
     private boolean usingTracking;
 
     private BluetoothScan mBleScan;
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity
     //myItem
     private HashMap<String, BleDeviceInfo> mItemMap;
 
-    private ArrayList<BleDeviceInfo> mArrayListBleDevice;    ;
+    private ArrayList<BleDeviceInfo> mArrayListBleDevice;
     private ArrayList<BleDeviceInfo> mAssignedItem;
 
     //myItem
@@ -105,6 +105,8 @@ public class MainActivity extends AppCompatActivity
     private MyBeaconsListAdapter mBeaconsListAdapter;
 
     public ProgressDialog mainProgressDialog = null;
+
+    private FloatingActionButton fab;
 
 
 
@@ -223,6 +225,22 @@ public class MainActivity extends AppCompatActivity
         mainProgressDialog.setMessage("목록을 불러오는 중...");
         mainProgressDialog.show();
 
+        initUI();
+
+        //툴바 세팅
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        toolbar.setTitle(R.string.app_name);
+        toolbar.setSubtitle("내 기기 목록");
+
+        toolbar.setTitleTextColor(Color.WHITE);
+        toolbar.setSubtitleTextColor(ContextCompat.getColor(MainActivity.this, R.color.colorSubtitle));
+
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
         Notifications.clear();
         BeaconList.refresh();
 
@@ -235,10 +253,6 @@ public class MainActivity extends AppCompatActivity
 
         bleService= new Intent(this,BleService.class);
         startService(bleService);
-
-        myBeacons=(ListView)findViewById(R.id.ble_list);
-        scannedBeacons=(ListView)findViewById(R.id.scan_list);
-        emptyListText=(TextView)findViewById(R.id.text_have_no_ble);
         if(myBeacons==null||scannedBeacons==null)
         {
             Log.d("sss","cannot find listview");
@@ -286,19 +300,15 @@ public class MainActivity extends AppCompatActivity
         mHandler.sendEmptyMessageDelayed(0, CEHCK_PERIOD);
         mTimeOut.sendEmptyMessageDelayed(0, TIMEOUT_PERIOD);
 
-
-
-        //Slide
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-        setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //ble 검색 및 추가
                 if(mBleScan.getMod()== Values.USE_NOTHING) {
+
+                    toolbar.setSubtitle("주변의 미등록 비콘 목록");
+                    fab.setImageResource(R.drawable.fab_my);
 
                     myBeacons.setVisibility(View.GONE);
                     scannedBeacons.setVisibility(VISIBLE);
@@ -309,6 +319,8 @@ public class MainActivity extends AppCompatActivity
 
                 }else if(mBleScan.getMod()== Values.USE_SCAN)
                 {
+                    toolbar.setSubtitle("내 기기 목록");
+                    fab.setImageResource(R.drawable.fab_scan);
                     if(mItemMap.isEmpty())
                     {
                         emptyListText.setVisibility(VISIBLE);
@@ -385,16 +397,18 @@ public class MainActivity extends AppCompatActivity
 
         //이미지 파일 썩션
 
-
-
-
-
-
-
-
-
-
     }
+
+    private void initUI() {
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        myBeacons=(ListView)findViewById(R.id.ble_list);
+        scannedBeacons=(ListView)findViewById(R.id.scan_list);
+        emptyListText=(TextView)findViewById(R.id.text_have_no_ble);
+    }
+
+//    private void switchMySubtitle(String str) {
+//        toolbar.
+//    }
 
 
     public void stopBleService()

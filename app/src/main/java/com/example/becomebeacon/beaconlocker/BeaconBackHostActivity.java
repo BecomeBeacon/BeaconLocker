@@ -1,5 +1,6 @@
 package com.example.becomebeacon.beaconlocker;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -40,6 +41,7 @@ public class BeaconBackHostActivity extends AppCompatActivity {
     private FirebaseUser mUser;
     public Bitmap bitmapImage;
     public FirebaseStorage storage = FirebaseStorage.getInstance();
+    private ImageView ivPreview;
 
     String phoneNum;
     String inputMessage;
@@ -81,6 +83,7 @@ public class BeaconBackHostActivity extends AppCompatActivity {
         sendMessage=(Button)findViewById(R.id.sendMessageButton);
         viewRssi = (TextView)findViewById(R.id.rssiFlow);
         writeMessage = (EditText) findViewById(R.id.message);
+        ivPreview = (ImageView) findViewById(R.id.lost_device_image);
     }
 
     private void initListeners() {
@@ -105,12 +108,15 @@ public class BeaconBackHostActivity extends AppCompatActivity {
 
     }
 
-    private void viewImage()
-    {
+    private void viewImage() {
         if(info.getPictureUri() != null)
         {
+            final ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setMessage("사진을 불러오는 중...");
+            progressDialog.show();
             try {
-                if (info.getPictureUri() == "null") {
+                if (info.getPictureUri() == "") {
 
                 } else {
                     StorageReference storageRef = storage.getReference().child(info.getPictureUri());
@@ -121,22 +127,23 @@ public class BeaconBackHostActivity extends AppCompatActivity {
                         public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                             // Success Case
                             bitmapImage = BitmapFactory.decodeFile(imageFile.getPath());
-                            //mImage.setImageBitmap(bitmapImage);
+                            ivPreview.setImageBitmap(bitmapImage);
+                            progressDialog.dismiss();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             // Fail Case
                             e.printStackTrace();
+                            progressDialog.dismiss();
                         }
                     });
                 }
                 } catch(Exception e){
                     e.printStackTrace();
+                    progressDialog.dismiss();
                 }
         }
-        ImageView image = (ImageView) findViewById(R.id.lost_device_image);
-        image.setImageBitmap(bitmapImage);
     }
 
     private void viewRssiInUser()
