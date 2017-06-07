@@ -95,7 +95,7 @@ public class PicturePopup {
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case CHOOSE_PICTURE: // 사진 선택
-                        Intent openAlbumIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                        Intent openAlbumIntent = new Intent(Intent.ACTION_PICK);
                         openAlbumIntent.setType("image/*");
                         choosePictureCallback.callBackMethod(openAlbumIntent);
                         break;
