@@ -82,6 +82,7 @@
                 android:text="분실물과의 거리 (m) :"
                 android:maxLines="1"
                 android:textSize="20sp"
+                android:textColor="@color/colorPrimary"
                 android:gravity="center_horizontal"/>
 
             <TextView
