@@ -57,6 +57,7 @@ public class DataFetch {
                             BeaconOnUser myBeaconOnUser = addressSnapshot.getValue(BeaconOnUser.class);
                             Log.v("Test_Print_ADDR", myBeaconOnUser.address);
 
+
                             findBeaconByAddress(myBeaconOnUser.address);
                         }
                         GetMainActivity.getMainActity().mainProgressDialog.dismiss();

@@ -1,5 +1,7 @@
 package com.example.becomebeacon.beaconlocker;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -42,6 +44,7 @@ public class BeaconBackHostActivity extends AppCompatActivity {
     public Bitmap bitmapImage;
     public FirebaseStorage storage = FirebaseStorage.getInstance();
     private ImageView ivPreview;
+    private TextView text_bd_name;
 
     String phoneNum;
     String inputMessage;
@@ -59,6 +62,14 @@ public class BeaconBackHostActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         mac = intent.getStringExtra("MAC");
+        int noti= intent.getIntExtra("NOTI",-1);
+        if(noti!=-1) {
+            Log.d("NOTIC","noti : "+noti);
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel(noti);
+            Notifications.notifications.remove(mac+Values.NOTI_I_FIND);
+
+        }
         if(mac==null)
         {
             Uri uriData = getIntent().getData();
@@ -73,6 +84,7 @@ public class BeaconBackHostActivity extends AppCompatActivity {
         fm=new FindMessage();
         fm.devAddress = info.devAddress;
         mHandler.sendEmptyMessage(0);
+        text_bd_name.setText(info.getNickname());
 
 
 
@@ -84,6 +96,7 @@ public class BeaconBackHostActivity extends AppCompatActivity {
         viewRssi = (TextView)findViewById(R.id.rssiFlow);
         writeMessage = (EditText) findViewById(R.id.message);
         ivPreview = (ImageView) findViewById(R.id.lost_device_image);
+        text_bd_name = (TextView) findViewById(R.id.text_bd_name);
     }
 
     private void initListeners() {
@@ -93,6 +106,7 @@ public class BeaconBackHostActivity extends AppCompatActivity {
             {
                 inputMessage = writeMessage.getText().toString();
                 fm.message = inputMessage;
+
 
                 mDatabase.getReference("users/"+ info.getUid()).child("messages")
                         .push().setValue(fm);

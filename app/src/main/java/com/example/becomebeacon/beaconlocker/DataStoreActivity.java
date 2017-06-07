@@ -272,15 +272,18 @@ public class DataStoreActivity extends AppCompatActivity {
                 case CHOOSE_PICTURE:
                 case TAKE_PICTURE:
                     //사진을 가져옴
+                    Log.d("GALL","Uri = " + data.toString());
                     picturePopup.pictureActivityForResult(requestCode, data, new Callback() {
                         @Override
                         public void callBackMethod(Object obj) {
                             //중간처리 완료
+                            Log.d("GALL","Uri = " + obj.toString());
                             filePath = (Uri)obj;
                             picturePopup.cutImage(new Callback() {
                                 @Override
                                 public void callBackMethod(Object obj) {
                                     //사진 크롭 완료
+                                    Log.d("GALL","Uri = " + obj.toString());
                                     startActivityForResult((Intent)obj, CROP_SMALL_PICTURE);
                                 }
                             });

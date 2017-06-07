@@ -554,7 +554,7 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
 
         } else if (id == R.id.nav_logout) {
-            signOut();
+
 
             //Memory 비우기
             mHandler.removeMessages(0);
@@ -563,6 +563,7 @@ public class MainActivity extends AppCompatActivity
             PictureList.clear();
 
             //새 인텐트 불러오기
+            signOut();
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             finish();

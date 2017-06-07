@@ -9,7 +9,7 @@ import java.util.HashSet;
 
 public class Notifications {
     static int cntNoti=0;
-    static public HashMap<String,Integer> notifications=new HashMap();
+    static public HashMap<String,Integer> notifications=new HashMap(); //key값은 MAC+op string임
 
     static public void clear()
     {
