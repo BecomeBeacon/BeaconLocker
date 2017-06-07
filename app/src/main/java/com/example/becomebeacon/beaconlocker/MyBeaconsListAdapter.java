@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -147,10 +148,12 @@ public class MyBeaconsListAdapter extends BaseAdapter {
         //TextView txtTimeout = (TextView)convertView.findViewById(R.id.text_timeout);
         //txtTimeout.setText("Timeout: " + String.valueOf(mBleDeviceInfoArrayList.get(position).timeout));
 
+
+        //편집중
         Button btnConnect = (Button)convertView.findViewById(R.id.button_connect);
-        //btnConnect.setVisibility(View.GONE);
-        btnConnect.setText("Detail");
-        btnConnect.setOnClickListener(new Button.OnClickListener() {
+        btnConnect.setVisibility(View.GONE);
+        LinearLayout layoutConnect = (LinearLayout)convertView.findViewById(R.id.linearLayout);
+        layoutConnect.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v)
             {
 

@@ -15,6 +15,7 @@ public class LostDevInfo {
     private String userName;
     private String nickNameOfThing;
     private String pictureLink;
+    private String pictureUri;
 
     public LostDevInfo() {
         longitude = 0;
@@ -25,6 +26,7 @@ public class LostDevInfo {
         this.uid = LoginActivity.getUser().getUid();
         this.userName = LoginActivity.getUser().getDisplayName();
         pictureLink="null";
+        pictureUri = "";
     }
 
     public LostDevInfo(BleDeviceInfo bdi) {
@@ -93,5 +95,13 @@ public class LostDevInfo {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getPictureUri() {
+        return pictureUri;
+    }
+
+    public void setPictureUri(String pictureUri) {
+        this.pictureUri = pictureUri;
     }
 }

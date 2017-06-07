@@ -50,7 +50,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
     private BleDeviceInfo item;
     private int noti;
     private EditText nickName;
-    private TextView address;
+//    private TextView address;
     private TextView meter;
     private Button showMap;
     private Button findStuff;
@@ -80,12 +80,20 @@ public class BeaconDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_item_meter);
         mContext=this;
 
+
+        Intent intent=getIntent();
+        String da=intent.getStringExtra("MAC");
+        noti=intent.getIntExtra("NOTI",-1);
+
+        item=BeaconList.mItemMap.get(da);
+
         //툴바 세팅
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_additem);
         setSupportActionBar(toolbar);
 
         toolbar.setTitle(R.string.app_name);
-        toolbar.setSubtitle("상세정보");
+        String subtitle = "상세정보 : " + item.devAddress;
+        toolbar.setSubtitle(subtitle);
 
         toolbar.setTitleTextColor(Color.WHITE);
         toolbar.setSubtitleTextColor(ContextCompat.getColor(BeaconDetailsActivity.this, R.color.colorSubtitle));
@@ -93,12 +101,6 @@ public class BeaconDetailsActivity extends AppCompatActivity {
         if(getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-
-        Intent intent=getIntent();
-        String da=intent.getStringExtra("MAC");
-        noti=intent.getIntExtra("NOTI",-1);
-
-        item=BeaconList.mItemMap.get(da);
 
         if(noti!=-1) {
             Log.d("NOTIC","noti : "+noti);
@@ -116,7 +118,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
         Log.d("BDA","item: "+item.nickname+", "+item.devAddress+", "+item.pictureUri);
         nickName.setText(item.nickname);
         limitDist.setText(item.limitDistance+"");
-        address.setText(item.devAddress);
+//        address.setText(item.devAddress);
 
         meter.setText(String.format("%.2f",item.distance2));
 
@@ -132,7 +134,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
     private void initUI() {
         ivPreview= (ImageView) findViewById(R.id.iv_image);
         nickName=(EditText)findViewById(R.id.et_NICKNAME);
-        address=(TextView)findViewById(R.id.et_address);
+//        address=(TextView)findViewById(R.id.et_address);
         meter=(TextView)findViewById(R.id.meter);
         disconnect=(Button)findViewById(R.id.disconnect);
 
@@ -286,7 +288,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
                 }
 
                 item.isLost = false;
-                Toast.makeText(getApplicationContext(),"찾음 ㅅㄱ",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),"회수처리 하였습니다.",Toast.LENGTH_SHORT).show();
                 findStuff.setEnabled(false);
                 Notifications.notifications.remove(item.devAddress+Values.NOTI_I_FIND);
             }

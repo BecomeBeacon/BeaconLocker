@@ -2,6 +2,7 @@ package com.example.becomebeacon.beaconlocker;
 
 import android.app.NotificationManager;
 import android.content.Context;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,6 +12,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -41,6 +43,8 @@ public class BeaconBackHostActivity extends AppCompatActivity {
     private FirebaseUser mUser;
     public Bitmap bitmapImage;
     public FirebaseStorage storage = FirebaseStorage.getInstance();
+    private ImageView ivPreview;
+    private TextView text_bd_name;
 
     String phoneNum;
     String inputMessage;
@@ -80,6 +84,7 @@ public class BeaconBackHostActivity extends AppCompatActivity {
         fm=new FindMessage();
         fm.devAddress = info.devAddress;
         mHandler.sendEmptyMessage(0);
+        text_bd_name.setText(info.getNickname());
 
 
 
@@ -90,6 +95,8 @@ public class BeaconBackHostActivity extends AppCompatActivity {
         sendMessage=(Button)findViewById(R.id.sendMessageButton);
         viewRssi = (TextView)findViewById(R.id.rssiFlow);
         writeMessage = (EditText) findViewById(R.id.message);
+        ivPreview = (ImageView) findViewById(R.id.lost_device_image);
+        text_bd_name = (TextView) findViewById(R.id.text_bd_name);
     }
 
     private void initListeners() {
@@ -115,14 +122,17 @@ public class BeaconBackHostActivity extends AppCompatActivity {
 
     }
 
-    private void viewImage()
-    {
-        if(info.getPictureUri() != null)
-        {
-            try {
-                if (info.getPictureUri() == "null") {
+    private void viewImage() {
+        if (info.getPictureUri() != null) {
+            if (info.getPictureUri() == "") {
 
-                } else {
+            } else {
+                final ProgressDialog progressDialog = new ProgressDialog(this);
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog.setMessage("사진을 불러오는 중...");
+                progressDialog.show();
+
+                try {
                     StorageReference storageRef = storage.getReference().child(info.getPictureUri());
                     // Storage 에서 다운받아 저장시킬 임시파일
                     final File imageFile = File.createTempFile("images", "jpg");
@@ -131,22 +141,23 @@ public class BeaconBackHostActivity extends AppCompatActivity {
                         public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                             // Success Case
                             bitmapImage = BitmapFactory.decodeFile(imageFile.getPath());
-                            //mImage.setImageBitmap(bitmapImage);
+                            ivPreview.setImageBitmap(bitmapImage);
+                            progressDialog.dismiss();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             // Fail Case
                             e.printStackTrace();
+                            progressDialog.dismiss();
                         }
                     });
-                }
-                } catch(Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
+                    progressDialog.dismiss();
                 }
+            }
         }
-        ImageView image = (ImageView) findViewById(R.id.lost_device_image);
-        image.setImageBitmap(bitmapImage);
     }
 
     private void viewRssiInUser()
