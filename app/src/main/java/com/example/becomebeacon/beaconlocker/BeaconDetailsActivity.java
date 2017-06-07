@@ -347,34 +347,42 @@ public class BeaconDetailsActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == DataStoreActivity.RESULT_OK) {
-            switch (requestCode) {
-                case CHOOSE_PICTURE:
-                case TAKE_PICTURE:
-                    //사진을 가져옴
-                    picturePopup.pictureActivityForResult(requestCode, data, new Callback() {
-                        @Override
-                        public void callBackMethod(Object obj) {
-                            //중간처리 완료
-                            filePath = (Uri)obj;
-                            picturePopup.cutImage(new Callback() {
-                                @Override
-                                public void callBackMethod(Object obj) {
-                                    //사진 크롭 완료
-                                    startActivityForResult((Intent)obj, CROP_SMALL_PICTURE);
-                                }
-                            });
+            try {
+                switch (requestCode) {
+                    case CHOOSE_PICTURE:
+                    case TAKE_PICTURE:
+                        //사진을 가져옴
+                        picturePopup.pictureActivityForResult(requestCode, data, new Callback() {
+                            @Override
+                            public void callBackMethod(Object obj) {
+                                //중간처리 완료
+                                filePath = (Uri) obj;
+                                picturePopup.cutImage(new Callback() {
+                                    @Override
+                                    public void callBackMethod(Object obj) {
+                                        //사진 크롭 완료
+                                        startActivityForResult((Intent) obj, CROP_SMALL_PICTURE);
+                                    }
+                                });
+                            }
+                        });
+                        break;
+                    case CROP_SMALL_PICTURE:
+                        try {
+                            //Uri 파일을 Bitmap으로 만들어서 ImageView에 집어 넣는다.
+                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                            ivPreview.setImageBitmap(bitmap);
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
-                    });
-                    break;
-                case CROP_SMALL_PICTURE:
-                    try {
-                        //Uri 파일을 Bitmap으로 만들어서 ImageView에 집어 넣는다.
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-                        ivPreview.setImageBitmap(bitmap);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    break;
+                        break;
+                }
+            }
+            catch (Exception e) {
+
+                e.printStackTrace();
+                Toast.makeText(BeaconDetailsActivity.this, "오류가 발생했습니다. 다른 방법으로 해주세요", Toast.LENGTH_SHORT).show();
+
             }
         }
     }
