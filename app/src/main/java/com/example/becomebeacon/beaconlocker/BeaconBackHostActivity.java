@@ -6,12 +6,15 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
@@ -77,6 +80,21 @@ public class BeaconBackHostActivity extends AppCompatActivity {
         }
         info = BeaconList.lostMap.get(mac);
 
+        //툴바 세팅
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_additem);
+        setSupportActionBar(toolbar);
+
+        toolbar.setTitle(R.string.app_name);
+        String subtitle = "상세정보 : " + info.devAddress;
+        toolbar.setSubtitle(subtitle);
+
+        toolbar.setTitleTextColor(Color.WHITE);
+        toolbar.setSubtitleTextColor(ContextCompat.getColor(BeaconBackHostActivity.this, R.color.colorSubtitle));
+
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
 
         initUI();
         initListeners();
@@ -89,6 +107,17 @@ public class BeaconBackHostActivity extends AppCompatActivity {
 
 
 
+    }
+
+    //툴바세팅
+    @Override
+    public boolean onOptionsItemSelected(android.view.MenuItem item) {
+        switch(item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void initUI() {
@@ -134,6 +163,7 @@ public class BeaconBackHostActivity extends AppCompatActivity {
 
                 try {
                     StorageReference storageRef = storage.getReference().child(info.getPictureUri());
+                    Log.d("PIC","storageRef = " + storageRef.toString());
                     // Storage 에서 다운받아 저장시킬 임시파일
                     final File imageFile = File.createTempFile("images", "jpg");
                     storageRef.getFile(imageFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
