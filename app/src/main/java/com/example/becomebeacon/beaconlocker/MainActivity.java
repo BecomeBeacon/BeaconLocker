@@ -221,136 +221,138 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-        mainProgressDialog = new ProgressDialog(this);
-        mainProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        mainProgressDialog.setMessage("목록을 불러오는 중...");
-        mainProgressDialog.show();
+        try {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_main);
 
-        initUI();
+            mainProgressDialog = new ProgressDialog(this);
+            mainProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            mainProgressDialog.setMessage("목록을 불러오는 중...");
+            mainProgressDialog.show();
 
-        int result1 = new PermissionRequester.Builder(MainActivity.this)
-                .setTitle("권한 요청")
-                .setMessage("권한을 요청합니다.")
-                .setPositiveButtonName("네")
-                .setNegativeButtonName("아니요.")
-                .create()
-                .request(android.Manifest.permission.ACCESS_FINE_LOCATION, 1000 , new PermissionRequester.OnClickDenyButtonListener() {
-                    @Override
-                    public void onClick(Activity activity) {
-                        Log.d("RESULT", "취소함.");
-                    }
-                });
+            initUI();
 
-        if (result1 == PermissionRequester.ALREADY_GRANTED) {
-            Log.d("RESULT", "권한이 이미 존재함.");
-            if (ActivityCompat.checkSelfPermission(MainActivity.this,
-                    android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            }
-        }
-        else if(result1 == PermissionRequester.NOT_SUPPORT_VERSION)
-            Log.d("RESULT", "마쉬멜로우 이상 버젼 아님.");
-        else if(result1 == PermissionRequester.REQUEST_PERMISSION)
-            Log.d("RESULT", "요청함. 응답을 기다림.");
+            int result1 = new PermissionRequester.Builder(MainActivity.this)
+                    .setTitle("권한 요청")
+                    .setMessage("권한을 요청합니다.")
+                    .setPositiveButtonName("네")
+                    .setNegativeButtonName("아니요.")
+                    .create()
+                    .request(android.Manifest.permission.ACCESS_FINE_LOCATION, 1000 , new PermissionRequester.OnClickDenyButtonListener() {
+                        @Override
+                        public void onClick(Activity activity) {
+                            Log.d("RESULT", "취소함.");
+                        }
+                    });
 
-
-        //툴바 세팅
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        toolbar.setTitle(R.string.app_name);
-        toolbar.setSubtitle("내 기기 목록");
-
-        toolbar.setTitleTextColor(Color.WHITE);
-        toolbar.setSubtitleTextColor(ContextCompat.getColor(MainActivity.this, R.color.colorSubtitle));
-
-        if(getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-
-        Notifications.clear();
-        BeaconList.refresh();
-
-        mBleUtils=new BleUtils();
-        mBluetoothAdapter= BluetoothAdapter.getDefaultAdapter();
-
-        GetMainActivity.setMA(this);
-
-        mActivity=this;
-        mArrayListBleDevice = BeaconList.mArrayListBleDevice;
-        mAssignedItem=BeaconList.mAssignedItem;
-        scannedMap = BeaconList.scannedMap;
-        mItemMap = BeaconList.mItemMap;
-        mBleDeviceListAdapter = new BleDeviceListAdapter(this, R.layout.ble_device_row,
-                mArrayListBleDevice, scannedMap,mAssignedItem, mItemMap);
-        mBeaconsListAdapter = new MyBeaconsListAdapter(this, R.layout.ble_device_row,
-                mAssignedItem, mItemMap);
-
-        SharedPreferences pref = getSharedPreferences("pref", AppCompatActivity.MODE_PRIVATE); // Shared Preference를 불러옵니다.
-        // 저장된 값들을 불러옵니다.
-        int scanTime = pref.getInt("ScanPeriod", Values.scanBreakTime);
-        Boolean useScan = pref.getBoolean("UseScan", true);
-        Boolean useGps = pref.getBoolean("UseGPS",false);
-
-        Values.scanBreakTime=scanTime;
-        Values.useBLE=useScan;
-        Values.useGPS=useGps;
-
-        usingTracking=true;
-        mScan=false;
-
-        scannedBeacons = (ListView)findViewById(R.id.scan_list);
-        scannedBeacons.setAdapter(mBleDeviceListAdapter);
-
-        myBeacons=(ListView)findViewById(R.id.ble_list);
-        myBeacons.setAdapter(mBeaconsListAdapter);
-
-        mAuth=LoginActivity.getAuth();
-        mUser=LoginActivity.getUser();
-
-        mHandler.sendEmptyMessageDelayed(0, CEHCK_PERIOD);
-        mTimeOut.sendEmptyMessageDelayed(0, TIMEOUT_PERIOD);
-
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //ble 검색 및 추가
-                if(mBleScan.getMod()== Values.USE_NOTHING) {
-
-                    toolbar.setSubtitle("주변의 미등록 비콘 목록");
-                    fab.setImageResource(R.drawable.fab_my);
-
-                    myBeacons.setVisibility(View.GONE);
-                    scannedBeacons.setVisibility(VISIBLE);
-                    emptyListText.setVisibility(View.GONE);
-                    mBleScan.changeMod(Values.USE_SCAN);
-                    mBleScan.checkBluetooth();
-
-
-                }else if(mBleScan.getMod()== Values.USE_SCAN)
-                {
-                    toolbar.setSubtitle("내 기기 목록");
-                    fab.setImageResource(R.drawable.fab_scan);
-                    if(mItemMap.isEmpty())
-                    {
-                        emptyListText.setVisibility(VISIBLE);
-                        myBeacons.setVisibility(View.GONE);
-
-                    }
-                    else
-                    {
-                        emptyListText.setVisibility(View.GONE);
-                        myBeacons.setVisibility(VISIBLE);
-                    }
-
-                    scannedBeacons.setVisibility(View.GONE);
-                    mBleScan.changeMod(Values.USE_NOTHING);
+            if (result1 == PermissionRequester.ALREADY_GRANTED) {
+                Log.d("RESULT", "권한이 이미 존재함.");
+                if (ActivityCompat.checkSelfPermission(MainActivity.this,
+                        android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 }
-           }
-        });
+            }
+            else if(result1 == PermissionRequester.NOT_SUPPORT_VERSION)
+                Log.d("RESULT", "마쉬멜로우 이상 버젼 아님.");
+            else if(result1 == PermissionRequester.REQUEST_PERMISSION)
+                Log.d("RESULT", "요청함. 응답을 기다림.");
+
+
+            //툴바 세팅
+            toolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+
+            toolbar.setTitle(R.string.app_name);
+            toolbar.setSubtitle("내 기기 목록");
+
+            toolbar.setTitleTextColor(Color.WHITE);
+            toolbar.setSubtitleTextColor(ContextCompat.getColor(MainActivity.this, R.color.colorSubtitle));
+
+            if(getSupportActionBar() != null) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
+
+            Notifications.clear();
+            BeaconList.refresh();
+
+            mBleUtils=new BleUtils();
+            mBluetoothAdapter= BluetoothAdapter.getDefaultAdapter();
+
+            GetMainActivity.setMA(this);
+
+            mActivity=this;
+            mArrayListBleDevice = BeaconList.mArrayListBleDevice;
+            mAssignedItem=BeaconList.mAssignedItem;
+            scannedMap = BeaconList.scannedMap;
+            mItemMap = BeaconList.mItemMap;
+            mBleDeviceListAdapter = new BleDeviceListAdapter(this, R.layout.ble_device_row,
+                    mArrayListBleDevice, scannedMap,mAssignedItem, mItemMap);
+            mBeaconsListAdapter = new MyBeaconsListAdapter(this, R.layout.ble_device_row,
+                    mAssignedItem, mItemMap);
+
+            SharedPreferences pref = getSharedPreferences("pref", AppCompatActivity.MODE_PRIVATE); // Shared Preference를 불러옵니다.
+            // 저장된 값들을 불러옵니다.
+            int scanTime = pref.getInt("ScanPeriod", Values.scanBreakTime);
+            Boolean useScan = pref.getBoolean("UseScan", true);
+            Boolean useGps = pref.getBoolean("UseGPS",false);
+
+            Values.scanBreakTime=scanTime;
+            Values.useBLE=useScan;
+            Values.useGPS=useGps;
+
+            usingTracking=true;
+            mScan=false;
+
+            scannedBeacons = (ListView)findViewById(R.id.scan_list);
+            scannedBeacons.setAdapter(mBleDeviceListAdapter);
+
+            myBeacons=(ListView)findViewById(R.id.ble_list);
+            myBeacons.setAdapter(mBeaconsListAdapter);
+
+            mAuth=LoginActivity.getAuth();
+            mUser=LoginActivity.getUser();
+
+            mHandler.sendEmptyMessageDelayed(0, CEHCK_PERIOD);
+            mTimeOut.sendEmptyMessageDelayed(0, TIMEOUT_PERIOD);
+
+            fab = (FloatingActionButton) findViewById(R.id.fab);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //ble 검색 및 추가
+                    if(mBleScan.getMod()== Values.USE_NOTHING) {
+
+                        toolbar.setSubtitle("주변의 미등록 비콘 목록");
+                        fab.setImageResource(R.drawable.fab_my);
+
+                        myBeacons.setVisibility(View.GONE);
+                        scannedBeacons.setVisibility(VISIBLE);
+                        emptyListText.setVisibility(View.GONE);
+                        mBleScan.changeMod(Values.USE_SCAN);
+                        mBleScan.checkBluetooth();
+
+
+                    }else if(mBleScan.getMod()== Values.USE_SCAN)
+                    {
+                        toolbar.setSubtitle("내 기기 목록");
+                        fab.setImageResource(R.drawable.fab_scan);
+                        if(mItemMap.isEmpty())
+                        {
+                            emptyListText.setVisibility(VISIBLE);
+                            myBeacons.setVisibility(View.GONE);
+
+                        }
+                        else
+                        {
+                            emptyListText.setVisibility(View.GONE);
+                            myBeacons.setVisibility(VISIBLE);
+                        }
+
+                        scannedBeacons.setVisibility(View.GONE);
+                        mBleScan.changeMod(Values.USE_NOTHING);
+                    }
+               }
+            });
 
 //        //TODO : fab - test용 버튼 (db저장메뉴)
 //        FloatingActionButton fab_test = (FloatingActionButton) findViewById(R.id.fab_test);
@@ -361,25 +363,22 @@ public class MainActivity extends AppCompatActivity
 //            }
 //        });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-               this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                   this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            drawer.setDrawerListener(toggle);
+            toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-
+            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+            navigationView.setNavigationItemSelectedListener(this);
 
 
+            //bluetoothAdapter 얻기
+            final BluetoothManager bluetoothManager =
+                    (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
 
-        //bluetoothAdapter 얻기
-        final BluetoothManager bluetoothManager =
-                (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
 
-
-        //bluetooth 체크 후 비활성화시 팝업
+            //bluetooth 체크 후 비활성화시 팝업
 //        if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
 //
 //            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -387,30 +386,34 @@ public class MainActivity extends AppCompatActivity
 //        }
 
 
-        View headerLayout = navigationView.getHeaderView(0);
-        mEmail=(TextView)headerLayout.findViewById(R.id.slide_user_email);
-        mName=(TextView)headerLayout.findViewById(R.id.slide_user_name);
-        mPoint=(TextView)headerLayout.findViewById(R.id.PointView);
+            View headerLayout = navigationView.getHeaderView(0);
+            mEmail=(TextView)headerLayout.findViewById(R.id.slide_user_email);
+            mName=(TextView)headerLayout.findViewById(R.id.slide_user_name);
+            mPoint=(TextView)headerLayout.findViewById(R.id.PointView);
 
 
+            if (mEmail != null&&mUser!=null) {
 
-        if (mEmail != null&&mUser!=null) {
+                mEmail.setText(mUser.getEmail());
+            }
 
-            mEmail.setText(mUser.getEmail());
+            if (mName != null&&mUser!=null) {
+
+                mName.setText(mUser.getDisplayName());
+            }
+
+            mBleScan =new BluetoothScan(this,mBleDeviceListAdapter,mBeaconsListAdapter);
+            bleService= new Intent(this,BleService.class);
+            startService(bleService);
+
+            if(Values.useBLE)
+                mBleScan.checkBluetooth();
+            //이미지 파일 썩션
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "오류가 발생했습니다. 관리자에게 문의하세요\n오류코드 : 10500", Toast.LENGTH_LONG).show();
+            finish();
         }
-
-        if (mName != null&&mUser!=null) {
-
-            mName.setText(mUser.getDisplayName());
-        }
-
-        mBleScan =new BluetoothScan(this,mBleDeviceListAdapter,mBeaconsListAdapter);
-        bleService= new Intent(this,BleService.class);
-        startService(bleService);
-
-        if(Values.useBLE)
-            mBleScan.checkBluetooth();
-        //이미지 파일 썩션
 
     }
 
@@ -420,87 +423,76 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initUI() {
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-        myBeacons=(ListView)findViewById(R.id.ble_list);
-        scannedBeacons=(ListView)findViewById(R.id.scan_list);
-        emptyListText=(TextView)findViewById(R.id.text_have_no_ble);
+        try {
+            fab = (FloatingActionButton) findViewById(R.id.fab);
+            myBeacons=(ListView)findViewById(R.id.ble_list);
+            scannedBeacons=(ListView)findViewById(R.id.scan_list);
+            emptyListText=(TextView)findViewById(R.id.text_have_no_ble);
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            Toast.makeText(getApplicationContext(), "오류가 발생했습니다. 관리자에게 문의하세요\n오류코드 : 10503", Toast.LENGTH_LONG).show();
+            finish();
+        }
     }
-
-//    private void switchMySubtitle(String str) {
-//        toolbar.
-//    }
-
 
     public void stopBleService()
     {
-        stopService(bleService);
+        try {
+            stopService(bleService);
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            Toast.makeText(getApplicationContext(), "오류가 발생했습니다. 관리자에게 문의하세요\n오류코드 : 10504", Toast.LENGTH_LONG).show();
+            finish();
+        }
     }
 
 
     @Override
     protected void onStart() {
-        //displayBeacons();
-        super.onStart();
-        Log.v("Testing Print", "onStart");
+        try {
+            super.onStart();
 
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
-        mGoogleApiClient.connect();
+            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestEmail()
+                    .build();
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                    .build();
+            mGoogleApiClient.connect();
 
+            //My Data List 갱신
+            DataFetch dataFetch = new DataFetch(mAssignedItem, mItemMap);
+            dataFetch.displayBeacons();
 
+            ProgressDialog asyncDialog = new ProgressDialog(
+                    MainActivity.this);
+        } catch (Exception e) {
+            e.printStackTrace();
 
-        //My Data List 갱신
-        DataFetch dataFetch = new DataFetch(mAssignedItem, mItemMap);
-        dataFetch.displayBeacons();
-
-        ProgressDialog asyncDialog = new ProgressDialog(
-                MainActivity.this);
-
-        //Log.v("mAssignedItem1 Addr", mAssignedItem.get(0).devAddress);
-        Log.v("Test_Print", "Test1");
-
-//        mItemMap = new HashMap<String, BleDeviceInfo>();
-//        for(int i = 0; i < mAssignedItem.size(); i++) {
-//            mItemMap.put(mAssignedItem.get(i).devAddress, mAssignedItem.get(i));
-//        }
-
-        //Log.v("mAssignedItem2 Addr", mAssignedItem.get(0).devAddress);
-        Log.v("Test_Print", "Test2");
-
-        //Log.v("mItemMap Addr", mItemMap.get("EC:08:81:F9:2A:D3").devAddress);
-        //Log.v("mItemMap nick", mItemMap.get("EC:08:81:F9:2A:D3").getNickname());
+            Toast.makeText(getApplicationContext(), "오류가 발생했습니다. 관리자에게 문의하세요\n오류코드 : 10505", Toast.LENGTH_LONG).show();
+            finish();
+        }
     }
 
     protected void onResume() {
-        super.onResume();
+        try {
+            super.onResume();
 
-        //BEACON_UUID = getBeaconUuid(setting);
+            if(mItemMap.isEmpty())
+            {
+                myBeacons.setVisibility(View.GONE);
+                scannedBeacons.setVisibility(View.GONE);
+                emptyListText.setVisibility(VISIBLE);
 
-        if(mItemMap.isEmpty())
-        {
-            myBeacons.setVisibility(View.GONE);
-            scannedBeacons.setVisibility(View.GONE);
-            emptyListText.setVisibility(VISIBLE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
 
+            Toast.makeText(getApplicationContext(), "오류가 발생했습니다. 관리자에게 문의하세요\n오류코드 : 10506", Toast.LENGTH_LONG).show();
+            finish();
         }
-        //saveRSSI = setting.getBoolean("saveRSSI", true);
-
-
-
-
-//        if(isScannig) {
-//            //scanBleDevice(true);            // BLE 장치 검색\
-//            mHandler.sendEmptyMessageDelayed(0, SCAN_PERIOD);
-//            mTimeOut.sendEmptyMessageDelayed(0, TIMEOUT_PERIOD);
-//        }
-//        else
-//        {
-//
-//        }
 
 
     }
@@ -508,190 +500,140 @@ public class MainActivity extends AppCompatActivity
     //Slide Back
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
+        try {
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            if (drawer.isDrawerOpen(GravityCompat.START)) {
+                drawer.closeDrawer(GravityCompat.START);
+            } else {
+                super.onBackPressed();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            Toast.makeText(getApplicationContext(), "오류가 발생했습니다. 관리자에게 문의하세요\n오류코드 : 10507", Toast.LENGTH_LONG).show();
+            finish();
         }
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.main, menu);
-//        return true;
-//    }
-
-
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-
         return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+        try {
+            // Handle navigation view item clicks here.
 
-        int id = item.getItemId();
+            int id = item.getItemId();
 
-        if (id == R.id.nav_machine) {
-            //내 메세지함 실행
-            Intent intent = new Intent(this, ReadMessageActivity.class);
-            startActivity(intent);
+            if (id == R.id.nav_machine) {
+                //내 메세지함 실행
+                Intent intent = new Intent(this, ReadMessageActivity.class);
+                startActivity(intent);
 
-        } else if (id == R.id.nav_laf) {
-            double lat, lng;
+            } else if (id == R.id.nav_laf) {
+                double lat, lng;
 
-            GpsInfo gpsCoordi= new GpsInfo(GetMainActivity.getMainActity(),GetMainActivity.getMainActity());
-            gpsCoordi.getLocation();
+                GpsInfo gpsCoordi= new GpsInfo(GetMainActivity.getMainActity(),GetMainActivity.getMainActity());
+                gpsCoordi.getLocation();
 
-            lat = gpsCoordi.lat;
-            lng = gpsCoordi.lon;
-            Log.d("gpsgps","lat : "+gpsCoordi.lat);
-            Log.d("gpsgps","lon : "+gpsCoordi.lon);
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse( "https://beaconlocker-51c69.firebaseapp.com/?lat=" + lat + "&lng=" + lng  ));
-            //Intent intent = new Intent(getApplicationContext(), RegLostDataActivity.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_map) {
-            Intent intent = new Intent(this, MultiMapActivity.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_setting) {
-            Intent intent = new Intent(this, SettingActivity.class);
-            startActivity(intent);
+                lat = gpsCoordi.lat;
+                lng = gpsCoordi.lon;
+                Log.d("gpsgps","lat : "+gpsCoordi.lat);
+                Log.d("gpsgps","lon : "+gpsCoordi.lon);
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse( "https://beaconlocker-51c69.firebaseapp.com/?lat=" + lat + "&lng=" + lng  ));
+                //Intent intent = new Intent(getApplicationContext(), RegLostDataActivity.class);
+                startActivity(intent);
+            } else if (id == R.id.nav_map) {
+                Intent intent = new Intent(this, MultiMapActivity.class);
+                startActivity(intent);
+            } else if (id == R.id.nav_setting) {
+                Intent intent = new Intent(this, SettingActivity.class);
+                startActivity(intent);
 
-        } else if (id == R.id.nav_logout) {
+            } else if (id == R.id.nav_logout) {
 
 
-            //Memory 비우기
-            mHandler.removeMessages(0);
-            mTimeOut.removeMessages(0);
-            stopBleService();
-            PictureList.clear();
+                //Memory 비우기
+                mHandler.removeMessages(0);
+                mTimeOut.removeMessages(0);
+                stopBleService();
+                PictureList.clear();
 
-            //새 인텐트 불러오기
-            signOut();
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
+                //새 인텐트 불러오기
+                signOut();
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+
+            }
+            //Slide Close
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            Toast.makeText(getApplicationContext(), "오류가 발생했습니다. 관리자에게 문의하세요\n오류코드 : 10508", Toast.LENGTH_LONG).show();
             finish();
-
         }
-        //Slide Close
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
 
     private void signOut()
     {
-        mAuth.signOut();
-        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(Status status) {
-                        // ...
-                        Toast.makeText(getApplicationContext(),"Logged Out",Toast.LENGTH_SHORT).show();
+        try {
+            mAuth.signOut();
+            Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                    new ResultCallback<Status>() {
+                        @Override
+                        public void onResult(Status status) {
+                            // ...
+                            Toast.makeText(getApplicationContext(),"Logged Out",Toast.LENGTH_SHORT).show();
 
-                    }
-                });
+                        }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            Toast.makeText(getApplicationContext(), "오류가 발생했습니다. 관리자에게 문의하세요\n오류코드 : 10509", Toast.LENGTH_LONG).show();
+            finish();
+        }
     }
 
     private void updateUI(FirebaseUser user) {
+        try {
+            if (user != null) {
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
 
-        if (user != null) {
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(intent);
+            } else {
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
 
-        } else {
-            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-            startActivity(intent);
-
+            Toast.makeText(getApplicationContext(), "오류가 발생했습니다. 관리자에게 문의하세요\n오류코드 : 10511", Toast.LENGTH_LONG).show();
+            finish();
         }
     }
-
-    public String getBeaconUuid(SharedPreferences pref)
-    {
-        String uuid = "";
-
-        uuid = pref.getString("keyUUID", BluetoothUuid.WINI_UUID.toString());
-
-        /*
-        if(USING_WINI) {
-            uuid = pref.getString("keyUUID", BluetoothUuid.WINI_UUID.toString());
-            //uuid = BluetoothUuid.WINI_UUID.toString();
-        }
-        else {
-
-            uuid = pref.getString("keyUUID", BluetoothUuid.WIZTURN_PROXIMITY_UUID.toString());
-            //uuid = BluetoothUuid.WIZTURN_PROXIMITY_UUID.toString();
-        }
-        */
-
-        return uuid;
-    }
-
-//    private void displayBeacons(){
-//        Log.v("Testing Print Uid", mUser.getUid());
-//        DatabaseReference userUuidRef = mDatabase.getReference("users");
-//
-//        userUuidRef
-//                .addChildEventListener(new ChildEventListener() {
-//                    @Override
-//                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-//                        Log.v("Testing Print", "ChildAdded");
-//                        //get UUID
-//                        for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
-//                            String Uuid = (String) messageSnapshot.getValue();
-//                            Log.v("Testing Print Uuid", Uuid);
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onChildRemoved(DataSnapshot dataSnapshot) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(DatabaseError databaseError) {
-//
-//                    }
-//                });
-//    }
 
     @Override
     public void onDestroy() {
-        Log.d("Main","main destory");
-        mBleScan.end();
-        mHandler.removeMessages(0);
-        mTimeOut.removeMessages(0);
-        //BeaconList.refresh();
-        //stopService(bleService);
-        super.onDestroy();
+        try {
+            mBleScan.end();
+            mHandler.removeMessages(0);
+            mTimeOut.removeMessages(0);
+            super.onDestroy();
+        } catch (Exception e) {
+            e.printStackTrace();
 
+            Toast.makeText(getApplicationContext(), "오류가 발생했습니다. 관리자에게 문의하세요\n오류코드 : 10510", Toast.LENGTH_LONG).show();
+            finish();
+        }
     }
 
 

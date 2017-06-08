@@ -4,9 +4,9 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -20,8 +20,6 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-
-import static com.example.becomebeacon.beaconlocker.BeaconList.msgMap;
 
 public class ReadMessageActivity extends AppCompatActivity {
     private String mMessageKey;
@@ -39,49 +37,61 @@ public class ReadMessageActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_read_message);
+        try {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_read_message);
 
-        //툴바 세팅
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_additem);
-        setSupportActionBar(toolbar);
+            //툴바 세팅
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_additem);
+            setSupportActionBar(toolbar);
 
-        toolbar.setTitle(R.string.app_name);
-        toolbar.setSubtitle("메세지 함");
+            toolbar.setTitle(R.string.app_name);
+            toolbar.setSubtitle("메세지 함");
 
-        toolbar.setTitleTextColor(Color.WHITE);
-        toolbar.setSubtitleTextColor(ContextCompat.getColor(ReadMessageActivity.this, R.color.colorSubtitle));
+            toolbar.setTitleTextColor(Color.WHITE);
+            toolbar.setSubtitleTextColor(ContextCompat.getColor(ReadMessageActivity.this, R.color.colorSubtitle));
 
-        if(getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            if(getSupportActionBar() != null) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
+
+            Intent intent=getIntent();
+            mMessageKey = intent.getStringExtra("MyMessageKey");
+
+            int notiNum=intent.getIntExtra("NOTI",-1);
+
+            if(notiNum!=-1) {
+                Log.d("NOTIC","noti : "+notiNum);
+                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                notificationManager.cancel(notiNum);
+            }
+
+            int op=1;
+            if(mMessageKey==null)
+                op=0;
+            mMessageIndex=initMsg(op);
+            initUI();
+            initListeners();
+            displayMyMessage();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "오류가 발생했습니다. 관리자에게 문의하세요\n오류코드 : 10700", Toast.LENGTH_LONG).show();
+            finish();
         }
-
-        Intent intent=getIntent();
-        mMessageKey = intent.getStringExtra("MyMessageKey");
-
-        int notiNum=intent.getIntExtra("NOTI",-1);
-
-        if(notiNum!=-1) {
-            Log.d("NOTIC","noti : "+notiNum);
-            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.cancel(notiNum);
-        }
-
-        int op=1;
-        if(mMessageKey==null)
-            op=0;
-        mMessageIndex=initMsg(op);
-        initUI();
-        initListeners();
-        displayMyMessage();
     }
 
     @Override
     public boolean onOptionsItemSelected(android.view.MenuItem item) {
-        switch(item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                break;
+        try {
+            switch(item.getItemId()) {
+                case android.R.id.home:
+                    finish();
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "오류가 발생했습니다. 관리자에게 문의하세요\n오류코드 : 10701", Toast.LENGTH_LONG).show();
+            finish();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -89,131 +99,187 @@ public class ReadMessageActivity extends AppCompatActivity {
     public int initMsg(int op)
     {
         int idx = 0;
-        msgList = new ArrayList<>(BeaconList.msgMap.values());
+        try {
+            idx = 0;
+            msgList = new ArrayList<>(BeaconList.msgMap.values());
 
-        Iterator<FindMessage> iter=msgList.iterator();
+            Iterator<FindMessage> iter=msgList.iterator();
 
-        while(iter.hasNext())
-        {
-            FindMessage fm=iter.next();
-            if(!BeaconList.mItemMap.containsKey(fm.devAddress))
+            while(iter.hasNext())
             {
-                iter.remove();
+                FindMessage fm=iter.next();
+                if(!BeaconList.mItemMap.containsKey(fm.devAddress))
+                {
+                    iter.remove();
+                }
+                else if(fm.isPoint)
+                {
+                    iter.remove();
+                }
             }
-            else if(fm.isPoint)
-            {
-                iter.remove();
-            }
-        }
 
-        if(op==1) {
+            if(op==1) {
 
-            for (int i = 0; i < msgList.size(); i++) {
-                if (mMessageKey.equals(msgList.get(i).keyValue)) {
-                    idx = i;
+                for (int i = 0; i < msgList.size(); i++) {
+                    if (mMessageKey.equals(msgList.get(i).keyValue)) {
+                        idx = i;
+
+                    }
 
                 }
-
             }
-        }
-        else if(op==0)
-        {
-            idx=msgList.size()-1;
+            else if(op==0)
+            {
+                idx=msgList.size()-1;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "오류가 발생했습니다. 관리자에게 문의하세요\n오류코드 : 10702", Toast.LENGTH_LONG).show();
+            finish();
         }
 
         return idx;
     }
 
     private void initUI() {
-        myMessageView = (TextView)findViewById(R.id.myMessageView);
-        goUpperMessage = (Button)findViewById(R.id.button_goUpperMessage);
-        goLowerMessage = (Button)findViewById(R.id.button_goLowerMessage);
-        deleteMessage = (Button)findViewById(R.id.button_deleteMessage);
+        try {
+            myMessageView = (TextView)findViewById(R.id.myMessageView);
+            goUpperMessage = (Button)findViewById(R.id.button_goUpperMessage);
+            goLowerMessage = (Button)findViewById(R.id.button_goLowerMessage);
+            deleteMessage = (Button)findViewById(R.id.button_deleteMessage);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "오류가 발생했습니다. 관리자에게 문의하세요\n오류코드 : 10703", Toast.LENGTH_LONG).show();
+            finish();
+        }
     }
 
     private void initListeners() {
-        goUpperMessage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setGoUpperMessage();
-            }
-        });
-        goLowerMessage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setGoLowerMessagege();
-            }
-        });
-        deleteMessage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setDeleteMessage();
-            }
-        });
+        try {
+            goUpperMessage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setGoUpperMessage();
+                }
+            });
+            goLowerMessage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setGoLowerMessagege();
+                }
+            });
+            deleteMessage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setDeleteMessage();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "오류가 발생했습니다. 관리자에게 문의하세요\n오류코드 : 10704", Toast.LENGTH_LONG).show();
+            finish();
+        }
     }
 
     private void displayMyMessage() {
-        if(msgList.size() == 0) {
-            myMessageView.setText("메세지가 없습니다");
-            Toast.makeText(ReadMessageActivity.this, "메세지가 없습니다", Toast.LENGTH_SHORT).show();
-        }
-        else {
-            try {
-                if (mMessageIndex < 0) {
-                    mMessageIndex = 0;
-                    makeMessage();
-                    Toast.makeText(ReadMessageActivity.this, "상위 메세지가 없습니다", Toast.LENGTH_SHORT).show();
-                } else if (mMessageIndex >= msgList.size()) {
-                    mMessageIndex = msgList.size() - 1;
-                    makeMessage();
-                    Toast.makeText(ReadMessageActivity.this, "하위 메세지가 없습니다", Toast.LENGTH_SHORT).show();
-                } else {
-                    makeMessage();
-                }
-            } catch (Exception e) {
-                e.getStackTrace();
+        try {
+            if(msgList.size() == 0) {
+                myMessageView.setText("메세지가 없습니다");
                 Toast.makeText(ReadMessageActivity.this, "메세지가 없습니다", Toast.LENGTH_SHORT).show();
             }
+            else {
+                try {
+                    if (mMessageIndex < 0) {
+                        mMessageIndex = 0;
+                        makeMessage();
+                        Toast.makeText(ReadMessageActivity.this, "상위 메세지가 없습니다", Toast.LENGTH_SHORT).show();
+                    } else if (mMessageIndex >= msgList.size()) {
+                        mMessageIndex = msgList.size() - 1;
+                        makeMessage();
+                        Toast.makeText(ReadMessageActivity.this, "하위 메세지가 없습니다", Toast.LENGTH_SHORT).show();
+                    } else {
+                        makeMessage();
+                    }
+                } catch (Exception e) {
+                    e.getStackTrace();
+                    Toast.makeText(ReadMessageActivity.this, "메세지가 없습니다", Toast.LENGTH_SHORT).show();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "오류가 발생했습니다. 관리자에게 문의하세요\n오류코드 : 10705", Toast.LENGTH_LONG).show();
+            finish();
         }
     }
 
     private void makeMessage() {
-        String str = msgList.get(mMessageIndex).devAddress;
-        String nickname =BeaconList.mItemMap.get(str).getNickname();
-        str = nickname + "에 대한 메세지\n" + msgList.get(mMessageIndex).message;
+        try {
+            String str = msgList.get(mMessageIndex).devAddress;
+            String nickname =BeaconList.mItemMap.get(str).getNickname();
+            str = nickname + "에 대한 메세지\n" + msgList.get(mMessageIndex).message;
 
-        myMessageView.setText(str);
+            myMessageView.setText(str);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "오류가 발생했습니다. 관리자에게 문의하세요\n오류코드 : 10706", Toast.LENGTH_LONG).show();
+            finish();
+        }
     }
 
     private void setGoUpperMessage() {
-        mMessageIndex--;
-        displayMyMessage();
+        try {
+            mMessageIndex--;
+            displayMyMessage();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "오류가 발생했습니다. 관리자에게 문의하세요\n오류코드 : 10707", Toast.LENGTH_LONG).show();
+            finish();
+        }
     }
 
     private void setGoLowerMessagege() {
-        mMessageIndex++;
-        displayMyMessage();
+        try {
+            mMessageIndex++;
+            displayMyMessage();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "오류가 발생했습니다. 관리자에게 문의하세요\n오류코드 : 10708", Toast.LENGTH_LONG).show();
+            finish();
+        }
     }
 
     private void setDeleteMessage() {
-        //파베에서 삭제
-        Log.d("RMA", "RMA LOG" + msgList.get(mMessageIndex).keyValue);
-        Log.d("RMA", "RMA Reference" + mDatabaseRef.child(msgList.get(mMessageIndex).keyValue).toString());
-        mDatabaseRef.child(msgList.get(mMessageIndex).keyValue).removeValue();
+        try {
+            //파베에서 삭제
+            Log.d("RMA", "RMA LOG" + msgList.get(mMessageIndex).keyValue);
+            Log.d("RMA", "RMA Reference" + mDatabaseRef.child(msgList.get(mMessageIndex).keyValue).toString());
+            mDatabaseRef.child(msgList.get(mMessageIndex).keyValue).removeValue();
 
-        //내부에서 삭제
-        BeaconList.msgMap.remove(msgList.get(mMessageIndex).keyValue);
-        msgList.remove(mMessageIndex--);
+            //내부에서 삭제
+            BeaconList.msgMap.remove(msgList.get(mMessageIndex).keyValue);
+            msgList.remove(mMessageIndex--);
 
-        Toast.makeText(ReadMessageActivity.this, "메세지가 삭제됐습니다.", Toast.LENGTH_SHORT).show();
-        displayMyMessage();
+            Toast.makeText(ReadMessageActivity.this, "메세지가 삭제됐습니다.", Toast.LENGTH_SHORT).show();
+            displayMyMessage();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "오류가 발생했습니다. 관리자에게 문의하세요\n오류코드 : 10709", Toast.LENGTH_LONG).show();
+            finish();
+        }
     }
 
     @Override
     public void onDestroy()
     {
-        super.onDestroy();
-        msgList.clear();
+
+        try {
+            super.onDestroy();
+            msgList.clear();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "오류가 발생했습니다. 관리자에게 문의하세요\n오류코드 : 10710", Toast.LENGTH_LONG).show();
+            finish();
+        }
 
     }
 }

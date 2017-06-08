@@ -20,3 +20,4 @@
   7 : ReadMessageActivity
   8 : RegLostDataActivity
   9 : SettingActivity
+  10 : NoActivity
