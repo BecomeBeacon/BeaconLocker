@@ -77,9 +77,9 @@ public class BeaconBackHostActivity extends AppCompatActivity {
             }
             info = BeaconList.lostMap.get(mac);
 
-            //툴바 세팅
-            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_additem);
-            setSupportActionBar(toolbar);
+        //툴바 세팅
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
             toolbar.setTitle(R.string.app_name);
             String subtitle = "상세정보 : " + info.devAddress;

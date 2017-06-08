@@ -1,6 +1,5 @@
 package com.example.becomebeacon.beaconlocker;
 
-import android.*;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -9,28 +8,24 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,16 +35,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FileDownloadTask;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -71,6 +59,7 @@ public class MainActivity extends AppCompatActivity
     private FirebaseAuth mAuth;
     private TextView mEmail;
     private TextView mName;
+    private TextView mPoint;
     private GoogleApiClient mGoogleApiClient;
     private Intent bleService;
 
@@ -280,8 +269,7 @@ public class MainActivity extends AppCompatActivity
 
         GetMainActivity.setMA(this);
 
-        bleService= new Intent(this,BleService.class);
-        startService(bleService);
+
         if(myBeacons==null||scannedBeacons==null)
         {
             Log.d("sss","cannot find listview");
@@ -319,7 +307,7 @@ public class MainActivity extends AppCompatActivity
         myBeacons=(ListView)findViewById(R.id.ble_list);
         myBeacons.setAdapter(mBeaconsListAdapter);
 
-        mBleScan =new BluetoothScan(this,mBleDeviceListAdapter,mBeaconsListAdapter);
+
 
         mAuth=LoginActivity.getAuth();
         mUser=LoginActivity.getUser();
@@ -405,12 +393,12 @@ public class MainActivity extends AppCompatActivity
 //            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 //            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
 //        }
-        if(Values.useBLE)
-            mBleScan.checkBluetooth();
+
 
         View headerLayout = navigationView.getHeaderView(0);
         mEmail=(TextView)headerLayout.findViewById(R.id.slide_user_email);
         mName=(TextView)headerLayout.findViewById(R.id.slide_user_name);
+        mPoint=(TextView)headerLayout.findViewById(R.id.PointView);
 
 
 
@@ -424,8 +412,19 @@ public class MainActivity extends AppCompatActivity
             mName.setText(mUser.getDisplayName());
         }
 
+        mBleScan =new BluetoothScan(this,mBleDeviceListAdapter,mBeaconsListAdapter);
+        bleService= new Intent(this,BleService.class);
+        startService(bleService);
+
+        if(Values.useBLE)
+            mBleScan.checkBluetooth();
         //이미지 파일 썩션
 
+    }
+
+    public void setPoint(int p)
+    {
+        mPoint.setText(BleService.myPoint+"");
     }
 
     private void initUI() {

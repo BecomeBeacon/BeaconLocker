@@ -51,7 +51,7 @@ public class BleService extends Service {
     private String TAG="BLESERVICE";
     private BluetoothScan mBleScan;
     private Location loc;
-    private int myPoint ;
+    public static int myPoint ;
     private String myPointKey=null;
 
     private String FIND_OTHERS_NOTI;
@@ -245,6 +245,7 @@ public class BleService extends Service {
                 {
 
                     myPoint+=addTotal;
+                    GetMainActivity.getMainActity().setPoint(myPoint);
 
                     //내 점수 setText 해줘야함 ㄹㅇ루
                 }
