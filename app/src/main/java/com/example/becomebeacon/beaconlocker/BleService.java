@@ -153,6 +153,7 @@ public class BleService extends Service {
                         {
                             if(msg.point<0) {//point 주는 msg는 음수로 온다
                                 addTotal -= msg.point;
+
                                 messageInfoRef.child(msg.keyValue).removeValue();
 
 
@@ -176,23 +177,27 @@ public class BleService extends Service {
                         else
                         {
                             if(msg.isChecked==false) {
-                                if(BeaconList.mItemMap.containsKey(msg.devAddress))
+                                if (BeaconList.mItemMap.containsKey(msg.devAddress)) {
                                     pushMsgNotification(BeaconList.mItemMap.get(msg.devAddress), msg);
+                                }
 
+                                if (!BeaconList.msgMap.containsKey(addressSnapshot.getKey()))
+                                    BeaconList.msgMap.put(addressSnapshot.getKey(), msg);
+
+                                msg.isChecked = true;
+
+                                messageInfoRef.child(addressSnapshot.getKey()).setValue(msg);
+
+                                if(BeaconList.rewardMap.containsKey(msg.devAddress))
+                                {
+                                    BeaconList.rewardMap.remove(msg.devAddress);
+                                }
+                                BeaconList.rewardMap.put(msg.devAddress,msg.sendUid);
                             }
-                            if(!BeaconList.msgMap.containsKey(addressSnapshot.getKey()))
-                                BeaconList.msgMap.put(addressSnapshot.getKey(),msg);
-
-                            msg.isChecked=true;
-                            messageInfoRef.child(addressSnapshot.getKey()).setValue(msg);
 
 
-                            if(BeaconList.rewardMap.containsKey(msg.devAddress))
-                            {
-                                BeaconList.rewardMap.remove(msg.devAddress);
-                            }
 
-                            BeaconList.rewardMap.put(msg.devAddress,msg.sendUid);
+
 
                         }
 
