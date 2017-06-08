@@ -75,7 +75,6 @@ public class BeaconBackHostActivity extends AppCompatActivity {
                 mac = uriData.getQueryParameter("beaconID");
             }
             info = BeaconList.lostMap.get(mac);
-            Log.d("BBHA", "BBHA String = " + info.toString());
 
         //툴바 세팅
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -164,21 +163,19 @@ public class BeaconBackHostActivity extends AppCompatActivity {
 
     private void viewImage() {
         try {
-            if (info.getPictureUri() == "") {
-                Log.d("BBHA", "if문");
+            if (info.getPictureUri() == null) {
+                //사진 없음
+                Toast.makeText(getApplicationContext(), "사진이 없습니다.", Toast.LENGTH_SHORT).show();
             } else {
-                Log.d("BBHA", "else문");
                 final ProgressDialog progressDialog = new ProgressDialog(this);
                 progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                 progressDialog.setMessage("사진을 불러오는 중...");
                 progressDialog.show();
 
                 try {
-                    Log.d("BBHA", "getpictureUri = " + info.getPictureUri());
                     StorageReference storageRef = storage.getReference().child(info.getPictureUri());
                     // Storage 에서 다운받아 저장시킬 임시파일
                     final File imageFile = File.createTempFile("images", "jpg");
-                    Log.d("BBHA", "2222");
                     storageRef.getFile(imageFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
@@ -186,7 +183,6 @@ public class BeaconBackHostActivity extends AppCompatActivity {
                             bitmapImage = BitmapFactory.decodeFile(imageFile.getPath());
                             ivPreview.setImageBitmap(bitmapImage);
                             progressDialog.dismiss();
-                            Log.d("BBHA", "3333");
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
@@ -194,14 +190,12 @@ public class BeaconBackHostActivity extends AppCompatActivity {
                             // Fail Case
                             e.printStackTrace();
                             progressDialog.dismiss();
-                            Log.d("BBHA", "4444");
                         }
                     });
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext(), "사진을 불러오지 못했습니다.", Toast.LENGTH_LONG).show();
                     progressDialog.dismiss();
-                    Log.d("BBHA", "5555");
                 }
             }
         } catch (Exception e) {
@@ -209,7 +203,6 @@ public class BeaconBackHostActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "오류가 발생했습니다. 관리자에게 문의하세요\n오류코드 : 10104", Toast.LENGTH_LONG).show();
             finish();
         }
-        Log.d("BBHA", "6666");
     }
 
     private void viewRssiInUser()

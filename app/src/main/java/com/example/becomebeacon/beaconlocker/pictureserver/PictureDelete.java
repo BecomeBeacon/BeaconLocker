@@ -29,7 +29,7 @@ public class PictureDelete {
         this.failCallback = failCallback;
     }
 
-    public void deletePicture(BleDeviceInfo bleDeviceInfo) throws Exception{
+    public void deletePicture(BleDeviceInfo bleDeviceInfo){
         mBleDeviceInfo = bleDeviceInfo;
         if(mBleDeviceInfo.getPictureUri()!=null)
             mStorage.getReference().child(mBleDeviceInfo.getPictureUri()).delete()
