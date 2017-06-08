@@ -384,7 +384,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
                                     filePath = (Uri) obj;
                                     picturePopup.cutImage(new Callback() {
                                         @Override
-                                        public void callBackMethod(Object obj) {
+                                        public void callBackMethod(Object obj){
                                             //사진 크롭 완료
                                             startActivityForResult((Intent) obj, CROP_SMALL_PICTURE);
                                         }
