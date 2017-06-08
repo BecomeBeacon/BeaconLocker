@@ -25,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:orientation="horizontal">
-        <view
+        <View
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_weight="1"/>
