@@ -11,7 +11,7 @@ import java.util.HashMap;
 public class PictureList {
     static public HashMap<String,Bitmap> pictures=new HashMap<>();
 
-    public static void clear()
+    public static void clear()throws Exception
     {
         for(Bitmap bm:pictures.values())
         {

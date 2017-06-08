@@ -7,23 +7,23 @@ package com.example.becomebeacon.beaconlocker;
 public class BeaconOnDB {
     public String nickname, picture, islost;
 
-    public BeaconOnDB() {
+    public BeaconOnDB() throws Exception{
         islost = "0";
         nickname = "";
         picture = "";
     }
 
-    public BeaconOnDB(String nickname) {
+    public BeaconOnDB(String nickname) throws Exception{
         islost = "0";
         this.nickname = nickname;
         picture = "";
     }
 
-    public String getNickname() {
+    public String getNickname() throws Exception{
         return nickname;
     }
 
-    public String getTitle() {
+    public String getTitle() throws Exception{
         if( nickname != null ) {
             if(nickname.length() > 5) {
                 return nickname.substring(0, 5) + "...";

@@ -64,7 +64,7 @@ public class GpsInfo extends Service implements LocationListener {
 
 
 
-    public Location getLocation() {
+    public Location getLocation()throws Exception {
 
         try {
             //locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
@@ -124,7 +124,7 @@ public class GpsInfo extends Service implements LocationListener {
         }
     }
 
-    public boolean GpsEnabled()
+    public boolean GpsEnabled()throws Exception
     {
         // GPS 정보 가져오기
         isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
@@ -132,7 +132,7 @@ public class GpsInfo extends Service implements LocationListener {
         return isGPSEnabled;
 
     }
-    public boolean NetworkEnabled()
+    public boolean NetworkEnabled()throws Exception
     {
         isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
         return isNetworkEnabled;
@@ -141,7 +141,7 @@ public class GpsInfo extends Service implements LocationListener {
     /**
      * 위도값을 가져옵니다.
      * */
-    public double getLatitude(){
+    public double getLatitude()throws Exception{
         if(location != null) {
             lat = location.getLatitude();
         }
@@ -151,7 +151,7 @@ public class GpsInfo extends Service implements LocationListener {
     /**
      * 경도값을 가져옵니다.
      * */
-    public double getLongitude(){
+    public double getLongitude()throws Exception{
         if(location != null) {
             lon = location.getLongitude();
         }
@@ -161,7 +161,7 @@ public class GpsInfo extends Service implements LocationListener {
     /**
      * GPS 나 wife 정보가 켜져있는지 확인합니다.
      * */
-    public boolean isGetLocation() {
+    public boolean isGetLocation()throws Exception {
         return this.isGetLocation;
     }
 
@@ -169,7 +169,7 @@ public class GpsInfo extends Service implements LocationListener {
      * GPS 정보를 가져오지 못했을때
      * 설정값으로 갈지 물어보는 alert 창
      * */
-    public void showSettingsAlert(){
+    public void showSettingsAlert()throws Exception{
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
 
         alertDialog.setTitle("GPS 사용유무셋팅");

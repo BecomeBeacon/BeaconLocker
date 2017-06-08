@@ -7,11 +7,11 @@ package com.example.becomebeacon.beaconlocker;
 public class BeaconOnUser  {
     public String address;
 
-    public BeaconOnUser(String address) {
+    public BeaconOnUser(String address) throws Exception {
         this.address = address;
     }
 
-    public BeaconOnUser() {
+    public BeaconOnUser() throws Exception {
         address = "";
     }
 }

@@ -7,11 +7,11 @@ package com.example.becomebeacon.beaconlocker;
 public class DeviceInfoStore {
     private static BleDeviceInfo bdi;
 
-    static public BleDeviceInfo getBleInfo()
+    static public BleDeviceInfo getBleInfo()throws Exception
     {
         return bdi;
     }
-    static public void setBleInfo(BleDeviceInfo bd)
+    static public void setBleInfo(BleDeviceInfo bd)throws Exception
     {
         bdi=bd;
     }

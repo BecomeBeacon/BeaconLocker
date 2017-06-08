@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -65,14 +66,23 @@ public class BleService extends Service {
 
         mContext=this;
         Notifications.clear();
-        if(isServiceRunningCheck()) {
 
+        try {
+            if(isServiceRunningCheck()) {
+
+                stopSelf();
+            }
+            mBleScan =new BluetoothScan(this);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "오류가 발생했습니다. 관리자에게 문의하세요\n오류코드 : 20104", Toast.LENGTH_LONG).show();
             stopSelf();
         }
 
 
         //Notifi_M = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-        mBleScan =new BluetoothScan(this);
+
         Notifications.cntNoti=0;
 
         mAssignedItem = BeaconList.mAssignedItem;
@@ -98,7 +108,7 @@ public class BleService extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
-    public void addDBListener()
+    public void addDBListener() throws Exception
     {
         lostBeaconInfoRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -131,81 +141,86 @@ public class BleService extends Service {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                int addTotal=0;
+                try {
+                    int addTotal=0;
 
-                for(DataSnapshot addressSnapshot : dataSnapshot.getChildren()) {
-                    FindMessage msg=addressSnapshot.getValue(FindMessage.class);
-                    msg.keyValue=addressSnapshot.getKey();
+                    for(DataSnapshot addressSnapshot : dataSnapshot.getChildren()) {
+                        FindMessage msg=addressSnapshot.getValue(FindMessage.class);
+                        msg.keyValue=addressSnapshot.getKey();
 
 
-                    if(msg.isPoint)
+                        if(msg.isPoint)
+                        {
+                            if(msg.point<0) {//point 주는 msg는 음수로 온다
+                                addTotal -= msg.point;
+                                messageInfoRef.child(msg.keyValue).removeValue();
+
+
+                            }
+                            else {
+                                checkZeroPoint = false;
+                                if(myPoint<msg.point)
+                                    myPoint = msg.point;
+                                myPointKey=addressSnapshot.getKey();
+                            }
+                            msg.isChecked=true;
+
+
+
+                            //Point msg는 받고 삭제해야한다
+
+
+
+
+                        }
+                        else
+                        {
+                            if(msg.isChecked==false) {
+                                if(BeaconList.mItemMap.containsKey(msg.devAddress))
+                                    pushMsgNotification(BeaconList.mItemMap.get(msg.devAddress), msg);
+
+                            }
+                            if(!BeaconList.msgMap.containsKey(addressSnapshot.getKey()))
+                                BeaconList.msgMap.put(addressSnapshot.getKey(),msg);
+
+                            msg.isChecked=true;
+                            messageInfoRef.child(addressSnapshot.getKey()).setValue(msg);
+
+
+                            if(BeaconList.rewardMap.containsKey(msg.devAddress))
+                            {
+                                BeaconList.rewardMap.remove(msg.devAddress);
+                            }
+
+                            BeaconList.rewardMap.put(msg.devAddress,msg.sendUid);
+
+                        }
+
+                        //DB에 ischeck를 체크해줘야함
+                    }
+
+                    if(checkZeroPoint)
                     {
-                        if(msg.point<0) {//point 주는 msg는 음수로 온다
-                            addTotal -= msg.point;
-                            messageInfoRef.child(msg.keyValue).removeValue();
+                        FindMessage fm=new FindMessage();
+                        fm.isPoint=true;
+                        fm.point=addTotal;
 
-
-                        }
-                        else {
-                            checkZeroPoint = false;
-                            if(myPoint<msg.point)
-                                myPoint = msg.point;
-                            myPointKey=addressSnapshot.getKey();
-                        }
-                        msg.isChecked=true;
-
-
-
-                        //Point msg는 받고 삭제해야한다
-
-
-
+                        messageInfoRef.push().setValue(fm);
+                        checkZeroPoint=false;
+                        myPoint=addTotal;
 
                     }
                     else
                     {
-                        if(msg.isChecked==false) {
-                            if(BeaconList.mItemMap.containsKey(msg.devAddress))
-                                pushMsgNotification(BeaconList.mItemMap.get(msg.devAddress), msg);
 
-                        }
-                        if(!BeaconList.msgMap.containsKey(addressSnapshot.getKey()))
-                            BeaconList.msgMap.put(addressSnapshot.getKey(),msg);
+                        myPoint+=addTotal;
+                        GetMainActivity.getMainActity().setPoint(myPoint);
 
-                        msg.isChecked=true;
-                        messageInfoRef.child(addressSnapshot.getKey()).setValue(msg);
-
-
-                        if(BeaconList.rewardMap.containsKey(msg.devAddress))
-                        {
-                            BeaconList.rewardMap.remove(msg.devAddress);
-                        }
-
-                        BeaconList.rewardMap.put(msg.devAddress,msg.sendUid);
-
+                        //내 점수 setText 해줘야함 ㄹㅇ루
                     }
-
-                    //DB에 ischeck를 체크해줘야함
-                }
-
-                if(checkZeroPoint)
-                {
-                    FindMessage fm=new FindMessage();
-                    fm.isPoint=true;
-                    fm.point=addTotal;
-
-                    messageInfoRef.push().setValue(fm);
-                    checkZeroPoint=false;
-                    myPoint=addTotal;
-
-                }
-                else
-                {
-
-                    myPoint+=addTotal;
-                    GetMainActivity.getMainActity().setPoint(myPoint);
-
-                    //내 점수 setText 해줘야함 ㄹㅇ루
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "오류가 발생했습니다. 관리자에게 문의하세요\n오류코드 : 20103", Toast.LENGTH_LONG).show();
                 }
 
             }
@@ -225,7 +240,12 @@ public class BleService extends Service {
 
     @Override
     public void onDestroy() {
-        mBleScan.end();
+        try {
+            mBleScan.end();
+        }catch(Exception e)
+        {
+
+        }
         mHandler.removeMessages(0);
         mTimeOut.removeMessages(0);
         super.onDestroy();
@@ -241,45 +261,50 @@ public class BleService extends Service {
         public void handleMessage(Message msg)
         {
 
-
-            if(mBleScan.getMod()== Values.USE_TRACK) {
-
-
-                if(mScan) {
-
-                    mBleScan.getBtAdapter().stopLeScan(mBleScan.mLeScanCallback);
-
-                    mScan = false;
-
-                    mHandler.sendEmptyMessageDelayed(0, Values.scanBreakTime);
+            try {
+                if(mBleScan.getMod()== Values.USE_TRACK) {
 
 
-                }
-                else
-                {
-                    if(Values.useGPS)
+                    if(mScan) {
+
+                        mBleScan.getBtAdapter().stopLeScan(mBleScan.mLeScanCallback);
+
+                        mScan = false;
+
+                        mHandler.sendEmptyMessageDelayed(0, Values.scanBreakTime);
+
+
+                    }
+                    else
                     {
+                        if(Values.useGPS)
+                        {
 
 
-                        //여기서 Values.latitude, Values.longitude에 현재 좌표 저장
-                        gps = new GpsInfo(GetMainActivity.getMainActity(),GetMainActivity.getMainActity());
-                        gps.getLocation();
+                            //여기서 Values.latitude, Values.longitude에 현재 좌표 저장
+                            gps = new GpsInfo(GetMainActivity.getMainActity(),GetMainActivity.getMainActity());
+                            gps.getLocation();
 
-                        Values.latitude = gps.lat;
-                        Values.longitude = gps.lon;
+                            Values.latitude = gps.lat;
+                            Values.longitude = gps.lon;
+
+
+                        }
+                        if(Values.useBLE) {
+
+                            mBleScan.getBtAdapter().startLeScan(mBleScan.mLeScanCallback);
+                        }
+                        mScan = true;
+
+                        mHandler.sendEmptyMessageDelayed(0, Values.scanTime);
 
 
                     }
-                    if(Values.useBLE) {
-
-                        mBleScan.getBtAdapter().startLeScan(mBleScan.mLeScanCallback);
-                    }
-                    mScan = true;
-
-                    mHandler.sendEmptyMessageDelayed(0, Values.scanTime);
-
-
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(), "오류가 발생했습니다. 관리자에게 문의하세요\n오류코드 : 20101", Toast.LENGTH_LONG).show();
+                mHandler.removeMessages(0);
             }
 
         }
@@ -290,21 +315,26 @@ public class BleService extends Service {
         public void handleMessage(Message msg)
         {
 
-            if(Values.useBLE) {
+            try {
+                if(Values.useBLE) {
 
-                for(int i=0;i<BeaconList.mAssignedItem.size();i++)
-                {
-                    BleDeviceInfo dbi=BeaconList.mAssignedItem.get(i);
-                    dbi.timeout--;
-                    if(dbi.isLost!=true&&dbi.timeout==0)
+                    for(int i=0;i<BeaconList.mAssignedItem.size();i++)
                     {
-                        dbi.isFar=true;
-                        pushNotification(dbi);
+                        BleDeviceInfo dbi=BeaconList.mAssignedItem.get(i);
+                        dbi.timeout--;
+                        if(dbi.isLost!=true&&dbi.timeout==0)
+                        {
+                            dbi.isFar=true;
+                            pushNotification(dbi);
+                        }
                     }
                 }
+                mTimeOut.sendEmptyMessageDelayed(0, 1000);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(), "오류가 발생했습니다. 관리자에게 문의하세요\n오류코드 : 20102", Toast.LENGTH_LONG).show();
+                mHandler.removeMessages(0);
             }
-            mTimeOut.sendEmptyMessageDelayed(0, 1000);
-
 
 
         }
@@ -312,7 +342,7 @@ public class BleService extends Service {
 
 
 
-    public void pushNotification(BleDeviceInfo bdi)
+    public void pushNotification(BleDeviceInfo bdi) throws Exception
     {
 
         if(Notifications.notifications.containsKey(bdi.devAddress+Values.NOTI_FAR))
@@ -373,7 +403,7 @@ public class BleService extends Service {
 
     }
 
-    public void pushMsgNotification(BleDeviceInfo bdi, FindMessage msg)
+    public void pushMsgNotification(BleDeviceInfo bdi, FindMessage msg) throws  Exception
     {
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         Intent intent = new Intent(this, ReadMessageActivity.class);
@@ -418,7 +448,7 @@ public class BleService extends Service {
 
     }
 
-    public void pushFindNotification(LostDevInfo ldi,int op)
+    public void pushFindNotification(LostDevInfo ldi,int op) throws Exception
     {
         if(Notifications.notifications.containsKey(ldi.getDevAddr()+Values.NOTI_I_FIND))
         {
@@ -485,7 +515,7 @@ public class BleService extends Service {
     }
 
 
-    public boolean isServiceRunningCheck() {
+    public boolean isServiceRunningCheck() throws Exception{
         ActivityManager manager = (ActivityManager) this.getSystemService(Activity.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
             if ("BleService".equals(service.service.getClassName())) {

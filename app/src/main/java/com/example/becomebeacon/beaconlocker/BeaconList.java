@@ -22,7 +22,7 @@ public class BeaconList {
     static public ArrayList<BleDeviceInfo> mArrayListBleDevice=new ArrayList<BleDeviceInfo>();    ;
     static public ArrayList<BleDeviceInfo> mAssignedItem=new ArrayList<BleDeviceInfo>();
 
-    static public void refresh()
+    static public void refresh() throws Exception
     {
         scannedMap.clear();
         mItemMap.clear();

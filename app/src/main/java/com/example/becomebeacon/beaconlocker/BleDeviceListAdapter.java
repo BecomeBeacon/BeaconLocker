@@ -69,7 +69,7 @@ public class BleDeviceListAdapter extends BaseAdapter {
         mAssignedBleMap=mBleMap;
     }
 
-    public synchronized void addOrUpdateItem(BleDeviceInfo info)
+    public synchronized void addOrUpdateItem(BleDeviceInfo info) throws Exception
     {
         if(mHashBleMap.containsKey(info.getDevAddress()))
         {

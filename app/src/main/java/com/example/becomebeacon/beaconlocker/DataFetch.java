@@ -20,6 +20,7 @@ import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by GW on 2017-05-02.
@@ -42,7 +43,7 @@ public class DataFetch {
         myItemMap = mItemMap;
     }
 
-    public void displayBeacons() {
+    public void displayBeacons() throws Exception{
     // users/$Uid/beacons/"Address"
         mUser= LoginActivity.getUser();
 
@@ -57,11 +58,21 @@ public class DataFetch {
                             BeaconOnUser myBeaconOnUser = addressSnapshot.getValue(BeaconOnUser.class);
                             Log.v("Test_Print_ADDR", myBeaconOnUser.address);
 
+                            try {
 
-                            findBeaconByAddress(myBeaconOnUser.address);
+                                findBeaconByAddress(myBeaconOnUser.address);
+                            }catch(Exception e)
+                            {
+
+                            }
                         }
                         GetMainActivity.getMainActity().mainProgressDialog.dismiss();
-                        BleService.mContext.addDBListener();
+                        try {
+                            BleService.mContext.addDBListener();
+                        }catch(Exception e)
+                        {
+
+                        }
                     }
 
                     @Override
@@ -71,7 +82,7 @@ public class DataFetch {
                 });
     }
 
-    public void findBeaconByAddress(String address) {
+    public void findBeaconByAddress(String address) throws Exception{
         // beacon/address/"beaconOnDB"
         DatabaseReference beaconInfoRef = mDatabase.getReference("beacon/");
 
@@ -141,7 +152,7 @@ public class DataFetch {
                 });
     }
 
-    public static FirebaseDatabase getDatabase()
+    public static FirebaseDatabase getDatabase()throws Exception
     {
         return mDatabase;
     }
