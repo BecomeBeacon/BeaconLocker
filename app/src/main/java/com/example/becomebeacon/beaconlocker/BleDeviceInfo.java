@@ -91,6 +91,7 @@ public class BleDeviceInfo {
         uid=ldi.getUid();
         lastDate=ldi.getLostDate();
         pictureLink=ldi.getPictureLink();
+        pictureUri=ldi.getPictureUri();
 
     }
 
