@@ -12,6 +12,7 @@ import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -206,7 +207,12 @@ public class BeaconDetailsActivity extends AppCompatActivity {
                     }
                 });
 
-                pictureDelete.deletePicture(item);
+                try {
+                    pictureDelete.deletePicture(item);
+                } catch (Exception e)
+                {
+
+                }
             }
             //수정 없으면 다른 데이터만 수정
             else {
@@ -244,9 +250,13 @@ public class BeaconDetailsActivity extends AppCompatActivity {
                         }
 
                     }
+                    try {
+                        dataModify.deleteBeacon(item);
+                    }
+                    catch(Exception e)
+                    {
 
-                    dataModify.deleteBeacon(item);
-
+                    }
                     finish();
                 }
             });
@@ -381,14 +391,20 @@ public class BeaconDetailsActivity extends AppCompatActivity {
                                 @Override
                                 public void callBackMethod(Object obj) {
                                     //중간처리 완료
-                                    filePath = (Uri) obj;
-                                    picturePopup.cutImage(new Callback() {
-                                        @Override
-                                        public void callBackMethod(Object obj){
-                                            //사진 크롭 완료
-                                            startActivityForResult((Intent) obj, CROP_SMALL_PICTURE);
-                                        }
-                                    });
+                                    try {
+                                        filePath = (Uri) obj;
+                                        picturePopup.cutImage(new Callback() {
+                                            @Override
+                                            public void callBackMethod(Object obj) {
+                                                //사진 크롭 완료
+                                                startActivityForResult((Intent) obj, CROP_SMALL_PICTURE);
+                                            }
+                                        });
+                                    }catch(Exception e)
+                                    {
+                                        Toast.makeText(getApplicationContext(), "오류가 발생했습니다. 관리자에게 문의하세요\n오류코드 : 10255", Toast.LENGTH_LONG).show();
+                                        finish();
+                                    }
                                 }
                             });
                             break;
@@ -399,6 +415,8 @@ public class BeaconDetailsActivity extends AppCompatActivity {
                                 ivPreview.setImageBitmap(bitmap);
                             } catch (IOException e) {
                                 e.printStackTrace();
+                                Toast.makeText(getApplicationContext(), "오류가 발생했습니다. 관리자에게 문의하세요\n오류코드 : 10233", Toast.LENGTH_LONG).show();
+                                finish();
                             }
                             break;
                     }

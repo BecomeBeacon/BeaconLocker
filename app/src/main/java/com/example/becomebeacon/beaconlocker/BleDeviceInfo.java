@@ -248,17 +248,17 @@ public class BleDeviceInfo {
         this.devName = devName;
     }
 
-    public String getDevAddress() throws Exception
+    public String getDevAddress()
     {
         return this.devAddress;
     }
 
-    public void setDevAddress(String deviceAddr) throws Exception
+    public void setDevAddress(String deviceAddr)
     {
         this.devAddress = deviceAddr;
     }
 
-    public int getMeasuredPower() throws Exception
+    public int getMeasuredPower()
     {
         return measuredPower;
         //return String.valueOf(this.measuredPower);

@@ -308,32 +308,39 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onClick(View view) {
                     //ble 검색 및 추가
-                    if (mBleScan.getMod() == Values.USE_NOTHING) {
 
-                        toolbar.setSubtitle("주변의 미등록 비콘 목록");
-                        fab.setImageResource(R.drawable.fab_my);
+                    try {
+                        if (mBleScan.getMod() == Values.USE_NOTHING) {
 
-                        myBeacons.setVisibility(View.GONE);
-                        scannedBeacons.setVisibility(VISIBLE);
-                        emptyListText.setVisibility(View.GONE);
-                        mBleScan.changeMod(Values.USE_SCAN);
-                        mBleScan.checkBluetooth();
+                            toolbar.setSubtitle("주변의 미등록 비콘 목록");
+                            fab.setImageResource(R.drawable.fab_my);
 
-
-                    } else if (mBleScan.getMod() == Values.USE_SCAN) {
-                        toolbar.setSubtitle("내 기기 목록");
-                        fab.setImageResource(R.drawable.fab_scan);
-                        if (mItemMap.isEmpty()) {
-                            emptyListText.setVisibility(VISIBLE);
                             myBeacons.setVisibility(View.GONE);
-
-                        } else {
+                            scannedBeacons.setVisibility(VISIBLE);
                             emptyListText.setVisibility(View.GONE);
-                            myBeacons.setVisibility(VISIBLE);
-                        }
+                            mBleScan.changeMod(Values.USE_SCAN);
+                            mBleScan.checkBluetooth();
 
-                        scannedBeacons.setVisibility(View.GONE);
-                        mBleScan.changeMod(Values.USE_NOTHING);
+
+                        } else if (mBleScan.getMod() == Values.USE_SCAN) {
+                            toolbar.setSubtitle("내 기기 목록");
+                            fab.setImageResource(R.drawable.fab_scan);
+                            if (mItemMap.isEmpty()) {
+                                emptyListText.setVisibility(VISIBLE);
+                                myBeacons.setVisibility(View.GONE);
+
+                            } else {
+                                emptyListText.setVisibility(View.GONE);
+                                myBeacons.setVisibility(VISIBLE);
+                            }
+
+                            scannedBeacons.setVisibility(View.GONE);
+                            mBleScan.changeMod(Values.USE_NOTHING);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), "오류가 발생했습니다. 관리자에게 문의하세요\n오류코드 : 10511", Toast.LENGTH_LONG).show();
+                        finish();
                     }
                 }
             });
@@ -527,8 +534,14 @@ public class MainActivity extends AppCompatActivity
                 //Intent intent = new Intent(getApplicationContext(), RegLostDataActivity.class);
                 startActivity(intent);
             } else if (id == R.id.nav_map) {
-                Intent intent = new Intent(this, MultiMapActivity.class);
-                startActivity(intent);
+                if(Values.useGPS) {
+                    Intent intent = new Intent(this, MultiMapActivity.class);
+                    startActivity(intent);
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(), "GPS가 켜져있을때 지원되는 기능입니다", Toast.LENGTH_LONG).show();
+                }
             } else if (id == R.id.nav_setting) {
                 Intent intent = new Intent(this, SettingActivity.class);
                 startActivity(intent);
