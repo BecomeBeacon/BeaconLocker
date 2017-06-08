@@ -273,12 +273,18 @@ public class BeaconDetailsActivity extends AppCompatActivity {
             showMap.setOnClickListener(new Button.OnClickListener() {
                 public void onClick(View v)
                 {
-                    Intent intent = new Intent(getApplicationContext(), MultiMapActivity.class);
+                    if(Values.useGPS) {
+                        Intent intent = new Intent(getApplicationContext(), MultiMapActivity.class);
 
-                    intent.putExtra("LAT",item.latitude);
-                    intent.putExtra("LON",item.longitude);
-                    intent.putExtra("DATE",item.lastDate);
-                    startActivity(intent);
+                        intent.putExtra("LAT", item.latitude);
+                        intent.putExtra("LON", item.longitude);
+                        intent.putExtra("DATE", item.lastDate);
+                        startActivity(intent);
+                    }
+                    else
+                    {
+                        Toast.makeText(getApplicationContext(), "GPS기능을 켰을 때 지원되는 기능입니다", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
             findStuff.setOnClickListener(new Button.OnClickListener()
@@ -310,6 +316,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
             lostButton.setOnClickListener(new Button.OnClickListener() {
                 public void onClick(View v) {
                     //잃어버림 신고 버튼
+                    Toast.makeText(getApplicationContext(), "GPS설정이 되지 않았을 경우 지도에 표시되지 않을수 있습니다", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(BeaconDetailsActivity.this, RegLostDataActivity.class);
                     intent.putExtra("MAC",item.devAddress);
                     startActivity(intent);

@@ -540,7 +540,7 @@ public class MainActivity extends AppCompatActivity
                 }
                 else
                 {
-                    Toast.makeText(getApplicationContext(), "GPS가 켜져있을때 지원되는 기능입니다", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "GPS기능을 켰을 때 지원되는 기능입니다", Toast.LENGTH_SHORT).show();
                 }
             } else if (id == R.id.nav_setting) {
                 Intent intent = new Intent(this, SettingActivity.class);
