@@ -203,7 +203,6 @@ public class BeaconDetailsActivity extends AppCompatActivity {
                     @Override
                     public void callBackMethod(Object obj) {
                         //기존 사진 삭제 실패 시
-                        Log.d("PictureModify", "Picture Delete Fail");
                         progressDialog.dismiss();
                     }
                 });
@@ -217,7 +216,6 @@ public class BeaconDetailsActivity extends AppCompatActivity {
             }
             //수정 없으면 다른 데이터만 수정
             else {
-                Log.d("BDA", "else if(filePath != null)");
                 dataModify.changeBeacon(item);
                 finish();
             }
