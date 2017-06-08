@@ -12,7 +12,6 @@ import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -95,7 +94,6 @@ public class BeaconDetailsActivity extends AppCompatActivity {
             }
 
             if(noti!=-1) {
-                Log.d("NOTIC","noti : "+noti);
                 NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                 notificationManager.cancel(noti);
                 Notifications.notifications.remove(item.devAddress+Values.NOTI_I_FIND);
@@ -106,7 +104,6 @@ public class BeaconDetailsActivity extends AppCompatActivity {
             initUI();
             initListeners();
 
-            Log.d("BDA","item: "+item.nickname+", "+item.devAddress+", "+item.pictureUri);
             nickName.setText(item.nickname);
             limitDist.setText(item.limitDistance+"");
 //        address.setText(item.devAddress);
@@ -176,7 +173,6 @@ public class BeaconDetailsActivity extends AppCompatActivity {
                 progressDialog.setMessage("업로드중...");
                 progressDialog.show();
 
-                Log.d("PictureModify", "Picture Modify");
                 PictureDelete pictureDelete = new PictureDelete(new Callback() {
                     @Override
                     public void callBackMethod(Object obj) {
@@ -186,7 +182,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
                             @Override
                             public void callBackMethod(Object obj) {
                                 //사진 재 업로드 성공 시
-                                Log.d("PictureModify", "Picture Re-Upload Success");
+
                                 item = (BleDeviceInfo) obj;
                                 dataModify.changeBeacon(item);
                                 progressDialog.dismiss();
@@ -196,7 +192,6 @@ public class BeaconDetailsActivity extends AppCompatActivity {
                             @Override
                             public void callBackMethod(Object obj) {
                                 //사진 재 업로드 실패 시
-                                Log.d("PictureModify", "Picture Re-Upload Fail");
                                 progressDialog.dismiss();
                             }
                         });
@@ -207,7 +202,6 @@ public class BeaconDetailsActivity extends AppCompatActivity {
                     @Override
                     public void callBackMethod(Object obj) {
                         //기존 사진 삭제 실패 시
-                        Log.d("PictureModify", "Picture Delete Fail");
                         progressDialog.dismiss();
                     }
                 });
@@ -216,7 +210,6 @@ public class BeaconDetailsActivity extends AppCompatActivity {
             }
             //수정 없으면 다른 데이터만 수정
             else {
-                Log.d("BDA", "else if(filePath != null)");
                 dataModify.changeBeacon(item);
                 finish();
             }
@@ -243,22 +236,15 @@ public class BeaconDetailsActivity extends AppCompatActivity {
                 public void onClick(View v)
                 {
                     BeaconList.mItemMap.remove(item.devAddress);
-                    Log.d("BDA","size : "+BeaconList.mAssignedItem.size());
 
                     for (int i = 0; i < BeaconList.mAssignedItem.size(); i++) {
-                        Log.d("BDA", "Compare " +BeaconList.mAssignedItem.get(i).devAddress+", "+item.devAddress);
+
                         if (BeaconList.mAssignedItem.get(i).devAddress.equals(item.devAddress)) {
                             BeaconList.mAssignedItem.remove(i);
-                            Log.d("BDA", "removed");
-
-
                         }
-                        else
-                        {
-                            Log.d("BDA", "not same");
-                        }
+
                     }
-                    Log.d("BDA","Array : "+BeaconList.mAssignedItem);
+
                     dataModify.deleteBeacon(item);
 
                     finish();
@@ -276,7 +262,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
                 public void onClick(View v)
                 {
                     Intent intent = new Intent(getApplicationContext(), MultiMapActivity.class);
-                    Log.d("BDA","lat : "+item.latitude+" long : "+item.longitude);
+
                     intent.putExtra("LAT",item.latitude);
                     intent.putExtra("LON",item.longitude);
                     intent.putExtra("DATE",item.lastDate);
@@ -299,7 +285,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
                         fm.point=-Values.REWARD_POINT;
                         mDatabase.getReference("users/" + BeaconList.rewardMap.get(item.devAddress)).child("messages")
                                 .push().setValue(fm);
-                        Log.d("POINT","success send point message");
+
                     }
 
                     item.isLost = false;
@@ -329,7 +315,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
     {
         try {
             super.onDestroy();
-            Log.d("BDA","BDA destroyed");
+
             mContext=null;
 
             if (progressDialog != null) {

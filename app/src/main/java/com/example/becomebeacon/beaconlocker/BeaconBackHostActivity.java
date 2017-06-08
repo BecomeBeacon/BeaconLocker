@@ -15,7 +15,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -64,7 +63,6 @@ public class BeaconBackHostActivity extends AppCompatActivity {
             mac = intent.getStringExtra("MAC");
             int noti= intent.getIntExtra("NOTI",-1);
             if(noti!=-1) {
-                Log.d("NOTIC","noti : "+noti);
                 NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                 notificationManager.cancel(noti);
                 Notifications.notifications.remove(mac+Values.NOTI_I_FIND);

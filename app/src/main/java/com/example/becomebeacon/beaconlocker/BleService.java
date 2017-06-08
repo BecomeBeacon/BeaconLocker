@@ -66,10 +66,10 @@ public class BleService extends Service {
         mContext=this;
         Notifications.clear();
         if(isServiceRunningCheck()) {
-            Log.d("BLESERVICE","already exist");
+
             stopSelf();
         }
-        Log.d("BLESERVICE","service start");
+
 
         //Notifi_M = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         mBleScan =new BluetoothScan(this);
@@ -130,13 +130,13 @@ public class BleService extends Service {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d("POINT","something changed");
+
                 int addTotal=0;
 
                 for(DataSnapshot addressSnapshot : dataSnapshot.getChildren()) {
                     FindMessage msg=addressSnapshot.getValue(FindMessage.class);
                     msg.keyValue=addressSnapshot.getKey();
-                    Log.d("POINT","key values is "+msg.keyValue+" : "+msg.point);
+
 
                     if(msg.isPoint)
                     {
@@ -175,7 +175,6 @@ public class BleService extends Service {
                         msg.isChecked=true;
                         messageInfoRef.child(addressSnapshot.getKey()).setValue(msg);
 
-                        Log.d("Point","change : "+msg.toString());
 
                         if(BeaconList.rewardMap.containsKey(msg.devAddress))
                         {
@@ -183,19 +182,8 @@ public class BleService extends Service {
                         }
 
                         BeaconList.rewardMap.put(msg.devAddress,msg.sendUid);
-                        Log.d("POINT","put reward for"+msg.devAddress+ ":"+msg.sendUid);
+
                     }
-
-
-
-                    Log.d("MSG","i got msg "+msg.devAddress+","+msg.message);
-                    Log.d("MSG","message list : "+BeaconList.msgMap);
-
-
-
-
-
-
 
                     //DB에 ischeck를 체크해줘야함
                 }
@@ -207,7 +195,6 @@ public class BleService extends Service {
                     fm.point=addTotal;
 
                     messageInfoRef.push().setValue(fm);
-                    Log.d("Point","change : "+fm.point);
                     checkZeroPoint=false;
                     myPoint=addTotal;
 
@@ -221,7 +208,6 @@ public class BleService extends Service {
                     //내 점수 setText 해줘야함 ㄹㅇ루
                 }
 
-                Log.d("POINT","1: MyPoint is "+myPoint);
             }
 
             @Override
@@ -239,7 +225,6 @@ public class BleService extends Service {
 
     @Override
     public void onDestroy() {
-        Log.d("Service","service destory");
         mBleScan.end();
         mHandler.removeMessages(0);
         mTimeOut.removeMessages(0);
@@ -247,11 +232,6 @@ public class BleService extends Service {
 
         if(myPointKey!=null)
             messageInfoRef.child(myPointKey).child("point").setValue(myPoint);
-
-
-        Log.d("POINT","Destroy: MyPoint is "+myPoint);
-
-
 
     }
 
@@ -277,7 +257,6 @@ public class BleService extends Service {
                 }
                 else
                 {
-                    Log.d(TAG,"gps : "+Values.useGPS);
                     if(Values.useGPS)
                     {
 
@@ -338,12 +317,7 @@ public class BleService extends Service {
 
         if(Notifications.notifications.containsKey(bdi.devAddress+Values.NOTI_FAR))
         {
-            Log.d("NOTIC",bdi.nickname+"NOTI is already exist "+Notifications.notifications);
             return;
-        }
-        else
-        {
-            Log.d("NOTIC",bdi.nickname+" NOTI instaite");
         }
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -380,7 +354,6 @@ public class BleService extends Service {
 
 
         Notifications.notifications.put(bdi.devAddress+Values.NOTI_FAR,Notifications.cntNoti);
-        Log.d("NOTIC","NotiNum is "+Notifications.cntNoti+" there is key "+Notifications.notifications.toString());
 
         notificationManager.notify(Notifications.cntNoti++, noti);
 
@@ -402,7 +375,6 @@ public class BleService extends Service {
 
     public void pushMsgNotification(BleDeviceInfo bdi, FindMessage msg)
     {
-        Log.d("POINT","noti come");
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         Intent intent = new Intent(this, ReadMessageActivity.class);
 
@@ -429,10 +401,6 @@ public class BleService extends Service {
 
         Notification noti = builder.build();
 
-
-//        Notifications.notifications.put(bdi.devAddress,Notifications.cntNoti);
-        Log.d("NOTIC","NotiNum is "+Notifications.cntNoti+" there is key "+Notifications.notifications.toString());
-
         notificationManager.notify(Notifications.cntNoti++, noti);
 
 
@@ -448,23 +416,18 @@ public class BleService extends Service {
 //        //토스트 띄우기
 //       Toast.makeText(BleService.this, "비컨 멀어짐", Toast.LENGTH_LONG).show();
 
-
     }
 
     public void pushFindNotification(LostDevInfo ldi,int op)
     {
         if(Notifications.notifications.containsKey(ldi.getDevAddr()+Values.NOTI_I_FIND))
         {
-            Log.d("NOTIC",ldi+"NOTI is already exist "+Notifications.notifications);
             return;
         }else
         {
-            Log.d("NOTIC",ldi.getDevAddr()+" is not in "+Notifications.notifications.keySet());
+
         }
 
-
-
-        Log.d("NOTIC", "LostItem name : " + ldi.getNickNameOfThing() + " ADRRESS : " + ldi.getDevAddr());
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         Intent intent ,intent2;
@@ -481,7 +444,6 @@ public class BleService extends Service {
         else
         {
             FIND_OTHERS_NOTI="ERROR";
-            Log.d("SERVICE","옵션을 줘야함");
             intent = new Intent();
         }
         intent2 = new Intent();
@@ -514,7 +476,6 @@ public class BleService extends Service {
 
 
         Notifications.notifications.put(ldi.getDevAddr()+Values.NOTI_I_FIND, Notifications.cntNoti);
-        Log.d("NOTIC", "NotiNum is " + Notifications.cntNoti + " there is key " + Notifications.notifications.toString());
 
         notificationManager.notify(Notifications.cntNoti++, noti);
 
@@ -522,94 +483,6 @@ public class BleService extends Service {
 
 
     }
-
-//    public void pushNotification()
-//    {
-////        Intent intent = new Intent(BleService.this, MainActivity.class);
-////        PendingIntent pendingIntent = PendingIntent.getActivity(BleService.this, 0, intent,PendingIntent.FLAG_UPDATE_CURRENT);
-////
-////        Notifi = new Notification.Builder(BleService.this.getApplicationContext())
-////                .setContentTitle("Content Title")
-////                .setContentText("Content Text")
-////                .setSmallIcon(R.drawable.main_logo)
-////                .setTicker("알림!!!")
-////                .setContentIntent(pendingIntent)
-////                .build();
-////
-////        //소리추가
-////        Notifi.defaults = Notification.DEFAULT_SOUND;
-////
-////        //알림 소리를 한번만 내도록
-////        Notifi.flags = Notification.FLAG_ONLY_ALERT_ONCE;
-////
-////        //확인하면 자동으로 알림이 제거 되도록
-////        Notifi.flags = Notification.FLAG_AUTO_CANCEL;
-////
-////
-////        Notifi_M.notify( 777 , Notifi);
-//
-//        NotificationCompat.Builder mBuilder = createNotification();
-//
-//        //커스텀 화면 만들기
-//        RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.push_alarm2);
-//        //remoteViews.setImageViewResource(R.id.img, R.drawable.main_logo);
-//        //remoteViews.setTextViewText(R.id.title, "Title");
-//        remoteViews.setImageViewResource(R.id.noti_image, R.mipmap.ic_launcher);
-//        remoteViews.setTextViewText(R.id.noti_text, "비컨이 멀어졌습니다.\n알고계신가요?");
-//
-//
-//
-//
-//
-//
-//
-//        //노티피케이션에 커스텀 뷰 장착
-//        mBuilder.setContent(remoteViews);
-//        mBuilder.setContentIntent(createPendingIntent());
-//
-//        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//        mNotificationManager.notify(1, mBuilder.build());
-//
-//
-//
-//
-//        //토스트 띄우기
-//        Toast.makeText(BleService.this, "비컨 멀어짐", Toast.LENGTH_LONG).show();
-//    }
-//
-//    private PendingIntent createPendingIntent(){
-//        Intent resultIntent = new Intent(this, MainActivity.class);
-//        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-//        stackBuilder.addParentStack(MainActivity.class);
-//        stackBuilder.addNextIntent(resultIntent);
-//
-//        return stackBuilder.getPendingIntent(
-//                0,
-//                PendingIntent.FLAG_UPDATE_CURRENT
-//        );
-//    }
-//
-//
-//
-//
-//    private NotificationCompat.Builder createNotification(){
-//        Bitmap icon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
-//        NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
-//                .setSmallIcon(R.mipmap.ic_launcher)
-//                .setLargeIcon(icon)
-//                .setContentTitle("StatusBar Title")
-//                .setContentText("StatusBar subTitle")
-//                .setSmallIcon(R.mipmap.ic_launcher/*스와이프 전 아이콘*/)
-//                .setAutoCancel(true)
-//                .setWhen(System.currentTimeMillis())
-//                .setDefaults(Notification.DEFAULT_ALL);
-//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-//            builder.setCategory(Notification.CATEGORY_MESSAGE)
-//                    .setPriority(Notification.PRIORITY_HIGH)
-//                    .setVisibility(Notification.VISIBILITY_PUBLIC);
-//        }
-//        return builder;
-//    }
 
 
     public boolean isServiceRunningCheck() {

@@ -147,7 +147,7 @@ public class BleDeviceListAdapter extends BaseAdapter {
 
 
                         DeviceInfoStore.setBleInfo(mBleDeviceInfoArrayList.get(pos));
-                        // Log.d("BLELISTADAPTER","DeviceStore has "+DeviceInfoStore.getBleInfo().toString());
+
                         Activity mActi = GetMainActivity.getMainActity();
                         Intent intent = new Intent(mActi, DataStoreActivity.class);
                         mActi.startActivity(intent);

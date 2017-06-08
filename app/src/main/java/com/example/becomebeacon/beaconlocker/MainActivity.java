@@ -115,8 +115,7 @@ public class MainActivity extends AppCompatActivity
                     if(mScan) {
                         mBleScan.getBtAdapter().stopLeScan(mBleScan.mLeScanCallback);
                         mScan=false;
-                        Log.d("main","scan stop");
-                        Log.d("main","scan break time ; "+Values.scanBreakTime);
+
                         mHandler.sendEmptyMessageDelayed(0, Values.scanBreakTime);
 
 
@@ -125,8 +124,7 @@ public class MainActivity extends AppCompatActivity
                     {
                         mBleScan.getBtAdapter().startLeScan(mBleScan.mLeScanCallback);
                         mScan=true;
-                        Log.d("main","scan start");
-                        Log.d("main","scan time ; "+Values.scanTime);
+
                         mHandler.sendEmptyMessageDelayed(0, Values.scanTime);
 
 
@@ -233,29 +231,31 @@ public class MainActivity extends AppCompatActivity
 
             initUI();
 
-            int result1 = new PermissionRequester.Builder(MainActivity.this)
-                    .setTitle("권한 요청")
-                    .setMessage("권한을 요청합니다.")
-                    .setPositiveButtonName("네")
-                    .setNegativeButtonName("아니요.")
-                    .create()
-                    .request(android.Manifest.permission.ACCESS_FINE_LOCATION, 1000 , new PermissionRequester.OnClickDenyButtonListener() {
-                        @Override
-                        public void onClick(Activity activity) {
-                            Log.d("RESULT", "취소함.");
-                        }
-                    });
+        int result1 = new PermissionRequester.Builder(MainActivity.this)
+                .setTitle("권한 요청")
+                .setMessage("권한을 요청합니다.")
+                .setPositiveButtonName("네")
+                .setNegativeButtonName("아니요.")
+                .create()
+                .request(android.Manifest.permission.ACCESS_FINE_LOCATION, 1000 , new PermissionRequester.OnClickDenyButtonListener() {
+                    @Override
+                    public void onClick(Activity activity) {
 
-            if (result1 == PermissionRequester.ALREADY_GRANTED) {
-                Log.d("RESULT", "권한이 이미 존재함.");
-                if (ActivityCompat.checkSelfPermission(MainActivity.this,
-                        android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                }
+                    }
+                });
+
+        if (result1 == PermissionRequester.ALREADY_GRANTED) {
+
+            if (ActivityCompat.checkSelfPermission(MainActivity.this,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             }
-            else if(result1 == PermissionRequester.NOT_SUPPORT_VERSION)
-                Log.d("RESULT", "마쉬멜로우 이상 버젼 아님.");
-            else if(result1 == PermissionRequester.REQUEST_PERMISSION)
-                Log.d("RESULT", "요청함. 응답을 기다림.");
+        }
+        else if(result1 == PermissionRequester.NOT_SUPPORT_VERSION) {
+
+        }
+        else if(result1 == PermissionRequester.REQUEST_PERMISSION) {
+
+        }
 
 
             //툴바 세팅
@@ -539,19 +539,18 @@ public class MainActivity extends AppCompatActivity
                 GpsInfo gpsCoordi= new GpsInfo(GetMainActivity.getMainActity(),GetMainActivity.getMainActity());
                 gpsCoordi.getLocation();
 
-                lat = gpsCoordi.lat;
-                lng = gpsCoordi.lon;
-                Log.d("gpsgps","lat : "+gpsCoordi.lat);
-                Log.d("gpsgps","lon : "+gpsCoordi.lon);
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse( "https://beaconlocker-51c69.firebaseapp.com/?lat=" + lat + "&lng=" + lng  ));
-                //Intent intent = new Intent(getApplicationContext(), RegLostDataActivity.class);
-                startActivity(intent);
-            } else if (id == R.id.nav_map) {
-                Intent intent = new Intent(this, MultiMapActivity.class);
-                startActivity(intent);
-            } else if (id == R.id.nav_setting) {
-                Intent intent = new Intent(this, SettingActivity.class);
-                startActivity(intent);
+            lat = gpsCoordi.lat;
+            lng = gpsCoordi.lon;
+
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse( "https://beaconlocker-51c69.firebaseapp.com/?lat=" + lat + "&lng=" + lng  ));
+            //Intent intent = new Intent(getApplicationContext(), RegLostDataActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_map) {
+            Intent intent = new Intent(this, MultiMapActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_setting) {
+            Intent intent = new Intent(this, SettingActivity.class);
+            startActivity(intent);
 
             } else if (id == R.id.nav_logout) {
 
@@ -623,13 +622,13 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onDestroy() {
-        try {
-            mBleScan.end();
-            mHandler.removeMessages(0);
-            mTimeOut.removeMessages(0);
-            super.onDestroy();
-        } catch (Exception e) {
-            e.printStackTrace();
+
+        mBleScan.end();
+        mHandler.removeMessages(0);
+        mTimeOut.removeMessages(0);
+        //BeaconList.refresh();
+        //stopService(bleService);
+        super.onDestroy();
 
             Toast.makeText(getApplicationContext(), "오류가 발생했습니다. 관리자에게 문의하세요\n오류코드 : 10510", Toast.LENGTH_LONG).show();
             finish();

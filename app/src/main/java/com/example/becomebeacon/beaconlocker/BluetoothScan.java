@@ -155,11 +155,10 @@ public class BluetoothScan {
     }
 
     public boolean getDeviceState() {
-        Log.d(TAG, "Check the Bluetooth support");
-        if(mBluetoothAdapter == null) { Log.d(TAG, "Bluetooth is not available");
+
+        if(mBluetoothAdapter == null) {
             return false;
         } else {
-            Log.d(TAG, "Bluetooth is available");
             return true;
         }
     }
@@ -171,15 +170,12 @@ public class BluetoothScan {
 
     public void enableBluetooth()
     {
-        Log.i(TAG, "Check the enabled Bluetooth");
         if(mBluetoothAdapter.isEnabled())
         {
             // 기기의 블루투스 상태가 On인 경우
-            Log.d(TAG, "Bluetooth Enable Now");
             // Next Step
         } else {
             // 기기의 블루투스 상태가 Off인 경우
-            Log.d(TAG, "Bluetooth Enable Request");
             Intent i = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             mActivity.startActivityForResult(i, REQUEST_ENABLE_BT);
         }
@@ -191,7 +187,7 @@ public class BluetoothScan {
             // 블루투스가 지원 가능한 기기일 때
             enableBluetooth();
         } else {
-            Log.d(TAG,"bluetooth not supported");
+
         }
     }
 
@@ -213,12 +209,6 @@ public class BluetoothScan {
         if (devAddress == null)
             devAddress = "Unknown";
 
-        if (!IS_DEBUG) {
-//            Log.d(TAG, "getBleDeviceInfoFromLeScan() : rssi: " + rssi +
-//                    ", addr: " + devName +
-//                    ", name: " + devAddress);
-        }
-
         //이 비교부분을 위로 올리자.. 일치 하지않으면 뭐할 연산하나....
         scanRecordAsHex = mBleUtils.ByteArrayToString(scanRecord);
 
@@ -236,36 +226,26 @@ public class BluetoothScan {
 
         txPower = scanRecord[29];
 
-        //Log.d(TAG, "proximityUUID: " + proximityUUID);
-
 
         if (proximityUUID.equals(BEACON_UUID) || proximityUUID.equals(BluetoothUuid.WIZTURN_PROXIMITY_UUID.toString()) || proximityUUID.equals(BluetoothUuid.WINI_UUID.toString()))
         {
             try {
-                //               Log.d(TAG, "Found Pebble UUID: " + proximityUUID);
+
 
                 double distance = mBleUtils.getDistance(rssiValue, txPower);
                 double distance2 = mBleUtils.getDistance_20150515(rssiValue, txPower);
 
-//                Log.d(TAG, "dev name: " + devName +
-//                        ", addr: " + devAddress +
-//                        ", major: " + major +
-//                        ", minor: " + minor +
-//                        ", rssi: " + rssi +
-//                        ", txPower: " + txPower +
-//                        ", distance: " + distance +
-//                        ", distance2: " + distance2);
 
                 BleDeviceInfo item = new BleDeviceInfo(proximityUUID, devName, devAddress, major, minor,
                         txPower, rssiValue, distance, distance2);
 
 
                 updateBleDeviceList(item);
-                Log.d("SCAN","Scanned item LD is "+item.limitDistance);
+
 
 
             } catch (Exception ex) {
-                Log.e("Error", "Exception: " + ex.getMessage());
+
             }
         }
     }
@@ -355,13 +335,6 @@ public class BluetoothScan {
         }
         else if(mod== Values.USE_TRACK)
         {
-            Log.d("SCAN","Tracking...: "+item.devAddress);
-            Log.d("SCAN","mItem : "+mItemMap.toString());
-
-
-            //잃어버린건지 찾아보자
-            Log.d("LOST","find key : "+item.devAddress+" in the lostmap : "+BeaconList.lostMap);
-            Log.d("LOST","and mylist :"+BeaconList.mItemMap);
             if(BeaconList.lostMap.containsKey(item.devAddress))//잃어버린거임
             {
                 BleDeviceInfo tItem = BeaconList.lostMap.get(item.devAddress);
@@ -377,7 +350,7 @@ public class BluetoothScan {
 
 
                     tItem.setCoordinate(Values.latitude, Values.longitude);
-                    Log.d(TAG, "in useGps : lat : " + tItem.latitude + " long : " + tItem.longitude);
+
                     long now=System.currentTimeMillis();
                     SimpleDateFormat CurDateFormat = new SimpleDateFormat("yyyy-MM-dd");
                     tItem.lastDate=CurDateFormat.format(new Date(now));
@@ -394,64 +367,32 @@ public class BluetoothScan {
 
                 }
 
-
-
-                Log.d("LOST",item.devAddress+" is lost item");
                 LostDevInfo ldi= new LostDevInfo(BeaconList.lostMap.get(item.devAddress));
                 if(BeaconList.mItemMap.containsKey(ldi.getDevAddr()))//내꺼
                 {
-                    Log.d("LOST","and it's mine");
                     mBleService.pushFindNotification(ldi,1);
                 }
                 else//다른사람꺼
                 {
-                    Log.d("LOST","and it's other");
                     if(!BeaconList.lostMap.get(item.devAddress).othersSendMsg) {
                         mBleService.pushFindNotification(ldi, 0);
                     }
                 }
             }
 
-
-//            if(!dbOpenHelper.uniqueTest(item.devAddress)) //있을때 if문 작동함
-//            {
-//                BleDeviceInfo bdi;
-//                //내꺼
-//                if(mItemMap.containsKey(item.devAddress))
-//                {
-//                    bdi=mItemMap.get(item.devAddress);
-//                    if(bdi.isLost) {
-//                        Log.d("DATABASE", "Key" + item.devAddress + " LostItem ");
-//                        mBleService.pushFindNotification(bdi.nickname, bdi.devAddress);
-//                    }
-//                }
-//                else {
-//                    Log.d("DATABASE", "address :" + item.devAddress + "is Not mine : " + mItemMap);
-//                    //다른사람
-//                }
-//
-//            }
-//            else
-//            {
-//                Log.d("DATABASE",item.devAddress+" is not in DB : ");
-//            }
-
             if(mItemMap.containsKey(item.devAddress)) {
                 if (BeaconList.scannedMap.containsKey(item.devAddress)) {
-                    Log.d("SCAN", "scanned map has my item");
+
                     BeaconList.scannedMap.remove(item.devAddress);
 
                     for (int i = 0; i < BeaconList.mArrayListBleDevice.size(); i++) {
                         if (BeaconList.mArrayListBleDevice.get(i).devAddress == item.devAddress) {
                             BeaconList.mArrayListBleDevice.remove(i);
-                            Log.d("SCAN", "removed");
-
                         }
                     }
                 }
-                Log.d("SCAN", "Tracking.. contain1");
-                BleDeviceInfo tItem = mItemMap.get(item.devAddress);
 
+                BleDeviceInfo tItem = mItemMap.get(item.devAddress);
 
                 tItem.rssi = (int) tItem.rssiKalmanFileter.update(item.rssi);
                 KalmanRSSI = tItem.rssi;
@@ -461,64 +402,41 @@ public class BluetoothScan {
 
                 if (Values.useGPS) {
                     tItem.setCoordinate(Values.latitude, Values.longitude);
-                    Log.d(TAG, "in useGps : lat : " + tItem.latitude + " long : " + tItem.longitude);
+
                     long now=System.currentTimeMillis();
                     SimpleDateFormat CurDateFormat = new SimpleDateFormat("yyyy-MM-dd");
                     tItem.lastDate=CurDateFormat.format(new Date(now));
 
                 }
 
-                Log.d("SCAN", tItem.devAddress + "dist : " + tItem.distance2 + " isfar? " + tItem.isFar+" noti : "+Notifications.notifications);
-
-//                if (tItem.isLost)
-//                {
-//                    Log.d("Notic","Key"+tItem.devAddress+" LostedItem ");
-//                    mBleService.pushFindNotification(tItem.nickname,tItem.devAddress);
-//
-//
-//                }
-
-
                 if(tItem.isLost)
                 {
-                    //Log.d("SCAN", tItem.devAddress+" is lost");
 
                 }
                 else if(tItem.isLost!=true&&tItem.limitDistance<tItem.distance2&&tItem.isFar!=true) {
                 //if(0.2<tItem.distance2) {
                     //멀다 팝업 띄운다
-
-                    Log.d("Notic","Key"+tItem.devAddress+" too far : distance :"+tItem.distance2+" limit : "+tItem.limitDistance);
-
                     mBleService.pushNotification(tItem);
-                    Log.d("Notic","NotiNum : "+Notifications.notifications.get(tItem.devAddress));
                     mItemMap.get(tItem.devAddress).isFar = true;
                         //팝업 내용에따라 isLost 갱신
 
                 }
                 else if(tItem.limitDistance>tItem.distance2)
                 {
-                    Log.d("SCAN","get close");
                     if(Notifications.notifications.containsKey(tItem.devAddress))
                     {
 
                         NotificationManager notificationManager = (NotificationManager)BleService.mContext.getSystemService(Context.NOTIFICATION_SERVICE);
                         notificationManager.cancel(Notifications.notifications.get(tItem.devAddress));
-                        Log.d("Notic","NotiNum is "+Notifications.notifications.get(tItem.devAddress)+" there is key "+Notifications.notifications.toString());
 
                         Notifications.notifications.remove(tItem.devAddress);
 
 
                     }
-                    else
-                    {
-                        Log.d("Notic","Key "+tItem.devAddress+"is not in noti "+Notifications.notifications.toString());
-                    }
+
                     mItemMap.get(tItem.devAddress).isFar = false;
                 }
-                else{
-                    Log.d("Notic","Key : "+tItem.devAddress+" is already far");
-                }
+
             }
         }
     }
@@ -552,7 +470,6 @@ public class BluetoothScan {
         @Override
         public void onLeScan(final BluetoothDevice device, final int rssi, final byte[] scanRecord) {
             mScanning = true;
-            Log.d("SCAN","mod is "+mod);
 
             getBleDeviceInfoFromLeScan(device, rssi, scanRecord);
                     /*

@@ -76,9 +76,7 @@ public class SettingActivity extends AppCompatActivity {
 
     public void onResume()
     {
-
         try {
-            Log.d("SETTING","on resume");
             super.onResume();
             int scanTime = pref.getInt("ScanPeriod", Values.scanBreakTime);
             Boolean useScan = pref.getBoolean("UseScan", true);
@@ -89,15 +87,14 @@ public class SettingActivity extends AppCompatActivity {
                 useScan=false;
             }
 
-            if(!Gps.GpsEnabled())
-            {
-                Log.d("SETTING","gps isn't able");
-                useGPS=false;
-            }
-            else
-            {
-                Log.d("SETTING","gps is able");
-            }
+        if(!Gps.GpsEnabled())
+        {
+            useGPS=false;
+        }
+        else
+        {
+
+        }
 
             scanPeriod.setText(""+scanTime/1000);
             changeScan(useScan);
@@ -175,26 +172,26 @@ public class SettingActivity extends AppCompatActivity {
         try {
             super.onActivityResult(requestCode, resultCode, data);
 
-            if (requestCode == Values.CHECK_GPS) {
-                Log.d("SETTING","in onActivityResult");
-                if(Gps.locationManager==null)
-                {
-                    Gps.locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-                }
-                if(!Gps.GpsEnabled())
-                {
-                    Log.d("SETTING","1gps is "+Gps.isGPSEnabled);
-                    Values.useGPS=false;
-                    changeGPS(false);
-                    //gpsSwitch.setChecked(false);
-                }
-                else
-                {
-                    Log.d("SETTING","2gps is "+Gps.isGPSEnabled);
-                    Values.useGPS=true;
-                    changeGPS(true);
-                    //.setChecked(true);
-                }
+        if (requestCode == Values.CHECK_GPS) {
+
+            if(Gps.locationManager==null)
+            {
+                Gps.locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+            }
+            if(!Gps.GpsEnabled())
+            {
+
+                Values.useGPS=false;
+                changeGPS(false);
+                //gpsSwitch.setChecked(false);
+            }
+            else
+            {
+
+                Values.useGPS=true;
+                changeGPS(true);
+                //.setChecked(true);
+            }
 
             }
         } catch (Exception e) {
@@ -208,17 +205,16 @@ public class SettingActivity extends AppCompatActivity {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-            try {
-                if(buttonView==gpsSwitch) {
-                    if (isChecked) {
-                        Log.d("SETTING", "in gpsSwitchListener");
-    //                if(!Gps.GpsEnabled()) {
-    //                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-    //                    startActivityForResult(intent, CHECK_GPS);
-    //                }
-                        if (!Gps.GpsEnabled()) {
-                            Gps.showSettingsAlert();
-                        }
+            if(buttonView==gpsSwitch) {
+                if (isChecked) {
+
+//                if(!Gps.GpsEnabled()) {
+//                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+//                    startActivityForResult(intent, CHECK_GPS);
+//                }
+                    if (!Gps.GpsEnabled()) {
+                        Gps.showSettingsAlert();
+                    }
 
                     } else {
                         Values.useGPS = false;
