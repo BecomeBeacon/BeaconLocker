@@ -27,13 +27,13 @@ public class DataModify {
     private static final int LINK_USER = 2;
 
     // whatChange = (1 = Beacon, 2 = lost item, 3 = User)
-    public DataModify() {
+    public DataModify() throws Exception{
         mUser= LoginActivity.getUser();
         mDatabaseRef = mDatabase.getReference();
         mStorageRef = mStorage.getReference();
     }
 
-    public void modifySwitch(int whatChange) {
+    public void modifySwitch(int whatChange) throws Exception{
         switch(whatChange) {
             case LINK_BEACON:
                 mDatabaseRef = mDatabase.getReference("beacon");
@@ -47,7 +47,7 @@ public class DataModify {
         }
     }
 
-    public void changeBeacon(BleDeviceInfo bleDeviceInfo) {
+    public void changeBeacon(BleDeviceInfo bleDeviceInfo) throws Exception{
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/beacon/" + bleDeviceInfo.getDevAddress(), bleDeviceInfo);
 
@@ -55,7 +55,7 @@ public class DataModify {
 
     }
 
-    public void deleteBeacon(BleDeviceInfo bleDeviceInfo) {
+    public void deleteBeacon(BleDeviceInfo bleDeviceInfo) throws Exception{
         try {
             mStorageRef.child(bleDeviceInfo.getPictureUri()).delete();
         }

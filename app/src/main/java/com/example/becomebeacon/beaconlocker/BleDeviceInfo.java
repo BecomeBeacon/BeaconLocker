@@ -79,7 +79,7 @@ public class BleDeviceInfo {
         this.pictureLink = null;
     }
 
-    public BleDeviceInfo(LostDevInfo ldi)
+    public BleDeviceInfo (LostDevInfo ldi)
     {
 
         this();
@@ -248,17 +248,17 @@ public class BleDeviceInfo {
         this.devName = devName;
     }
 
-    public String getDevAddress()
+    public String getDevAddress() throws Exception
     {
         return this.devAddress;
     }
 
-    public void setDevAddress(String deviceAddr)
+    public void setDevAddress(String deviceAddr) throws Exception
     {
         this.devAddress = deviceAddr;
     }
 
-    public int getMeasuredPower()
+    public int getMeasuredPower() throws Exception
     {
         return measuredPower;
         //return String.valueOf(this.measuredPower);
@@ -363,12 +363,12 @@ public class BleDeviceInfo {
         거리 계산
      */
 
-    public static void setLimitTime(int t)
+    public static void setLimitTime(int t) throws Exception
     {
         TIME_OUT=t;
     }
 
-    public double estimateDistance(int rssiValue, int txPower)
+    public double estimateDistance(int rssiValue, int txPower) throws Exception
     {
         if(txPower == 0)
         {
@@ -388,14 +388,14 @@ public class BleDeviceInfo {
     /*
         BleDeviceInfo의 devAddress만 비교하기 위함
      */
-    public boolean equals(BleDeviceInfo b) {
+    public boolean equals(BleDeviceInfo b)throws Exception {
         if(b.devAddress.equals(this.devAddress))
             return true;
         else
             return false;
     }
 
-    public void setCoordinate(double lati,double longi)
+    public void setCoordinate(double lati,double longi)throws Exception
     {
         latitude=lati;
         longitude=longi;

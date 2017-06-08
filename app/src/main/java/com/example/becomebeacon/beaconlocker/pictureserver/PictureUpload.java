@@ -29,7 +29,7 @@ public class PictureUpload {
     private Callback successCallback;
     private Callback failCallback;
 
-    public PictureUpload(Callback successCallback, Callback failCallback) {
+    public PictureUpload(Callback successCallback, Callback failCallback) throws Exception{
         mStorage = FirebaseStorage.getInstance();
         mDatabase = FirebaseDatabase.getInstance();
 
@@ -37,9 +37,9 @@ public class PictureUpload {
         this.failCallback = failCallback;
     }
 
-    public void uploadPicture(BleDeviceInfo bleDeviceInfo, Uri filePath) {
+    public void uploadPicture(BleDeviceInfo bleDeviceInfo, Uri filePath) throws Exception{
         //Log : Upload 할 filepath
-        Log.v("PictureUpload","Filepath in uploadFile = " + String.valueOf(filePath));
+
         mBleDeviceInfo = bleDeviceInfo;
 
         //Unique한 파일명을 만들자.
@@ -57,8 +57,8 @@ public class PictureUpload {
                 //성공시
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Log.v("PictureUpload", "uploadPicture Success");
+                    public void onSuccess (UploadTask.TaskSnapshot taskSnapshot) {
+
                         mBleDeviceInfo.setPictureUri(mPicUri);
                         getUriFromFirebase();
                     }
@@ -67,7 +67,7 @@ public class PictureUpload {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.v("PictureUpload", "uploadPicture Fail");
+
                         failCallback.callBackMethod(e);
                     }
                 })
@@ -80,13 +80,13 @@ public class PictureUpload {
                 });
     }
 
-    private void getUriFromFirebase() {
+    private void getUriFromFirebase(){
         StorageReference storageRef = mStorage.getReference().child(mPicUri);
         storageRef.getDownloadUrl()
                 .addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
-                        Log.v("PictureUpload", "getUriFromFirebase Success");
+
                         mBleDeviceInfo.setPictureLink(uri.toString());
                         successCallback.callBackMethod(mBleDeviceInfo);
                     }
@@ -94,7 +94,7 @@ public class PictureUpload {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.v("PictureUpload", "getUriFromFirebase Fail");
+
                         failCallback.callBackMethod(e);
                     }
                 });

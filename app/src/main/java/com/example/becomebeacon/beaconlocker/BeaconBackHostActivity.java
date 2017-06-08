@@ -105,7 +105,7 @@ public class BeaconBackHostActivity extends AppCompatActivity {
 
     //툴바세팅
     @Override
-    public boolean onOptionsItemSelected(android.view.MenuItem item) {
+    public boolean onOptionsItemSelected(android.view.MenuItem item){
         try {
             switch(item.getItemId()) {
                 case android.R.id.home:

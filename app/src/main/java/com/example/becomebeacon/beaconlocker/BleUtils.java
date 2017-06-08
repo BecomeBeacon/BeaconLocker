@@ -13,7 +13,7 @@ public class BleUtils {
     /*
        byte[]를 String 타입으로 변환
     */
-    public String ByteArrayToString(byte[] scanRecord)
+    public String ByteArrayToString(byte[] scanRecord) throws Exception
     {
         /*
             byte -> String (2byte로 계산됨)
@@ -33,7 +33,7 @@ public class BleUtils {
         Conversion byte to integer value
         byte는 signed 값이므로 0xff로 and 연산을 수행함
      */
-    public int byteToInt(byte value1, byte value2)
+    public int byteToInt(byte value1, byte value2) throws Exception
     {
         return ((value1 & 0xff) << 8 | (value2 & 0xff));
     }
@@ -41,7 +41,7 @@ public class BleUtils {
     /*
         거리 계산 공식은 자료 조사 후 재수정 해야 됨
      */
-    public double getDistance(int rssi, int mPower)
+    public double getDistance(int rssi, int mPower) throws Exception
     {
         double distance = 0.0;  // 단위는 meter
 
@@ -67,7 +67,7 @@ public class BleUtils {
         아래링크를 참조하여 작성함
         https://medium.com/truth-labs/beacon-tracking-with-node-js-and-raspberry-pi-794afa880318
      */
-    public double getDistance_20150515(int rssiValue, int txPower)
+    public double getDistance_20150515(int rssiValue, int txPower) throws Exception
     {
         if (rssiValue == 0)
             return -1.0;

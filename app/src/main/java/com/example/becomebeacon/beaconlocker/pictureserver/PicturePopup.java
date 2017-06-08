@@ -29,11 +29,11 @@ public class PicturePopup {
 
     private Uri tempUri;
 
-    public PicturePopup(Context context) {
+    public PicturePopup(Context context) throws Exception{
         this.mContext = context;
     }
 
-    public void showChoosePicDialog(final Callback choosePictureCallback, final Callback takePictureCallback) {
+    public void showChoosePicDialog(final Callback choosePictureCallback, final Callback takePictureCallback) throws Exception{
         int result1 = new PermissionRequester.Builder((Activity) mContext)
                 .setTitle("권한 요청")
                 .setMessage("권한을 요청합니다.")
@@ -116,7 +116,7 @@ public class PicturePopup {
         builder.show();
     }
 
-    public void pictureActivityForResult(int requestCode, Intent data, Callback ImageToViewCallback) {
+    public void pictureActivityForResult (int requestCode, Intent data, Callback ImageToViewCallback) throws Exception{
         switch (requestCode) {
             case TAKE_PICTURE:
                 ImageToViewCallback.callBackMethod(tempUri);
@@ -128,7 +128,7 @@ public class PicturePopup {
         }
     }
 
-    public void cutImage(Callback cropSmallPictureCallback) {
+    public void cutImage(Callback cropSmallPictureCallback) throws Exception{
         if (tempUri == null) {
 
         }

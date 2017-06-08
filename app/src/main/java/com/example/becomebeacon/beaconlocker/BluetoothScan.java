@@ -89,7 +89,7 @@ public class BluetoothScan {
     BleService mBleService;
 
 
-    BluetoothScan(BleService bleS )
+    BluetoothScan(BleService bleS ) throws Exception
     {
         mBleService=bleS;
         mActivity=GetMainActivity.getMainActity();
@@ -116,7 +116,7 @@ public class BluetoothScan {
     }
 
 
-    BluetoothScan(MainActivity ma, BleDeviceListAdapter bdla, MyBeaconsListAdapter mbla)
+    BluetoothScan(MainActivity ma, BleDeviceListAdapter bdla, MyBeaconsListAdapter mbla) throws Exception
     {
 
         mActivity=ma;
@@ -144,17 +144,17 @@ public class BluetoothScan {
 
     }
 
-    public void end()
+    public void end() throws Exception
     {
         mBluetoothAdapter.stopLeScan(mLeScanCallback);
     }
 
 
-    protected void onDestory(){
+    protected void onDestory() throws Exception{
         mBluetoothAdapter.stopLeScan(mLeScanCallback);
     }
 
-    public boolean getDeviceState() {
+    public boolean getDeviceState()  throws Exception{
 
         if(mBluetoothAdapter == null) {
             return false;
@@ -163,12 +163,12 @@ public class BluetoothScan {
         }
     }
 
-    public boolean isBleOn()
+    public boolean isBleOn() throws Exception
     {
         return mBluetoothAdapter.isEnabled();
     }
 
-    public void enableBluetooth()
+    public void enableBluetooth() throws Exception
     {
         if(mBluetoothAdapter.isEnabled())
         {
@@ -181,7 +181,7 @@ public class BluetoothScan {
         }
     }
 
-    public void checkBluetooth()
+    public void checkBluetooth() throws Exception
     {
         if(getDeviceState()) {
             // 블루투스가 지원 가능한 기기일 때
@@ -191,7 +191,7 @@ public class BluetoothScan {
         }
     }
 
-    public void getBleDeviceInfoFromLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
+    public void getBleDeviceInfoFromLeScan(BluetoothDevice device, int rssi, byte[] scanRecord)  throws Exception{
         String devName;
         String devAddress;
         String scanRecordAsHex;     // 24byte
@@ -250,7 +250,7 @@ public class BluetoothScan {
         }
     }
 
-    public void updateBleDeviceList(final BleDeviceInfo item)
+    public void updateBleDeviceList(final BleDeviceInfo item) throws Exception
     {
         int index = 0;
         boolean foundItem = false;
@@ -449,7 +449,7 @@ public class BluetoothScan {
         //sendSocketMsg(mMaxRssiBeacon.devAddress, mMaxRssiBeacon.major, mMaxRssiBeacon.minor);
 
 
-    public BleDeviceInfo getMaxRssiBeacon()
+    public BleDeviceInfo getMaxRssiBeacon() throws Exception
     {
         int pos = 0;
         int maxRssi = mArrayListBleDevice.get(0).rssi;
@@ -471,7 +471,13 @@ public class BluetoothScan {
         public void onLeScan(final BluetoothDevice device, final int rssi, final byte[] scanRecord) {
             mScanning = true;
 
-            getBleDeviceInfoFromLeScan(device, rssi, scanRecord);
+            try {
+                getBleDeviceInfoFromLeScan(device, rssi, scanRecord);
+            }
+            catch(Exception e)
+            {
+
+            }
                     /*
                         Exception 방지를 위해 runOnUiThread()에서 notifyDataSetChanged()를 호출함
                         - Only the original thread that created a view hierarchy can touch its views
