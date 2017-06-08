@@ -1,29 +1,15 @@
 package com.example.becomebeacon.beaconlocker;
 
-import android.app.Activity;
-import android.app.ActivityManager;
-import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ListView;
-import android.content.SharedPreferences;
-import android.widget.Toast;
 
-
-import com.estimote.sdk.connection.internal.protocols.Operation;
-import com.example.becomebeacon.beaconlocker.database.BeaconLost;
-import com.example.becomebeacon.beaconlocker.database.DbOpenHelper;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 

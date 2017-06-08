@@ -5,14 +5,15 @@ package com.example.becomebeacon.beaconlocker;
  */
 
 import android.app.Activity;
-import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,26 +21,6 @@ import java.util.HashMap;
 /**
  * Created by changsu on 2015-03-23.
  */
-
-import android.bluetooth.BluetoothDevice;
-import android.content.Context;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.content.Intent;
-import android.widget.Toast;
-
-import org.w3c.dom.Text;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
 
 public class BleDeviceListAdapter extends BaseAdapter {
     private Context mContext;

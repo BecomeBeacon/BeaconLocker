@@ -1,6 +1,5 @@
 package com.example.becomebeacon.beaconlocker;
 
-import android.*;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -16,12 +15,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-
-import static android.content.ContentValues.TAG;
 
 public class GpsInfo extends Service implements LocationListener {
 

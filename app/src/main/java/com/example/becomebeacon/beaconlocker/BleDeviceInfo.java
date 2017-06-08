@@ -5,9 +5,6 @@ package com.example.becomebeacon.beaconlocker;
  */
 
 import android.bluetooth.BluetoothDevice;
-import android.net.Uri;
-
-import java.util.Date;
 
 public class BleDeviceInfo {
 

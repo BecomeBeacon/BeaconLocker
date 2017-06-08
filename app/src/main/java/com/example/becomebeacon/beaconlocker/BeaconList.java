@@ -2,7 +2,6 @@ package com.example.becomebeacon.beaconlocker;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 
 /**
  * Created by 함상혁입니다 on 2017-05-13.
