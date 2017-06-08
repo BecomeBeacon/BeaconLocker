@@ -163,40 +163,34 @@ public class BeaconBackHostActivity extends AppCompatActivity {
 
     private void viewImage() {
         try {
-            if (info.getPictureUri() == null) {
-                //사진 없음
-                Toast.makeText(getApplicationContext(), "사진이 없습니다.", Toast.LENGTH_SHORT).show();
-            } else {
-                final ProgressDialog progressDialog = new ProgressDialog(this);
-                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                progressDialog.setMessage("사진을 불러오는 중...");
-                progressDialog.show();
-
-                try {
-                    StorageReference storageRef = storage.getReference().child(info.getPictureUri());
-                    // Storage 에서 다운받아 저장시킬 임시파일
-                    final File imageFile = File.createTempFile("images", "jpg");
-                    storageRef.getFile(imageFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                            // Success Case
-                            bitmapImage = BitmapFactory.decodeFile(imageFile.getPath());
-                            ivPreview.setImageBitmap(bitmapImage);
-                            progressDialog.dismiss();
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            // Fail Case
-                            e.printStackTrace();
-                            progressDialog.dismiss();
-                        }
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), "사진을 불러오지 못했습니다.", Toast.LENGTH_LONG).show();
-                    progressDialog.dismiss();
-                }
+            final ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setMessage("사진을 불러오는 중...");
+            progressDialog.show();
+            try {
+                StorageReference storageRef = storage.getReference().child(info.getPictureUri());
+                // Storage 에서 다운받아 저장시킬 임시파일
+                final File imageFile = File.createTempFile("images", "jpg");
+                storageRef.getFile(imageFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        // Success Case
+                        bitmapImage = BitmapFactory.decodeFile(imageFile.getPath());
+                        ivPreview.setImageBitmap(bitmapImage);
+                        progressDialog.dismiss();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Fail Case
+                        e.printStackTrace();
+                        progressDialog.dismiss();
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(), "사진이 없습니다.", Toast.LENGTH_LONG).show();
+                progressDialog.dismiss();
             }
         } catch (Exception e) {
             e.printStackTrace();
