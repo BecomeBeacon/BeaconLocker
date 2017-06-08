@@ -355,14 +355,15 @@ public class BluetoothScan {
                     SimpleDateFormat CurDateFormat = new SimpleDateFormat("yyyy-MM-dd");
                     tItem.lastDate=CurDateFormat.format(new Date(now));
 
+
                     ///여기서 갱신된 la,lo를 DB에도 갱신해줘야함
-                    lostBeaconInfoRef.child(item.devAddress).child("longitude")
+                    lostBeaconInfoRef.child(tItem.devAddress).child("longitude")
                             .setValue(Values.longitude);
 
-                    lostBeaconInfoRef.child(item.devAddress).child("latitude")
+                    lostBeaconInfoRef.child(tItem.devAddress).child("latitude")
                             .setValue(Values.latitude);
 
-                    lostBeaconInfoRef.child(item.devAddress).child("lastDate")
+                    lostBeaconInfoRef.child(tItem.devAddress).child("lastDate")
                             .setValue(tItem.lastDate);
 
                 }

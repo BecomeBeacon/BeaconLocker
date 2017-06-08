@@ -245,14 +245,17 @@ public class BleService extends Service {
 
     @Override
     public void onDestroy() {
+
+        mHandler.removeMessages(0);
+        mTimeOut.removeMessages(0);
+
         try {
             mBleScan.end();
         }catch(Exception e)
         {
 
         }
-        mHandler.removeMessages(0);
-        mTimeOut.removeMessages(0);
+
         super.onDestroy();
 
         if(myPointKey!=null)
@@ -530,8 +533,22 @@ public class BleService extends Service {
         return false;
     }
 
+    public void findStuff(BleDeviceInfo item)
+    {
+
+        mDatabase.getReference("lost_items/").child(item.devAddress).removeValue();
+
+        mDatabase.getReference("beacon/"+ item.devAddress + "/")
+                .child("isLost")
+                .setValue(false);
+        if(BeaconList.lostMap.containsKey(item.devAddress))
+        {
+            BeaconList.lostMap.remove(item.devAddress);
+        }
 
 
+        item.isLost = false;
+    }
 
 
 }

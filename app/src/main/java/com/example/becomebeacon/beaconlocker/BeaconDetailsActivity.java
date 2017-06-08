@@ -235,6 +235,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
             disconnect.setOnClickListener(new Button.OnClickListener() {
                 public void onClick(View v)
                 {
+                    BleService.mContext.findStuff(item);
                     BeaconList.mItemMap.remove(item.devAddress);
 
                     for (int i = 0; i < BeaconList.mAssignedItem.size(); i++) {
@@ -278,11 +279,8 @@ public class BeaconDetailsActivity extends AppCompatActivity {
                 public void onClick(View v)
                 {
 
-                    mDatabase.getReference("beacon/"+ item.devAddress + "/")
-                                .child("isLost")
-                                .setValue(false);
+                    BleService.mContext.findStuff(item);
 
-                    mDatabase.getReference("lost_items/").child(item.devAddress).removeValue();
                     if(BeaconList.rewardMap.containsKey(item.devAddress)) {
                         FindMessage fm=new FindMessage();
                         fm.isPoint=true;
@@ -292,7 +290,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
 
                     }
 
-                    item.isLost = false;
+
                     Toast.makeText(getApplicationContext(),"회수처리 하였습니다.",Toast.LENGTH_SHORT).show();
                     findStuff.setEnabled(false);
                     Notifications.notifications.remove(item.devAddress+Values.NOTI_I_FIND);
