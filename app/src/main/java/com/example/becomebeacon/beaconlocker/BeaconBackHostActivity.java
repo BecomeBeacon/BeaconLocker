@@ -75,6 +75,7 @@ public class BeaconBackHostActivity extends AppCompatActivity {
                 mac = uriData.getQueryParameter("beaconID");
             }
             info = BeaconList.lostMap.get(mac);
+            Log.d("BBHA", "BBHA String = " + info.toString());
 
         //툴바 세팅
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
