@@ -96,7 +96,6 @@ public class DataStoreActivity extends AppCompatActivity {
             et_Limit_distance = (EditText) findViewById(R.id.et_Limit_distance);
 
             if(et_Address!=null&&mBleDeviceInfo!=null) {
-                Log.d("DSA","check 2");
                 et_Address.setText(mBleDeviceInfo.devAddress);
             }
             //사진 선택
@@ -195,7 +194,6 @@ public class DataStoreActivity extends AppCompatActivity {
                     @Override
                     public void callBackMethod(Object obj) {
                         //Upload 성공시
-                        Log.d("MODULE_TEST", "Upload Success");
                         mBleDeviceInfo = (BleDeviceInfo)obj;
                         databaseStore();
                         progressDialog.dismiss();
@@ -205,7 +203,6 @@ public class DataStoreActivity extends AppCompatActivity {
                     @Override
                     public void callBackMethod(Object obj) {
                         //Upload 실패시
-                        Log.d("MODULE_TEST", "Upload Fail");
                         Exception e = (Exception)obj;
                         e.getStackTrace();
                         progressDialog.dismiss();
@@ -218,7 +215,6 @@ public class DataStoreActivity extends AppCompatActivity {
                 progressDialog.setMessage("업로드중...");
                 progressDialog.show();
 
-                Log.d("MODULE_TEST", "do->upload");
                 pictureUpload.uploadPicture(mBleDeviceInfo, filePath);
             }
 
@@ -228,7 +224,6 @@ public class DataStoreActivity extends AppCompatActivity {
             }
 
             BeaconList.scannedMap.remove(mBleDeviceInfo.devAddress);
-            Log.d("dataStoreActivity", "size : " + BeaconList.mArrayListBleDevice.size());
             for (int i = 0; i < BeaconList.mArrayListBleDevice.size(); i++) {
                 if (BeaconList.mArrayListBleDevice.get(i).devAddress == mBleDeviceInfo.devAddress) {
                     BeaconList.mArrayListBleDevice.remove(i);
@@ -316,18 +311,15 @@ public class DataStoreActivity extends AppCompatActivity {
                         case CHOOSE_PICTURE:
                         case TAKE_PICTURE:
                             //사진을 가져옴
-                            Log.d("GALL", "Uri = " + data.toString());
                             picturePopup.pictureActivityForResult(requestCode, data, new Callback() {
                                 @Override
                                 public void callBackMethod(Object obj) {
                                     //중간처리 완료
-                                    Log.d("GALL", "Uri = " + obj.toString());
                                     filePath = (Uri) obj;
                                     picturePopup.cutImage(new Callback() {
                                         @Override
                                         public void callBackMethod(Object obj) {
                                             //사진 크롭 완료
-                                            Log.d("GALL", "Uri = " + obj.toString());
                                             startActivityForResult((Intent) obj, CROP_SMALL_PICTURE);
                                         }
                                     });

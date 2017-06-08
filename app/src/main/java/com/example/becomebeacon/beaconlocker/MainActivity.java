@@ -109,51 +109,57 @@ public class MainActivity extends AppCompatActivity
     {
         public void handleMessage(Message msg)
         {
-            if(mBleScan.getMod()== Values.USE_SCAN) {
+            try {
+                if(mBleScan.getMod()== Values.USE_SCAN) {
 
-                if(mScan) {
-                    mBleScan.getBtAdapter().stopLeScan(mBleScan.mLeScanCallback);
-                    mScan=false;
-                    Log.d("main","scan stop");
-                    Log.d("main","scan break time ; "+Values.scanBreakTime);
-                    mHandler.sendEmptyMessageDelayed(0, Values.scanBreakTime);
+                    if(mScan) {
+                        mBleScan.getBtAdapter().stopLeScan(mBleScan.mLeScanCallback);
+                        mScan=false;
+                        Log.d("main","scan stop");
+                        Log.d("main","scan break time ; "+Values.scanBreakTime);
+                        mHandler.sendEmptyMessageDelayed(0, Values.scanBreakTime);
 
 
+                    }
+                    else
+                    {
+                        mBleScan.getBtAdapter().startLeScan(mBleScan.mLeScanCallback);
+                        mScan=true;
+                        Log.d("main","scan start");
+                        Log.d("main","scan time ; "+Values.scanTime);
+                        mHandler.sendEmptyMessageDelayed(0, Values.scanTime);
+
+
+                    }
                 }
-                else
+                else if(mBleScan.getMod()== Values.USE_NOTHING)
                 {
-                    mBleScan.getBtAdapter().startLeScan(mBleScan.mLeScanCallback);
-                    mScan=true;
-                    Log.d("main","scan start");
-                    Log.d("main","scan time ; "+Values.scanTime);
-                    mHandler.sendEmptyMessageDelayed(0, Values.scanTime);
+                    if(mScan)
+                    {
+                        mScan=false;
+                        mBleScan.getBtAdapter().stopLeScan(mBleScan.mLeScanCallback);
+                    }
+                    mBeaconsListAdapter.notifyDataSetChanged();
+                    if(mItemMap.isEmpty()) {
+                        emptyListText.setVisibility(View.VISIBLE);
+                        myBeacons.setVisibility(View.GONE);
+                    }
+                    else {
+                        emptyListText.setVisibility(View.GONE);
+                        myBeacons.setVisibility(View.VISIBLE);
+                    }
+                    if(BeaconDetailsActivity.getBDA()!=null)
+                    {
+                        BeaconDetailsActivity.getBDA().refreshDistance();
+                    }
 
 
+                    mHandler.sendEmptyMessageDelayed(0, CEHCK_PERIOD);
                 }
-            }
-            else if(mBleScan.getMod()== Values.USE_NOTHING)
-            {
-                if(mScan)
-                {
-                    mScan=false;
-                    mBleScan.getBtAdapter().stopLeScan(mBleScan.mLeScanCallback);
-                }
-                mBeaconsListAdapter.notifyDataSetChanged();
-                if(mItemMap.isEmpty()) {
-                    emptyListText.setVisibility(View.VISIBLE);
-                    myBeacons.setVisibility(View.GONE);
-                }
-                else {
-                    emptyListText.setVisibility(View.GONE);
-                    myBeacons.setVisibility(View.VISIBLE);
-                }
-                if(BeaconDetailsActivity.getBDA()!=null)
-                {
-                    BeaconDetailsActivity.getBDA().refreshDistance();
-                }
-
-
-                mHandler.sendEmptyMessageDelayed(0, CEHCK_PERIOD);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(), "오류가 발생했습니다. 관리자에게 문의하세요\n오류코드 : 10501", Toast.LENGTH_LONG).show();
+                finish();
             }
 
         }
@@ -161,49 +167,54 @@ public class MainActivity extends AppCompatActivity
 
     private Handler mTimeOut = new Handler(){
         public void handleMessage(Message msg){
-            //Log.i("TAG","TIMEOUT UPDATE");
+            try {
+                //Log.i("TAG","TIMEOUT UPDATE");
 
-            HashMap<String, BleDeviceInfo> tMap;
-            ArrayList<BleDeviceInfo> tArray;
-            int mod= mBleScan.getMod();
-
-
-
-            int maxRssi = 0;
-            int maxIndex = -1;
+                HashMap<String, BleDeviceInfo> tMap;
+                ArrayList<BleDeviceInfo> tArray;
+                int mod= mBleScan.getMod();
 
 
-            if(mod== Values.USE_SCAN) {
-                tMap = scannedMap;
-                tArray = mArrayListBleDevice;
+                int maxRssi = 0;
+                int maxIndex = -1;
 
 
-                //timeout counter update
-                for (int i = 0; i < tArray.size(); i++) {
-                    tArray.get(i).timeout--;
-                    if (tArray.get(i).timeout == 0) {
-                        tMap.remove(tArray.get(i).devAddress);
-                        tArray.remove(i);
-                    } else {
-                        if (tArray.get(i).rssi > maxRssi || maxRssi == 0) {
-                            maxRssi = tArray.get(i).rssi;
-                            maxIndex = i;
+                if(mod== Values.USE_SCAN) {
+                    tMap = scannedMap;
+                    tArray = mArrayListBleDevice;
+
+
+                    //timeout counter update
+                    for (int i = 0; i < tArray.size(); i++) {
+                        tArray.get(i).timeout--;
+                        if (tArray.get(i).timeout == 0) {
+                            tMap.remove(tArray.get(i).devAddress);
+                            tArray.remove(i);
+                        } else {
+                            if (tArray.get(i).rssi > maxRssi || maxRssi == 0) {
+                                maxRssi = tArray.get(i).rssi;
+                                maxIndex = i;
+                            }
                         }
                     }
-                }
-                //TextView text_max_dev = (TextView)findViewById(R.id.text_max_dev);
+                    //TextView text_max_dev = (TextView)findViewById(R.id.text_max_dev);
 
-                if (maxIndex == -1) {
-                    //text_max_dev.setText("No Dev");
-                } else {
-                    //text_max_dev.setText(maxIndex+1 +"th    "
-                    //        + "major: " + mArrayListBleDevice.get(maxIndex).major + "  "
-                    //        + "minor: " + mArrayListBleDevice.get(maxIndex).minor + "  "
-                    //        + mArrayListBleDevice.get(maxIndex).getRssi() +"dbm");
+                    if (maxIndex == -1) {
+                        //text_max_dev.setText("No Dev");
+                    } else {
+                        //text_max_dev.setText(maxIndex+1 +"th    "
+                        //        + "major: " + mArrayListBleDevice.get(maxIndex).major + "  "
+                        //        + "minor: " + mArrayListBleDevice.get(maxIndex).minor + "  "
+                        //        + mArrayListBleDevice.get(maxIndex).getRssi() +"dbm");
+                    }
                 }
+
+                mTimeOut.sendEmptyMessageDelayed(0, TIMEOUT_PERIOD);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(), "오류가 발생했습니다. 관리자에게 문의하세요\n오류코드 : 10502", Toast.LENGTH_LONG).show();
+                finish();
             }
-
-            mTimeOut.sendEmptyMessageDelayed(0, TIMEOUT_PERIOD);
 
         }
     };
@@ -265,15 +276,8 @@ public class MainActivity extends AppCompatActivity
         mBleUtils=new BleUtils();
         mBluetoothAdapter= BluetoothAdapter.getDefaultAdapter();
 
-
-
         GetMainActivity.setMA(this);
 
-
-        if(myBeacons==null||scannedBeacons==null)
-        {
-            Log.d("sss","cannot find listview");
-        }
         mActivity=this;
         mArrayListBleDevice = BeaconList.mArrayListBleDevice;
         mAssignedItem=BeaconList.mAssignedItem;
@@ -290,13 +294,9 @@ public class MainActivity extends AppCompatActivity
         Boolean useScan = pref.getBoolean("UseScan", true);
         Boolean useGps = pref.getBoolean("UseGPS",false);
 
-
-
         Values.scanBreakTime=scanTime;
         Values.useBLE=useScan;
         Values.useGPS=useGps;
-
-
 
         usingTracking=true;
         mScan=false;
@@ -307,12 +307,8 @@ public class MainActivity extends AppCompatActivity
         myBeacons=(ListView)findViewById(R.id.ble_list);
         myBeacons.setAdapter(mBeaconsListAdapter);
 
-
-
         mAuth=LoginActivity.getAuth();
         mUser=LoginActivity.getUser();
-
-
 
         mHandler.sendEmptyMessageDelayed(0, CEHCK_PERIOD);
         mTimeOut.sendEmptyMessageDelayed(0, TIMEOUT_PERIOD);
@@ -353,10 +349,6 @@ public class MainActivity extends AppCompatActivity
                     scannedBeacons.setVisibility(View.GONE);
                     mBleScan.changeMod(Values.USE_NOTHING);
                 }
-
-
-                Log.d("main","scan mod changed "+mBleScan.getMod());
-
            }
         });
 

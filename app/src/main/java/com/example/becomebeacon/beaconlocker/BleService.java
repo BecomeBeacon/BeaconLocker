@@ -6,26 +6,16 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.support.v7.app.NotificationCompat;
 import android.util.Log;
-import android.widget.RemoteViews;
-import android.widget.Toast;
 
-import com.example.becomebeacon.beaconlocker.database.BeaconLost;
-import com.example.becomebeacon.beaconlocker.database.DbOpenHelper;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,12 +23,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Vector;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * Created by 함상혁입니다 on 2017-05-09.
@@ -67,20 +51,10 @@ public class BleService extends Service {
     private DatabaseReference messageInfoRef;
 
     private FirebaseDatabase mDatabase;
-    //private DbOpenHelper dbOpenHelper;
-    //DB 비활성화
-
-//    NotificationManager Notifi_M;
-//    Notification Notifi ;
-
-
-
-
 
     @Override
     public void onCreate()
     {
-
         super.onCreate();
         mDatabase = FirebaseDatabase.getInstance();
 
@@ -88,9 +62,6 @@ public class BleService extends Service {
 
         lostBeaconInfoRef = mDatabase.getReference("lost_items/");
         messageInfoRef = mDatabase.getReference("users/"+LoginActivity.getUser().getUid()+"/messages");
-
-
-
 
         mContext=this;
         Notifications.clear();
