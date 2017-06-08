@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -65,7 +64,7 @@ public class RegLostDataActivity extends AppCompatActivity implements OnMapReady
 //        devInfo.setLongetude(128.609486);
 
         if(noti!=-1) {
-            Log.d("NOTIC","noti : "+noti);
+
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.cancel(noti);
             Notifications.notifications.remove(devInfo.getDevAddr()+Values.NOTI_FAR);
@@ -78,11 +77,8 @@ public class RegLostDataActivity extends AppCompatActivity implements OnMapReady
         }
         else
         {
-            Log.d("RLDA", "date : null");
             devInfo.setLostDate("NO-DATE");
         }
-
-        Log.d("RLDA","devInfo : "+devInfo.getDevAddr()+" "+devInfo.getLatitude()+" "+devInfo.getLongitude());
 
         BeaconList.mItemMap.get(devInfo.getDevAddr()).isLost=true;
 

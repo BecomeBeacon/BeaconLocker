@@ -64,14 +64,13 @@ public class DataModify {
 
     public void deleteBeacon(BleDeviceInfo bleDeviceInfo) {
         try {
-            Log.d("DM",bleDeviceInfo.getPictureUri());
             mStorageRef.child(bleDeviceInfo.getPictureUri()).delete();
         }
         catch (Exception e) {
 
         }
         mDatabaseRef.child("beacon/").child(bleDeviceInfo.devAddress).removeValue();
-        Log.d("RMA", "DataModify" + mDatabaseRef.child("beacon/").child(bleDeviceInfo.devAddress));
+
         mDatabaseRef.child("users").child(mUser.getUid()).child("beacons").child(bleDeviceInfo.devAddress).removeValue();
     }
 }

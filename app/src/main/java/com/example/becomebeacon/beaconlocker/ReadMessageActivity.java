@@ -62,7 +62,7 @@ public class ReadMessageActivity extends AppCompatActivity {
         int notiNum=intent.getIntExtra("NOTI",-1);
 
         if(notiNum!=-1) {
-            Log.d("NOTIC","noti : "+notiNum);
+
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.cancel(notiNum);
         }
@@ -196,9 +196,7 @@ public class ReadMessageActivity extends AppCompatActivity {
     }
 
     private void setDeleteMessage() {
-        //파베에서 삭제
-        Log.d("RMA", "RMA LOG" + msgList.get(mMessageIndex).keyValue);
-        Log.d("RMA", "RMA Reference" + mDatabaseRef.child(msgList.get(mMessageIndex).keyValue).toString());
+
         mDatabaseRef.child(msgList.get(mMessageIndex).keyValue).removeValue();
 
         //내부에서 삭제

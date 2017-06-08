@@ -60,7 +60,6 @@ public class BleUtils {
         distance = Math.pow(10, ((double)mPower - rssi) / (10 * 2));
         distance = Math.round(distance * 100) / 100.0;
 
-        //Log.d("Util", "distance: " + distance);
         return distance;
     }
 

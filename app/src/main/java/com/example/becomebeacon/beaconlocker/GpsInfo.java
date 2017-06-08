@@ -70,11 +70,11 @@ public class GpsInfo extends Service implements LocationListener {
             //locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
             GpsEnabled();
             NetworkEnabled();
-            Log.d("GPS","test1");
+
             if (Build.VERSION.SDK_INT >= 23) {
                 if (ContextCompat.checkSelfPermission(mContext,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     // 이 권한을 필요한 이유를 설명해야하는가?
-                    Log.d("GPS","test2");
+
                     if (ActivityCompat.shouldShowRequestPermissionRationale(mActivity,Manifest.permission.ACCESS_FINE_LOCATION))
                     {
                         // 다이어로그같은것을 띄워서 사용자에게 해당 권한이 필요한 이유에 대해 설명합니다
@@ -93,22 +93,21 @@ public class GpsInfo extends Service implements LocationListener {
 //                showSettingsAlert();
 //            }
             isGetLocation = true;
-            Log.d("GPS","test3");
 
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES,this);
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES,this);
-            Log.d("GPS","test4");
+
             location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             lat = getLatitude();
             lon = getLongitude();
-            Log.d("GPS","test5");
+
             if(lat==0 || lon ==0)
             {
                 location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                 lat = getLatitude();
                 lon = getLongitude();
             }
-            Log.d("GPS","test5");
+
 
         } catch (Exception e) {
             e.printStackTrace();

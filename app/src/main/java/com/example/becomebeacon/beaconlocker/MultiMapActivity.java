@@ -100,7 +100,7 @@ public class MultiMapActivity extends FragmentActivity
 
     @Override
     public void onDestroy() {
-        Log.d("Service","service destory");
+
         mHandler.removeMessages(0);
         super.onDestroy();
     }
@@ -207,7 +207,7 @@ public class MultiMapActivity extends FragmentActivity
         distance = distance + Math.cos(radLat1) * Math.cos(radLat2) * Math.cos(radDist);
         ret = EARTH_R * Math.acos(distance);
         double rslt = Math.round(Math.round(ret) / 1000);
-        Log.d("Calcdis","Result ? : "+rslt);
+
         if(rslt < 1)
         {
             return true;

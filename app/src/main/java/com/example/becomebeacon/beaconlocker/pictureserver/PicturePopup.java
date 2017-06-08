@@ -11,7 +11,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 
 import com.example.becomebeacon.beaconlocker.PermissionRequester;
 
@@ -44,20 +43,23 @@ public class PicturePopup {
                 .request(Manifest.permission.WRITE_EXTERNAL_STORAGE, 1000 , new PermissionRequester.OnClickDenyButtonListener() {
                     @Override
                     public void onClick(Activity activity) {
-                        Log.d("RESULT", "취소함.");
+
                     }
                 });
 
         if (result1 == PermissionRequester.ALREADY_GRANTED) {
-            Log.d("RESULT", "권한이 이미 존재함.");
+
             if (ActivityCompat.checkSelfPermission( mContext,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             }
         }
         else if(result1 == PermissionRequester.NOT_SUPPORT_VERSION)
-            Log.d("RESULT", "마쉬멜로우 이상 버젼 아님.");
+        {
+
+        }
+
         else if(result1 == PermissionRequester.REQUEST_PERMISSION) {
-            Log.d("RESULT", "요청함. 응답을 기다림.");
+
             int result2 = new PermissionRequester.Builder((Activity) mContext)
                     .setTitle("권한 요청")
                     .setMessage("권한을 요청합니다.")
@@ -67,20 +69,22 @@ public class PicturePopup {
                     .request(Manifest.permission.READ_EXTERNAL_STORAGE, 1000 , new PermissionRequester.OnClickDenyButtonListener() {
                         @Override
                         public void onClick(Activity activity) {
-                            Log.d("RESULT", "취소함.");
+
                         }
                     });
 
             if (result2 == PermissionRequester.ALREADY_GRANTED) {
-                Log.d("RESULT", "권한이 이미 존재함.");
+
                 if (ActivityCompat.checkSelfPermission(mContext,
                         Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                 }
             }
             else if(result2 == PermissionRequester.NOT_SUPPORT_VERSION)
-                Log.d("RESULT", "마쉬멜로우 이상 버젼 아님.");
+            {
+
+            }
             else if(result2 == PermissionRequester.REQUEST_PERMISSION) {
-                Log.d("RESULT", "요청함. 응답을 기다림.");
+
 
             }
         }
@@ -126,7 +130,7 @@ public class PicturePopup {
 
     public void cutImage(Callback cropSmallPictureCallback) {
         if (tempUri == null) {
-            Log.i("alanjet", "The uri is not exist.");
+
         }
         Intent intent = new Intent("com.android.camera.action.CROP");
         intent.setDataAndType(tempUri, "image/*");

@@ -115,8 +115,7 @@ public class MainActivity extends AppCompatActivity
                     if(mScan) {
                         mBleScan.getBtAdapter().stopLeScan(mBleScan.mLeScanCallback);
                         mScan=false;
-                        Log.d("main","scan stop");
-                        Log.d("main","scan break time ; "+Values.scanBreakTime);
+
                         mHandler.sendEmptyMessageDelayed(0, Values.scanBreakTime);
 
 
@@ -125,8 +124,7 @@ public class MainActivity extends AppCompatActivity
                     {
                         mBleScan.getBtAdapter().startLeScan(mBleScan.mLeScanCallback);
                         mScan=true;
-                        Log.d("main","scan start");
-                        Log.d("main","scan time ; "+Values.scanTime);
+
                         mHandler.sendEmptyMessageDelayed(0, Values.scanTime);
 
 
@@ -240,20 +238,22 @@ public class MainActivity extends AppCompatActivity
                 .request(android.Manifest.permission.ACCESS_FINE_LOCATION, 1000 , new PermissionRequester.OnClickDenyButtonListener() {
                     @Override
                     public void onClick(Activity activity) {
-                        Log.d("RESULT", "취소함.");
+
                     }
                 });
 
         if (result1 == PermissionRequester.ALREADY_GRANTED) {
-            Log.d("RESULT", "권한이 이미 존재함.");
+
             if (ActivityCompat.checkSelfPermission(MainActivity.this,
                     android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             }
         }
-        else if(result1 == PermissionRequester.NOT_SUPPORT_VERSION)
-            Log.d("RESULT", "마쉬멜로우 이상 버젼 아님.");
-        else if(result1 == PermissionRequester.REQUEST_PERMISSION)
-            Log.d("RESULT", "요청함. 응답을 기다림.");
+        else if(result1 == PermissionRequester.NOT_SUPPORT_VERSION) {
+
+        }
+        else if(result1 == PermissionRequester.REQUEST_PERMISSION) {
+
+        }
 
 
         //툴바 세팅
@@ -561,8 +561,7 @@ public class MainActivity extends AppCompatActivity
 
             lat = gpsCoordi.lat;
             lng = gpsCoordi.lon;
-            Log.d("gpsgps","lat : "+gpsCoordi.lat);
-            Log.d("gpsgps","lon : "+gpsCoordi.lon);
+
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse( "https://beaconlocker-51c69.firebaseapp.com/?lat=" + lat + "&lng=" + lng  ));
             //Intent intent = new Intent(getApplicationContext(), RegLostDataActivity.class);
             startActivity(intent);
@@ -684,7 +683,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onDestroy() {
-        Log.d("Main","main destory");
+
         mBleScan.end();
         mHandler.removeMessages(0);
         mTimeOut.removeMessages(0);

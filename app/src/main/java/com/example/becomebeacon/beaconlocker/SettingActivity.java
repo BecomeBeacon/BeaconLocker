@@ -1,27 +1,17 @@
 package com.example.becomebeacon.beaconlocker;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
-
-import com.example.becomebeacon.beaconlocker.R;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 
 /**
  * Created by 王楠 on 2017/5/13.
@@ -79,7 +69,6 @@ public class SettingActivity extends AppCompatActivity {
 
     public void onResume()
     {
-        Log.d("SETTING","on resume");
         super.onResume();
         int scanTime = pref.getInt("ScanPeriod", Values.scanBreakTime);
         Boolean useScan = pref.getBoolean("UseScan", true);
@@ -92,12 +81,11 @@ public class SettingActivity extends AppCompatActivity {
 
         if(!Gps.GpsEnabled())
         {
-            Log.d("SETTING","gps isn't able");
             useGPS=false;
         }
         else
         {
-            Log.d("SETTING","gps is able");
+
         }
 
         scanPeriod.setText(""+scanTime/1000);
@@ -159,21 +147,21 @@ public class SettingActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == Values.CHECK_GPS) {
-            Log.d("SETTING","in onActivityResult");
+
             if(Gps.locationManager==null)
             {
                 Gps.locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
             }
             if(!Gps.GpsEnabled())
             {
-                Log.d("SETTING","1gps is "+Gps.isGPSEnabled);
+
                 Values.useGPS=false;
                 changeGPS(false);
                 //gpsSwitch.setChecked(false);
             }
             else
             {
-                Log.d("SETTING","2gps is "+Gps.isGPSEnabled);
+
                 Values.useGPS=true;
                 changeGPS(true);
                 //.setChecked(true);
@@ -190,7 +178,7 @@ public class SettingActivity extends AppCompatActivity {
 
             if(buttonView==gpsSwitch) {
                 if (isChecked) {
-                    Log.d("SETTING", "in gpsSwitchListener");
+
 //                if(!Gps.GpsEnabled()) {
 //                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
 //                    startActivityForResult(intent, CHECK_GPS);

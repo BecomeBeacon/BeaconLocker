@@ -108,17 +108,15 @@ public class LoginActivity extends AppCompatActivity implements
         try {
             super.onActivityResult(requestCode, resultCode, data);
 
-            Log.d("TAG","onActivityresult");
             // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
             if (requestCode == RC_SIGN_IN) {
                 GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-                Log.d("TAG","login"+result.isSuccess());
+
                 if (result.isSuccess()) {
                     // Google Sign In was successful, authenticate with Firebase
                     GoogleSignInAccount account = result.getSignInAccount();
                     firebaseAuthWithGoogle(account);
 
-                    Log.d("TAG","afterfireba");
                 } else {
                     // Google Sign In failed, update UI appropriately
                     // [START_EXCLUDE]
@@ -139,9 +137,6 @@ public class LoginActivity extends AppCompatActivity implements
     // [START auth_with_google]
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         try {
-            Log.d("TAG", "firebaseAuthWithGoogle:" + acct.getId());
-
-
             FirebaseAuthWithGoogleProgress task = new FirebaseAuthWithGoogleProgress();
             task.execute(acct);
         } catch (Exception e) {
@@ -208,7 +203,6 @@ public class LoginActivity extends AppCompatActivity implements
     private void updateUI(FirebaseUser user) {
         try {
             if (user != null) {
-                Log.d("sss","updateUI not null");
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
                 finish();

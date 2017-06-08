@@ -87,15 +87,10 @@ public class DataFetch {
 
 
                         if(bleDeviceInfo!=null) {
-                            Log.d("DF", "datasnapshot bleinfo" + bleDeviceInfo.getDevAddress());
 
-                            //if(!myItemMap.containsKey(myAddress)) {
-
-                                ////////
                             if(bleDeviceInfo.getPictureUri() != null)
                             {
                                 try {
-                                    Log.d("DF", "child = " + bleDeviceInfo.getPictureUri());
                                     StorageReference storageRef = storage.getReference().child(bleDeviceInfo.getPictureUri());
                                     // Storage 에서 다운받아 저장시킬 임시파일
                                     final File imageFile = File.createTempFile("images", "jpg");
@@ -104,10 +99,8 @@ public class DataFetch {
                                         public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                                             // Success Case
                                             bitmapImage = BitmapFactory.decodeFile(imageFile.getPath());
-                                            Log.d("DF", "bitmapImage.toString();" + bitmapImage.toString());
 
                                             PictureList.pictures.put(bleDeviceInfo.devAddress,bitmapImage);
-                                            Log.d("DF","put complete pictues : "+PictureList.pictures.toString());
                                             //mImage.setImageBitmap(bitmapImage);
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {
@@ -125,7 +118,6 @@ public class DataFetch {
                             ////////
 
                             if(myItemMap.containsKey(myAddress)) {
-                                Log.d("DF", "갱신");
                                 myItemMap.remove(myAddress);
                                 for (int i = 0; i < BeaconList.mAssignedItem.size(); i++) {
 
