@@ -32,3 +32,31 @@ public class NoActivity extends AppCompatActivity{
         }
     }
 }
+
+
+//에러코드 공식
+//첫 1자리
+//        - 1 : Activity
+//        - 2 : Service
+//
+//        둘째~셋째자리
+//        - Activity, Service 순서
+//
+//        넷째~다섯째자리
+//        - 예외처리 Method 순서 ( 0 = 전체 클래스 )
+//
+//        =================================================둘째~셋째자리 순서
+//
+//        Activity
+//        1 : BeaconBackHostActivity
+//        2 : BeaconDetailsActivity
+//        3 : DataStoreActivity
+//        4 : LoginActivity
+//        5 : MainActivity
+//        6 : MultiMapActivity
+//        7 : ReadMessageActivity
+//        8 : RegLostDataActivity
+//        9 : SettingActivity
+//        10 : NoActivity
+//        Service
+//        1 : BleService

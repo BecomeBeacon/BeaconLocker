@@ -204,7 +204,7 @@ public class SettingActivity extends AppCompatActivity {
 
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
+        try {
             if(buttonView==gpsSwitch) {
                 if (isChecked) {
 
