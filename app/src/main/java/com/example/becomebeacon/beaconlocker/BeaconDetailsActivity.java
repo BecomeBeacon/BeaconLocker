@@ -206,13 +206,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
                         progressDialog.dismiss();
                     }
                 });
-
-                try {
                     pictureDelete.deletePicture(item);
-                } catch (Exception e)
-                {
-
-                }
             }
             //수정 없으면 다른 데이터만 수정
             else {
@@ -250,13 +244,7 @@ public class BeaconDetailsActivity extends AppCompatActivity {
                         }
 
                     }
-                    try {
-                        dataModify.deleteBeacon(item);
-                    }
-                    catch(Exception e)
-                    {
-
-                    }
+                    dataModify.deleteBeacon(item);
                     finish();
                 }
             });

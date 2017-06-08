@@ -59,7 +59,7 @@ public class DataModify {
 
     }
 
-    public void deleteBeacon(BleDeviceInfo bleDeviceInfo) throws Exception{
+    public void deleteBeacon(BleDeviceInfo bleDeviceInfo){
         try {
             mStorageRef.child(bleDeviceInfo.getPictureUri()).delete();
         }
