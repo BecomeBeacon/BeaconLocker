@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -106,6 +107,13 @@ public class MyBeaconsListAdapter extends BaseAdapter {
         if(PictureList.pictures.containsKey(mBleDeviceInfoArrayList.get(position).devAddress)) {
             ImageView image = (ImageView) convertView.findViewById(R.id.device_image);
             image.setImageBitmap(PictureList.pictures.get(mBleDeviceInfoArrayList.get(position).devAddress));
+            Log.d("PIC","사진있음");
+        }
+        else
+        {
+            ImageView image = (ImageView) convertView.findViewById(R.id.device_image);
+            image.setImageBitmap(PictureList.pictures.get(R.mipmap.ic_launcher_round));
+            Log.d("PIC","사진없음");
         }
 
         TextView txtBdName = (TextView)convertView.findViewById(R.id.text_bd_name);
