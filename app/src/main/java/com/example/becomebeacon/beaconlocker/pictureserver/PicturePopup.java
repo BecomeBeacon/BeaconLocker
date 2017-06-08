@@ -128,7 +128,7 @@ public class PicturePopup {
         }
     }
 
-    public void cutImage(Callback cropSmallPictureCallback) throws Exception{
+    public void cutImage(Callback cropSmallPictureCallback){
         if (tempUri == null) {
 
         }

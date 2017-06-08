@@ -29,7 +29,7 @@ public class PictureUpload {
     private Callback successCallback;
     private Callback failCallback;
 
-    public PictureUpload(Callback successCallback, Callback failCallback) throws Exception{
+    public PictureUpload(Callback successCallback, Callback failCallback){
         mStorage = FirebaseStorage.getInstance();
         mDatabase = FirebaseDatabase.getInstance();
 
@@ -37,7 +37,7 @@ public class PictureUpload {
         this.failCallback = failCallback;
     }
 
-    public void uploadPicture(BleDeviceInfo bleDeviceInfo, Uri filePath) throws Exception{
+    public void uploadPicture(BleDeviceInfo bleDeviceInfo, Uri filePath){
         //Log : Upload 할 filepath
 
         mBleDeviceInfo = bleDeviceInfo;

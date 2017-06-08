@@ -11,7 +11,7 @@ public class DeviceInfoStore {
     {
         return bdi;
     }
-    static public void setBleInfo(BleDeviceInfo bd)throws Exception
+    static public void setBleInfo(BleDeviceInfo bd)
     {
         bdi=bd;
     }

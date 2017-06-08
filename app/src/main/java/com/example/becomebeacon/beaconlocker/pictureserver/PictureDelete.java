@@ -21,7 +21,7 @@ public class PictureDelete {
 
     private BleDeviceInfo mBleDeviceInfo;
 
-    public PictureDelete(Callback successCallback, Callback failCallback) throws Exception {
+    public PictureDelete(Callback successCallback, Callback failCallback) {
         mStorage = FirebaseStorage.getInstance();
         mDatabase = FirebaseDatabase.getInstance();
 

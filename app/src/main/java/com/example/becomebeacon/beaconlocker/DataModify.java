@@ -47,10 +47,14 @@ public class DataModify {
         }
     }
 
-    public void changeBeacon(BleDeviceInfo bleDeviceInfo) throws Exception{
+    public void changeBeacon(BleDeviceInfo bleDeviceInfo) {
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/beacon/" + bleDeviceInfo.getDevAddress(), bleDeviceInfo);
+        try {
+            childUpdates.put("/beacon/" + bleDeviceInfo.getDevAddress(), bleDeviceInfo);
+        }catch(Exception e)
+        {
 
+        }
         mDatabaseRef.updateChildren(childUpdates);
 
     }
