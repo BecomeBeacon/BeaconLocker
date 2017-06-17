@@ -101,10 +101,13 @@ public class BleDeviceListAdapter extends BaseAdapter {
         //txtUuid.setText("UUID: " + mBleDeviceInfoArrayList.get(position).proximityUuid);
 
         TextView txtBdName = (TextView)convertView.findViewById(R.id.text_bd_name);
-        txtBdName.setText("Device Name: " + mBleDeviceInfoArrayList.get(position).devName);
+        if (mBleDeviceInfoArrayList.get(position).devName == "Unknown")
+            txtBdName.setText("등록되지 않은 비컨");
+        else
+            txtBdName.setText("장치 이름: " + mBleDeviceInfoArrayList.get(position).devName);
 
         TextView txtBdAddress = (TextView)convertView.findViewById(R.id.text_bd_address);
-        txtBdAddress.setText("Dev Address: " + mBleDeviceInfoArrayList.get(position).devAddress);
+        txtBdAddress.setText("MAC ID:  " + mBleDeviceInfoArrayList.get(position).devAddress);
 
         //TextView txtMajor = (TextView)convertView.findViewById(R.id.text_major);
         //txtMajor.setText("Major: " + String.valueOf(mBleDeviceInfoArrayList.get(position).major));
@@ -120,7 +123,7 @@ public class BleDeviceListAdapter extends BaseAdapter {
         //txtTxPower.setText("Tx Power: " + String.valueOf(mBleDeviceInfoArrayList.get(position).txPower) + " dbm");      // changsu
 
         TextView txtDistance = (TextView)convertView.findViewById(R.id.text_distance);
-        txtDistance.setText("Distance: " //+ String.format("%.2f",String.valueOf(mBleDeviceInfoArrayList.get(position).distance))+ " m ("
+        txtDistance.setText("떨어진 거리: " //+ String.format("%.2f",String.valueOf(mBleDeviceInfoArrayList.get(position).distance))+ " m ("
                 + String.format("%.2f", mBleDeviceInfoArrayList.get(position).distance2) +"m");
 
         //TextView txtTimeout = (TextView)convertView.findViewById(R.id.text_timeout);
