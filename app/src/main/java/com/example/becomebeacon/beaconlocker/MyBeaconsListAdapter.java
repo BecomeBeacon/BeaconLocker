@@ -117,10 +117,11 @@ public class MyBeaconsListAdapter extends BaseAdapter {
         }
 
         TextView txtBdName = (TextView)convertView.findViewById(R.id.text_bd_name);
-        txtBdName.setText("Device Name: " + mBleDeviceInfoArrayList.get(position).nickname);
+        txtBdName.setText(mBleDeviceInfoArrayList.get(position).nickname);
 
         TextView txtBdAddress = (TextView)convertView.findViewById(R.id.text_bd_address);
-        txtBdAddress.setText("Dev Address: " + mBleDeviceInfoArrayList.get(position).devAddress);
+        //txtBdAddress.setText("MAC ID: " + mBleDeviceInfoArrayList.get(position).devAddress);
+        txtBdAddress.setVisibility(View.GONE);
 
         /*TextView txtMajor = (TextView)convertView.findViewById(R.id.text_major);
         txtMajor.setText("Major: " + String.valueOf(mBleDeviceInfoArrayList.get(position).major));
@@ -136,7 +137,7 @@ public class MyBeaconsListAdapter extends BaseAdapter {
         txtTxPower.setText("Tx Power: " + String.valueOf(mBleDeviceInfoArrayList.get(position).txPower) + " dbm");      // changsu
         */
         TextView txtDistance = (TextView)convertView.findViewById(R.id.text_distance);
-        txtDistance.setText("Distance: "// + String.valueOf(mBleDeviceInfoArrayList.get(position).distance) + " m ("
+        txtDistance.setText("떨어진 거리: "// + String.valueOf(mBleDeviceInfoArrayList.get(position).distance) + " m ("
                 + String.format("%.2f", mBleDeviceInfoArrayList.get(position).distance2) + "m");
 
         //TextView txtTimeout = (TextView)convertView.findViewById(R.id.text_timeout);
