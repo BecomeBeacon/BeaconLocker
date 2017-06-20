@@ -197,10 +197,13 @@ public class ReadMessageActivity extends AppCompatActivity {
                 try {
                     if (mMessageIndex < 0) {
                         mMessageIndex = 0;
+                        Log.d("PPAP",""+mMessageIndex);
                         makeMessage();
+
                         Toast.makeText(ReadMessageActivity.this, "상위 메세지가 없습니다", Toast.LENGTH_SHORT).show();
                     } else if (mMessageIndex >= msgList.size()) {
                         mMessageIndex = msgList.size() - 1;
+                        Log.d("PPAP",""+mMessageIndex);
                         makeMessage();
                         Toast.makeText(ReadMessageActivity.this, "하위 메세지가 없습니다", Toast.LENGTH_SHORT).show();
                     } else {
