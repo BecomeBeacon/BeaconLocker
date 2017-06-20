@@ -178,11 +178,11 @@ public class BleService extends Service {
                         {
                             if(msg.isChecked==false) {
                                 if (BeaconList.mItemMap.containsKey(msg.devAddress)) {
-                                    pushMsgNotification(BeaconList.mItemMap.get(msg.devAddress), msg);
+                                    if (!BeaconList.msgMap.containsKey(addressSnapshot.getKey())) {
+                                        BeaconList.msgMap.put(addressSnapshot.getKey(), msg);
+                                        pushMsgNotification(BeaconList.mItemMap.get(msg.devAddress), msg);
+                                    }
                                 }
-
-                                if (!BeaconList.msgMap.containsKey(addressSnapshot.getKey()))
-                                    BeaconList.msgMap.put(addressSnapshot.getKey(), msg);
 
                                 msg.isChecked = true;
 
@@ -193,6 +193,12 @@ public class BleService extends Service {
                                     BeaconList.rewardMap.remove(msg.devAddress);
                                 }
                                 BeaconList.rewardMap.put(msg.devAddress,msg.sendUid);
+                            }
+                            else
+                            {
+                                if (!BeaconList.msgMap.containsKey(addressSnapshot.getKey())) {
+                                    BeaconList.msgMap.put(addressSnapshot.getKey(), msg);
+                                }
                             }
 
 
