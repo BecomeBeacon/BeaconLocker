@@ -1,10 +1,14 @@
 package com.example.becomebeacon.beaconlocker;
 
+import java.util.Comparator;
+import java.util.Date;
+
 /**
  * Created by Ryu on 2017-06-04.
  */
 
-public class FindMessage {
+public class FindMessage implements Comparable <FindMessage>
+{
 
     public String message;
     public String devAddress;
@@ -13,6 +17,7 @@ public class FindMessage {
     public boolean isPoint;
     public String sendUid;
     public int point;
+    public Date date;
 
     public FindMessage()
     {
@@ -23,7 +28,16 @@ public class FindMessage {
         this.devAddress ="";
         isChecked=false;
         keyValue="";
+        date=null;
     }
+
+
+    @Override
+    public int compareTo(FindMessage other)
+    {
+        return date.compareTo(other.date);
+    }
+
 
     public String toString()
     {

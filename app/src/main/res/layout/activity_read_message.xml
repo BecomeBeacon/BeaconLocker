@@ -15,35 +15,45 @@
     <TextView
         android:id="@+id/myMessageView"
         android:layout_width="250dp"
-        android:layout_height="180dp"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
+        android:layout_height="30dp"
         android:text="message"
-        android:textSize="18dp"/>
+        android:textSize="18dp"
+        android:layout_above="@+id/myrealMessageView"
+        android:layout_centerHorizontal="true" />
+    <TextView
+        android:id="@+id/myrealMessageView"
+        android:layout_width="250dp"
+        android:layout_height="150dp"
+        android:background="@drawable/xml_border"
+        android:text="message"
+        android:textSize="18dp"
+        android:layout_alignBottom="@+id/button_deleteMessage"
+        android:layout_alignStart="@+id/myMessageView" />
 
     <Button
         android:id="@+id/button_goUpperMessage"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:background="@drawable/ic_arrow_upward"
+        android:layout_marginBottom="46dp"
         android:layout_above="@+id/myMessageView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="14dp"
-        android:background="@drawable/ic_arrow_upward" />
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:id="@+id/button_goLowerMessage"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_below="@+id/myMessageView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="18dp"
-        android:background="@drawable/ic_arrow_downward"/>
+        android:background="@drawable/ic_arrow_downward"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/button_goUpperMessage"
+        android:layout_marginBottom="60dp" />
 
     <Button
         android:id="@+id/button_deleteMessage"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:background="@drawable/ic_delete_forever"
+        android:layout_marginBottom="55dp"
         android:layout_above="@+id/button_goLowerMessage"
-        android:layout_toEndOf="@+id/myMessageView" />
+        android:layout_toEndOf="@+id/myrealMessageView" />
 </RelativeLayout>

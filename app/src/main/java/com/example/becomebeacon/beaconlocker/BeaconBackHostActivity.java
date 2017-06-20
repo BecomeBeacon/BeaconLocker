@@ -32,6 +32,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
+import java.util.Date;
 
 
 public class BeaconBackHostActivity extends AppCompatActivity {
@@ -97,6 +98,7 @@ public class BeaconBackHostActivity extends AppCompatActivity {
             fm.devAddress = info.devAddress;
             mHandler.sendEmptyMessage(0);
             text_bd_name.setText(info.getNickname());
+            fm.date= new Date(System.currentTimeMillis());
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(getApplicationContext(), "오류가 발생했습니다. 관리자에게 문의하세요\n오류코드 : 10100", Toast.LENGTH_LONG).show();

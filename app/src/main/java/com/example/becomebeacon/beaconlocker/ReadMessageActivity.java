@@ -18,7 +18,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
 
 public class ReadMessageActivity extends AppCompatActivity {
@@ -31,6 +34,7 @@ public class ReadMessageActivity extends AppCompatActivity {
     private ArrayList<FindMessage> msgList;
     //Layout 멤버변수
     TextView myMessageView;
+    TextView myrealMessageView;
     Button goUpperMessage;
     Button goLowerMessage;
     Button deleteMessage;
@@ -102,7 +106,7 @@ public class ReadMessageActivity extends AppCompatActivity {
         try {
             idx = 0;
             msgList = new ArrayList<>(BeaconList.msgMap.values());
-
+            Collections.sort(msgList);
             Iterator<FindMessage> iter=msgList.iterator();
 
             while(iter.hasNext())
@@ -144,6 +148,7 @@ public class ReadMessageActivity extends AppCompatActivity {
     private void initUI() {
         try {
             myMessageView = (TextView)findViewById(R.id.myMessageView);
+            myrealMessageView = (TextView)findViewById(R.id.myrealMessageView);
             goUpperMessage = (Button)findViewById(R.id.button_goUpperMessage);
             goLowerMessage = (Button)findViewById(R.id.button_goLowerMessage);
             deleteMessage = (Button)findViewById(R.id.button_deleteMessage);
@@ -183,8 +188,9 @@ public class ReadMessageActivity extends AppCompatActivity {
 
     private void displayMyMessage() {
         try {
+            setUserName();
             if(msgList.size() == 0) {
-                myMessageView.setText("메세지가 없습니다");
+                myrealMessageView.setText("메세지가 없습니다");
                 Toast.makeText(ReadMessageActivity.this, "메세지가 없습니다", Toast.LENGTH_SHORT).show();
             }
             else {
@@ -218,13 +224,23 @@ public class ReadMessageActivity extends AppCompatActivity {
             String nickname =BeaconList.mItemMap.get(str).getNickname();
             str = nickname + "에 대한 메세지\n" + msgList.get(mMessageIndex).message;
 
-            myMessageView.setText(str);
+            myrealMessageView.setText(str);
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(getApplicationContext(), "오류가 발생했습니다. 관리자에게 문의하세요\n오류코드 : 10706", Toast.LENGTH_LONG).show();
             finish();
         }
     }
+    private void setUserName()
+    {
+        FindMessage message = msgList.get(mMessageIndex);
+        String nickname =BeaconList.mItemMap.get(message.devAddress).getNickname();
+        SimpleDateFormat CurDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String date = CurDateFormat.format(message.date);
+        String str = nickname + "에 대한 메세지, " + date;
+        myMessageView.setText(str);
+    }
+
 
     private void setGoUpperMessage() {
         try {
